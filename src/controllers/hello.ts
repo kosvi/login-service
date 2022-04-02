@@ -1,8 +1,14 @@
+/*
+ * This Controller simply says hello. 
+ * It's only use is for testing deployment and to make sure the server is running after deployment
+ */
+
 import { HelloService } from '../services/hello';
+import { Controller } from '../types';
 import { IncomingMessage, ServerResponse } from 'http';
 import { logger } from '../utils/logger';
 
-export class HelloController {
+export class HelloController implements Controller {
 
   async handleRequest(req: IncomingMessage, res: ServerResponse) {
     if (req.url === '/hello' && req.method === 'GET') {

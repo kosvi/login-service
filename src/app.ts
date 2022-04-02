@@ -3,10 +3,14 @@ import { logger } from './utils/logger';
 import { HelloController } from './controllers/hello';
 
 import { createServer as HttpCreateServer } from 'http';
+import { Controller } from './types';
 
 const server = HttpCreateServer((req, res) => {
+  let controller: Controller | undefined;
   if (req.url?.startsWith('/hello')) {
-    const controller = new HelloController();
+    controller = new HelloController();
+  }
+  if (controller) {
     controller.handleRequest(req, res)
       .then(_result => {
         logger.log('hello handled');
