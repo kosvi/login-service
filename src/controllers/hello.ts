@@ -10,6 +10,8 @@ import { logger } from '../utils/logger';
 
 export class HelloController implements Controller {
 
+  controllerName = 'HelloController';
+
   async handleRequest(req: IncomingMessage, res: ServerResponse) {
     if (req.url === '/hello' && req.method === 'GET') {
       await this.getHello(req, res);
