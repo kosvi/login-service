@@ -4,18 +4,21 @@
     "esModuleInterop": true,
     "target": "es6",
     "moduleResolution": "node",
-    "sourceMap": true,
-    "rootDirs": [
-      "./src"
-    ],
+    "sourceMap": false,
+    "rootDir": "./src",
     "outDir": "./dist",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
   "lib": [
     "es2015"
+  ],
+  "exclude": [
+    "dist",
+    "test"
   ]
 }
