@@ -20,3 +20,31 @@ Source code of the project is located in `./src`. It is organized in the followi
 |./utils| Contains additional support utilities for the application. |
 
 Tests are located in separate `./test` folder. They follow the same structure as the `./src` folder and each source file should contain it's pair in the test folder. 
+
+## Database
+
+Database is relatively simple. And since there is only a few simple requests needed, no ORM is planned as dependency. Only issue this raises is that there is no ready-made solution for migrations, but since our database is quite simple, we just need to settle for a self-made solution. 
+
+**Tables**
+
+*Users*
+
+| field | type | description |
+|-------|------|-------------|
+|uuid   | string, primary key | this is unique id given to each user |
+|username | string, unique | this is the username used for logging in, needs to be unique |
+| password| string | combine with username and use it to login |
+|name | string | gecos (full name suggested, up to user what to input) |
+|email | string | just so we can reset password or similar, mailinator etc. allowed |
+|admin| boolean | simply marks if the user is admin (can manage user database) |
+|locked | boolean | user is locked or not |
+|stealth | boolean | affects the information added to tokens |
+
+## Environment
+
+App has following environmental variables (no dotenv).
+
+|variable name| description | required | default value |
+|-------------|-------------|----------|---------------|
+|NODE_ENV     |informs the server about the enviroment it's currently running | no | production |
+|DATABASE_URL | tell where to find database | **yes** | postgres://user:password@localhost:port/db |

@@ -1,4 +1,4 @@
-import { User } from '../../src/types/objects';
+import { User } from '../../src/types';
 import { v4 as uuidv4 } from 'uuid';
 import { validators } from '../../src/utils/validators';
 
@@ -7,8 +7,12 @@ describe('validator tests', () => {
   it('should validate valid Users', () => {
     const validUserWithoutUid: User = {
       username: 'username',
+      password: 'this-is-some-hashed-string',
       name: 'full name',
-      password: 'this-is-some-hashed-string'
+      email: 'user@example.net',
+      admin: false,
+      locked: false,
+      stealth: false
     };
     expect(validators.isUser(validUserWithoutUid)).toBe(true);
     const validUserWithUid: User = {
@@ -21,7 +25,11 @@ describe('validator tests', () => {
   it('shouldn\'t validate invalid Users', () => {
     const invalidUserWithoutPassword: Omit<User, 'password'> = {
       username: 'username',
-      name: 'full name'
+      name: 'full name',
+      email: 'user@example.net',
+      admin: false,
+      locked: false,
+      stealth: false
     };
     expect(validators.isUser(invalidUserWithoutPassword)).toBe(false);
     expect(validators.userFailure(invalidUserWithoutPassword)).toBe('password is required');

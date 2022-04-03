@@ -3,7 +3,7 @@
  * It's only use is for testing deployment and to make sure the server is running after deployment
  */
 
-import { HelloService } from '../services/hello';
+import { helloService } from '../services';
 import { Controller, HttpRequest, HttpResponse } from '../types';
 import { ControllerError } from '../utils/customErrors';
 import { logger } from '../utils/logger';
@@ -22,11 +22,10 @@ export class HelloController implements Controller {
   }
 
   async getHello(_req: HttpRequest, res: HttpResponse) {
-    const hello = new HelloService();
     try {
       responseHandlers.setHeaderJson(res);
       responseHandlers.setStatus(200, res);
-      const content = await hello.sayHello();
+      const content = await helloService.sayHello();
       res.end(JSON.stringify(content));
     } catch (_error) {
       logger.error('error in sayHello()');

@@ -3,14 +3,20 @@
  *  once the application grows bigger
  */
 
+import { NODE_ENV } from './config';
+
 const log = (line: string) => {
-  // eslint-disable-next-line no-console
-  console.log(line);
+  if (NODE_ENV === 'dev') {
+    // eslint-disable-next-line no-console
+    console.log(line);
+  }
 };
 
 const error = (line: string) => {
-  // eslint-disable-next-line no-console
-  console.error(line);
+  if (NODE_ENV === 'dev') {
+    // eslint-disable-next-line no-console
+    console.error(line);
+  }
 };
 
 export const logger = {

@@ -2,24 +2,9 @@
  * These functions will validate objects so we can use them in the code later on
  */
 
-import { z, ZodError } from 'zod';
-import { User } from '../types/objects';
-import { USER_CONSTANTS } from './config';
+import { ZodError } from 'zod';
+import { User, ZodUser } from '../types';
 import { logger } from './logger';
-
-const ZodUser = z.object({
-  username: z.string({
-    required_error: 'username is required'
-  }).min(USER_CONSTANTS.USERNAME_MIN_LENGTH),
-  name: z.string({
-    required_error: 'name is required'
-  }).min(USER_CONSTANTS.NAME_MIN_LENGTH),
-  password: z.string({
-    required_error: 'password is required'
-  }).min(1),
-  uid: z.string().uuid().optional()
-});
-
 
 const isUser = (obj: unknown): obj is User => {
   try {
