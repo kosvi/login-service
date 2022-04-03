@@ -1,10 +1,9 @@
 import { Controller, HttpRequest, HttpResponse } from '../../src/types';
-import { HelloController } from '../../src/controllers';
+import { ProfileController } from '../../src/controllers';
 import { mockResponse } from '../utils/mockers';
-// import { ControllerError } from '../../src/utils/customErrors';
 import { verify200isReturned, verify404isReturned } from './helperFunctions';
 
-describe('HelloController tests', () => {
+describe('ProfileController tests', () => {
 
   let req: HttpRequest | undefined, res: HttpResponse;
   let controller: Controller;
@@ -13,17 +12,17 @@ describe('HelloController tests', () => {
     // ret request undefined and reset response and controller
     req = undefined;
     res = mockResponse();
-    controller = new HelloController();
+    controller = new ProfileController();
   });
 
-  it('should return 200 from GET to /hello', async () => {
-    req = { url: '/hello', method: 'GET' };
+  it('should return 200 from GET to /profile', async () => {
+    req = { url: '/profile', method: 'GET' };
     await controller.handleRequest(req, res);
-    verify200isReturned(req, res, 'application/json', JSON.stringify({ msg: 'Hello Api' }));
+    verify200isReturned(req, res, 'text/html');
   });
 
   it('should return 404 with any other path', async () => {
-    req = { url: '/hello/world', method: 'GET' };
+    req = { url: '/profile/1', method: 'GET' };
     await verify404isReturned(req, res, controller);
   });
 

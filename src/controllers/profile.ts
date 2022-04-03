@@ -1,0 +1,28 @@
+import { ProfileService } from '../services/profile';
+import { Controller, HttpRequest, HttpResponse } from '../types';
+import { ControllerError } from '../utils/customErrors';
+import { responseHandlers } from '../utils/responseHandlers';
+
+export class ProfileController implements Controller {
+  controllerName = 'ProfileController';
+
+  async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
+    if (req.url === '/profile' && req.method === 'GET') {
+      await this.getPage(req, res);
+    } else {
+      throw new ControllerError(404, 'not found');
+    }
+  }
+
+  async getPage(_req: HttpRequest, res: HttpResponse) {
+    try {
+      const content = await ProfileService.getPageContent();
+      responseHandlers.setHeaderHtml(res);
+      responseHandlers.setStatus(200, res);
+      res.end(content);
+    } catch (error) {
+      throw new ControllerError(500, 'server is missing a file');
+    }
+  }
+
+}
