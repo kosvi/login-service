@@ -10,6 +10,8 @@ import { ErrorController, HelloController, ProfileController } from './controlle
 import { createServer as HttpCreateServer } from 'http';
 import { parsers } from './utils/parsers';
 import { ControllerError } from './utils/customErrors';
+import { db } from './utils/db';
+import { migrations } from './migrations/migrations';
 
 /*
  * Create server and direct requests to correct Controllers
@@ -49,7 +51,17 @@ const server = HttpCreateServer((request, res) => {
   })();
 });
 
-// Start server
-server.listen(PORT, () => {
-  logger.log(`server started on port ${PORT}`);
-});
+const start = async (): Promise<void> => {
+  // run database migrations
+  if (!(await db.runMigrations(migrations))) {
+    // migrations failed
+    logger.error('Database migrations failed, exiting...');
+    process.exit(1);
+  }
+  // Start server
+  server.listen(PORT, () => {
+    logger.log(`server started on port ${PORT}`);
+  });
+};
+
+void start();

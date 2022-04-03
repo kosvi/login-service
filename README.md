@@ -31,7 +31,7 @@ Database is relatively simple. And since there is only a few simple requests nee
 
 | field | type | description |
 |-------|------|-------------|
-|uuid   | string, primary key | this is unique id given to each user |
+|uid   | string, primary key | this is unique id given to each user |
 |username | string, unique | this is the username used for logging in, needs to be unique |
 | password| string | combine with username and use it to login |
 |name | string | gecos (full name suggested, up to user what to input) |

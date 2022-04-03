@@ -9,6 +9,10 @@ export interface User {
 import { z } from 'zod';
 import { USER_CONSTANTS } from '../utils/config';
 
+export interface Migration {
+  id: string,
+  sql: string
+}
 
 export const ZodUser = z.object({
   // uid

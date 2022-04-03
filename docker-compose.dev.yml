@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+
+  login-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: 'dev'
+      POSTGRES_PASSWORD: 'password'
+    volumes:
+      - ./db/:/var/lib/postgresql/data
+    container_name: login-db
+
+  login-server:
+    image: login-service
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    environment:
+      DATABASE_URL: 'postgres://dev:password@login-db:5432/dev'
+      NODE_ENV: 'dev'
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 3001:3001
+    container_name: login-server
+    depends_on:
+      - 'login-db'
