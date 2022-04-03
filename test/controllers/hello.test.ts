@@ -2,7 +2,7 @@ import { Controller, HttpRequest, HttpResponse } from '../../src/types';
 import { HelloController } from '../../src/controllers';
 import { mockResponse } from '../utils/mockers';
 // import { ControllerError } from '../../src/utils/customErrors';
-import { verify200isReturned, verify404isReturned } from './helperFunctions';
+import { verify200isReturned, verify404isReturned } from '../utils/helperFunctions';
 
 describe('HelloController tests', () => {
 
