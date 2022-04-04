@@ -48,3 +48,4 @@ App has following environmental variables (no dotenv).
 |-------------|-------------|----------|---------------|
 |NODE_ENV     |informs the server about the enviroment it's currently running | no | production |
 |DATABASE_URL | tell where to find database | **yes** | postgres://user:password@localhost:port/db |
+|PORT         | set the port the server listens on | no | 3000 |

@@ -19,6 +19,12 @@ const error = (line: string) => {
   }
 };
 
+const logError = (err: unknown) => {
+  if (err instanceof Error) {
+    error(`${err.name}: ${err.message}`);
+  }
+};
+
 export const logger = {
-  log, error
+  log, error, logError
 };

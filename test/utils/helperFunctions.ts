@@ -5,6 +5,18 @@
 import { Controller, HttpRequest, HttpResponse } from '../../src/types';
 import { ControllerError } from '../../src/utils/customErrors';
 
+/*
+ * Here is the helpers for testing if our controller has 
+ * formed a correct response to the request
+ * 
+ * Available helpers:
+ *  - verify 200 is returned
+ *  - verify 404 is returned
+ * 
+ * response type (text/html or application/json) can be defined as param
+ * also content body can be tested if body is sent with response
+ */
+
 // this just lists possible Content-Types:
 type ContentType = 'text/html' | 'application/json';
 

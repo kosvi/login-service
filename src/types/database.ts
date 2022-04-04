@@ -1,10 +1,12 @@
 /*
-export interface User {
-  uid?: string,
-  username: string,
-  name: string,
-  password: string
-}*/
+ * This file contains type definitions for all the objects we
+ * want to store in the database. 
+ *
+ * using zod-objects we save A LOT of time validating objects. 
+ * in addition, we can extract the type-definitions our from those zod-objects
+ * 
+ * you can read user-object attributes from comment-lines above attribute options
+ */
 
 import { z } from 'zod';
 import { USER_CONSTANTS } from '../utils/config';

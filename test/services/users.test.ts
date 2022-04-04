@@ -10,6 +10,7 @@ describe('users service tests', () => {
   it('should fail to store invalid user', async () => {
     try {
       await userService.addUser('username', 'password', 'full name', 'invalid email');
+      // addUser should fail, below line should never be run
       expect('').toBe('never end up here!');
     } catch (error) {
       expect(error).toBe('Invalid email');
@@ -23,6 +24,7 @@ describe('users service tests', () => {
     if (validators.isUser(user)) {
       expect(user.email).toBe('user@example.com');
     } else {
+      // for some mind melting reason, we failed to validate user we just validate earlier
       expect('').toBe('user validation failed');
     }
   });
