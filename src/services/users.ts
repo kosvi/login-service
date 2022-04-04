@@ -4,6 +4,10 @@ import { validators } from '../utils/validators';
 
 const users: Array<User> = [];
 
+const hashPassword = (password: string): string => {
+  return password.split('').reverse().join('');
+};
+
 const addUser = async (username: string, password: string, name: string, email: string): Promise<User> => {
   return new Promise((resolve, reject) => {
     const newUser: User = {
@@ -37,5 +41,5 @@ const findByUsername = async (username: string): Promise<User> => {
 };
 
 export const userService = {
-  addUser, findByUsername
+  hashPassword, addUser, findByUsername
 };
