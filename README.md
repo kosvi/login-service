@@ -35,10 +35,11 @@ Database is relatively simple. And since there is only a few simple requests nee
 |username | string, unique | this is the username used for logging in, needs to be unique |
 | password| string | combine with username and use it to login |
 |name | string | gecos (full name suggested, up to user what to input) |
-|email | string | just so we can reset password or similar, mailinator etc. allowed |
+|email | string, unique | just so we can reset password or similar, mailinator etc. allowed |
 |admin| boolean | simply marks if the user is admin (can manage user database) |
 |locked | boolean | user is locked or not |
 |stealth | boolean | affects the information added to tokens |
+| created_on | timestamp | current timestamp on time of creation |
 
 ## Environment
 
