@@ -1,14 +1,20 @@
 # Login Service
 
+- [Description](#project-description)
+- [Technologies](#used-technologies)
+- [Repository structure](#repository-structure)
+- [Database](#database)
+- [Environmental variables](#environmental-variables)
+
 ## Project description
 
 This project is supposed to simply provide authentication service and provide JSONWebTokens for authenticated clients. 
 
 ## Used technologies
 
-Main goal is to provide a simple authentication server. To achieve this, dependencies are tried to keep as minimal as possible. Project does not use Express.js and dotenv is not used, so please edit `./src/utils/config.ts` directly if needed. For now there is no decision made about the database, but it will most likely be Postgres. 
+Main goal is to provide a simple authentication server. To achieve this, dependencies are tried to keep as minimal as possible. Project does not use Express.js! Database will be Postgres, no others supported. 
 
-## Project structure
+## Repository structure
 
 Source code of the project is located in `./src`. It is organized in the following structure. 
 
@@ -23,7 +29,8 @@ Tests are located in separate `./test` folder. They follow the same structure as
 
 ## Database
 
-Database is relatively simple. And since there is only a few simple requests needed, no ORM is planned as dependency. Only issue this raises is that there is no ready-made solution for migrations, but since our database is quite simple, we just need to settle for a self-made solution. 
+Database is relatively simple. And since there is only a few simple requests needed, no ORM is planned as dependency. 
+As a bit of an anti-pattern, our DB migrations are built-in, but we try to live with it. 
 
 **Tables**
 
@@ -41,9 +48,11 @@ Database is relatively simple. And since there is only a few simple requests nee
 |stealth | boolean | affects the information added to tokens |
 | created_on | timestamp | current timestamp on time of creation |
 
+*possibility for a settings-table is reserver for the future*
+
 ## Environment
 
-App has following environmental variables (no dotenv).
+App has following environmental variables and they can be set in `.env`.
 
 |variable name| description | required | default value |
 |-------------|-------------|----------|---------------|

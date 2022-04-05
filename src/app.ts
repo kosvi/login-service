@@ -1,17 +1,19 @@
 // import utilities and CONSTANTS
 import { logger } from './utils/logger';
+import { parsers } from './utils/parsers';
 import { PORT } from './utils/config';
 
 // Import controllers
 import { Controller } from './types';
 import { ErrorController, HelloController, ProfileController } from './controllers';
+import { ControllerError } from './utils/customErrors';
+
+// Database stuff
+import { db } from './utils/db';
+import { migrations } from './migrations/migrations';
 
 // Import createServer so we can start taking in requests
 import { createServer as HttpCreateServer } from 'http';
-import { parsers } from './utils/parsers';
-import { ControllerError } from './utils/customErrors';
-import { db } from './utils/db';
-import { migrations } from './migrations/migrations';
 
 /*
  * Create server and direct requests to correct Controllers
