@@ -25,7 +25,7 @@ const parseLine = (variableObj: Record<string, string>, line: string): Record<st
   return variableObj;
 };
 
-// This was so elegantly written by Jaakko that I will not make a single change
+// This was so elegantly written by Jaakko that I will not make changes to it
 
 const parseEnv = (content: string): Record<string, string> => {
   const rows = content.split('\n');
@@ -46,6 +46,7 @@ const initializeEnv = () => {
   };
 };
 
+// will export parseEnv for testing
 export const dotenv = {
   parseEnv, initializeEnv
 };
