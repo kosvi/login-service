@@ -1,4 +1,3 @@
-// import { existsSync, readFileSync } from 'fs';
 import { dotenv } from '../../src/utils/dotenv';
 import fs from 'fs';
 

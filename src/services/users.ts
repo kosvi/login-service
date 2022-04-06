@@ -1,3 +1,9 @@
+/*
+ * This service handles storing, finding and updating of users inside database
+ */
+
+// THIS FILE NEEDS A BIT OF REWRITE SINCE WE NEED TO IMPLEMENT OUR DATABASE IN IT NEXT
+
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../types';
 import { validators } from '../utils/validators';
