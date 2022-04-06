@@ -2,11 +2,11 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['dist'],
+  testPathIgnorePatterns: ['dist','db'],
   collectCoverage: true,
   coverageReporters: ['html', 'text'],
   coveragePathIgnorePatterns: [
-    'node_modules'
+    'node_modules', 'db'
   ],
   coverageThreshold: {
     global: {
@@ -15,5 +15,8 @@ module.exports = {
       lines: 50,
       statements: 50
     }
-  }
+  },
+  watchPathIgnorePatterns: [
+    'db'
+  ]
 };
