@@ -50,7 +50,7 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 
 *possibility for a settings-table is reserver for the future*
 
-## Environment
+## Environmental variables
 
 App has following environmental variables and they can be set in `.env`.
 
