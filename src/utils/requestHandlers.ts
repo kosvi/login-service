@@ -37,6 +37,6 @@ const parseRequest = async (req: IncomingMessage): Promise<HttpRequest> => {
   };
 };
 
-export const parsers = {
+export const requestHandlers = {
   parseRequest
 };

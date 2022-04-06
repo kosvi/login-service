@@ -22,7 +22,7 @@ Source code of the project is located in `./src`. It is organized in the followi
 |------|-------------|
 |app.js| Contains the main server that is used to fire up the application. |
 |./controllers| Contains a single Controller class in every file. Controllers handle requests and send responses. |
-|./services | Services are used to handle the main business logic. They provide data for controllers to send to user and they take the input from Controllers and handle it correctly. |
+|./services | Services are used to handle the main business logic. They provide data for controllers to send to user and they take the input from Controllers and handle it accordingly. |
 |./utils| Contains additional support utilities for the application. |
 
 Tests are located in separate `./test` folder. They follow the same structure as the `./src` folder and each source file should contain it's pair in the test folder. 

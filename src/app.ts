@@ -1,6 +1,6 @@
 // import utilities and CONSTANTS
 import { logger } from './utils/logger';
-import { parsers } from './utils/parsers';
+import { requestHandlers } from './utils/requestHandlers';
 import { PORT } from './utils/config';
 
 // Import controllers
@@ -22,7 +22,7 @@ const server = HttpCreateServer((request, res) => {
   // This will allow us to use async - await here
   void (async () => {
     // let's parse the request
-    const req = await parsers.parseRequest(request);
+    const req = await requestHandlers.parseRequest(request);
     // we will initiate controller with correct Controller class depending on the requested URL
     let controller: Controller | undefined;
     if (req.url?.startsWith('/hello')) {

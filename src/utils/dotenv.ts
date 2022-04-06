@@ -19,7 +19,8 @@ const parseLine = (variableObj: Record<string, string>, line: string): Record<st
   const parts = line.split(/=(.*)/);
   const key = parts[0].trim();
   const value = parts[1].trim();
-  if (key.length > 0 && value.length > 0) {
+  // make sure our key only contains a-zA-Z0-9_
+  if (key.length > 0 && value.length > 0 && key.match(/^[\w]+$/)) {
     variableObj[key] = value;
   }
   return variableObj;
@@ -46,7 +47,6 @@ const initializeEnv = () => {
   };
 };
 
-// will export parseEnv for testing
 export const dotenv = {
-  parseEnv, initializeEnv
+  initializeEnv
 };
