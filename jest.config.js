@@ -2,11 +2,11 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['dist','db'],
+  testPathIgnorePatterns: ['<rootDir>/dist','<rootDir>/db'],
   collectCoverage: true,
   coverageReporters: ['html', 'text'],
   coveragePathIgnorePatterns: [
-    'node_modules', 'db'
+    'node_modules', '<rootDir>/db'
   ],
   coverageThreshold: {
     global: {
@@ -17,6 +17,6 @@ module.exports = {
     }
   },
   watchPathIgnorePatterns: [
-    'db'
+    '<rootDir>/db'
   ]
 };
