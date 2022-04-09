@@ -1,9 +1,11 @@
+/* eslint-disable no-console */
 // https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-node-js-on-ubuntu-20-04
 
 import { Pool } from 'pg';
-import { Migration, User } from '../types';
+import { Migration, PublicUser, User } from '../types';
 import { DATABASE_URL } from './config';
 import { logger } from './logger';
+import { validators } from './validators';
 
 const pool = new Pool({
   connectionString: DATABASE_URL
@@ -57,13 +59,33 @@ const runMigrations = async (migrations: Array<Migration>): Promise<boolean> => 
 };
 
 const addUser = async (user: User): Promise<boolean> => {
-  await pool.query(
-    'INSERT INTO users (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
-    [user.uid, user.username, user.password, user.name, user.email]
-  );
-  return true;
+  try {
+    await pool.query(
+      'INSERT INTO users (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
+      [user.uid, user.username, user.password, user.name, user.email]
+    );
+    return true;
+  } catch (error) {
+    logger.logError(error);
+    return false;
+  }
+};
+
+const getUser = async (username: string, password: string): Promise<PublicUser | undefined> => {
+  try {
+    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, created_on FROM users\
+                             WHERE username = $1 AND password = $2',
+      [username, password]);
+    if (validators.validateQueryResult(result) && result.rowCount === 1 && validators.isPublicUser(result.rows[0])) {
+      return result.rows[0];
+    }
+    return undefined;
+  } catch (error) {
+    logger.logError(error);
+    return undefined;
+  }
 };
 
 export const db = {
-  pool, runMigrations, addUser
+  pool, runMigrations, addUser, getUser
 };

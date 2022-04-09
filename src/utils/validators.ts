@@ -3,7 +3,7 @@
  */
 
 import { ZodError } from 'zod';
-import { User, ZodUser } from '../types';
+import { PublicUser, User, ZodUser } from '../types';
 import { logger } from './logger';
 
 const isUser = (obj: unknown): obj is User => {
@@ -32,6 +32,43 @@ const userFailure = (obj: unknown): string | undefined => {
   }
 };
 
+const isPublicUser = (obj: unknown): obj is PublicUser => {
+  if (obj && typeof obj === 'object' && 'password' in obj) {
+    // we have password -> this is not public!
+    return false;
+  }
+  try {
+    if (obj && typeof obj === 'object') {
+      ZodUser.parse({ password: 'mocked', ...obj });
+      return true;
+    } else {
+      // not even object!
+      return false;
+    }
+  } catch (error) {
+    let message = 'parsing user failed';
+    if (error instanceof Error) {
+      message += `: ${error.message}`;
+    }
+    logger.error(message);
+    return false;
+  }
+};
+
+const userToPublicUser = (user: User): PublicUser => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...publicUser } = user;
+  return publicUser;
+};
+
+function validateQueryResult(obj: unknown): obj is { rows: [unknown], rowCount: number } {
+  if (obj && typeof obj === 'object' && 'rows' in obj && 'rowCount' in obj) {
+    // we still need to check typeof rows and rowCount, but we'll get to it
+    return true;
+  }
+  return false;
+}
+
 export const validators = {
-  isUser, userFailure
+  isUser, userFailure, isPublicUser, userToPublicUser, validateQueryResult
 };
