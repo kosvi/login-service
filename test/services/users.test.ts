@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/unbound-method */
 import { validators } from '../../src/utils/validators';
 import { userService } from '../../src/services';
 import { PublicUser } from '../../src/types';
@@ -13,6 +13,13 @@ jest.mock('pg', () => {
   };
   return { Pool: jest.fn(() => mockPool) };
 });
+// mock uuid
+jest.mock('uuid', () => {
+  const mockUuid = {
+    v4: jest.fn().mockImplementation(() => { return 'af3b325f-06f0-4b25-9fb8-27b07a55cd14'; })
+  };
+  return mockUuid;
+});
 
 describe('users service tests', () => {
 
@@ -26,9 +33,13 @@ describe('users service tests', () => {
 
   it('should allow storing a user', async () => {
     // mock database query result
-    (pool.query as jest.Mock).mockResolvedValue({ rows: [{}], rowCount: 1 });
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{}], rowCount: 1 });
     const newUser = await userService.addUser('username', 'password', 'full name', 'user@example.com');
     expect(validators.isPublicUser(newUser)).toBe(true);
+    // check that pool.query was called with correct params
+    expect(pool.query).toHaveBeenCalledTimes(1);
+    expect(pool.query).toHaveBeenCalledWith('INSERT INTO users (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
+      ['af3b325f-06f0-4b25-9fb8-27b07a55cd14', 'username', userService.hashPassword('password'), 'full name', 'user@example.com']);
   });
 
   it('should fail to store invalid user', async () => {
