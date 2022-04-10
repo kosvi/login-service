@@ -16,7 +16,7 @@ const addUser = async (username: string, password: string, name: string, email: 
   const newUser: User = {
     uid: uuidv4(),
     username: username,
-    password: password,
+    password: hashPassword(password),
     name: name,
     email: email,
     admin: false,
