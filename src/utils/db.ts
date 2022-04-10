@@ -2,7 +2,7 @@
 // https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-node-js-on-ubuntu-20-04
 
 import { Pool } from 'pg';
-import { Migration, PublicUser, User } from '../types';
+import { Migration, User } from '../types';
 import { DATABASE_URL } from './config';
 import { logger } from './logger';
 import { validators } from './validators';
@@ -72,10 +72,10 @@ const addUser = async (user: User): Promise<boolean> => {
   }
 };
 
-const getUser = async (username: string): Promise<PublicUser | undefined> => {
+const getUser = async (username: string): Promise<User | undefined> => {
   try {
-    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, created_on FROM users WHERE username = $1', [username]);
-    if (result.rowCount === 1 && validators.isPublicUser(result.rows[0])) {
+    const result = await pool.query('SELECT uid, username, password, name, email, admin, locked, stealth, created_on FROM users WHERE username = $1', [username]);
+    if (result.rowCount === 1 && validators.isUser(result.rows[0])) {
       return result.rows[0];
     }
     return undefined;

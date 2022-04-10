@@ -37,8 +37,8 @@ const addUser = async (username: string, password: string, name: string, email: 
   }
 };
 
-const findByUsername = async (username: string): Promise<PublicUser | undefined> => {
-  const user: PublicUser | undefined = await db.getUser(username);
+const findByUsername = async (username: string): Promise<User | undefined> => {
+  const user: User | undefined = await db.getUser(username);
   return user;
 };
 
