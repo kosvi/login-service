@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { validators } from '../../src/utils/validators';
 import { userService } from '../../src/services';
-import { User } from '../../src/types';
+import { PublicUser } from '../../src/types';
 // these are needed for mocking
 import { v4 as uuidv4 } from 'uuid';
 import { Pool } from 'pg';
@@ -59,10 +59,9 @@ describe('users service tests', () => {
   });
 
   it('should return user by username', async () => {
-    const user: User = {
+    const user: PublicUser = {
       uid: uuidv4(),
       username: 'username',
-      password: 'a-long-difficult-hash',
       name: 'full name',
       email: 'user@example.com',
       admin: false,
@@ -77,7 +76,7 @@ describe('users service tests', () => {
     });
     // now fetch user by username
     const resultUser = await userService.findByUsername('username');
-    if (validators.isUser(resultUser)) {
+    if (validators.isPublicUser(resultUser)) {
       expect(resultUser.email).toBe(user.email);
     } else {
       // for some mind melting reason, we failed to validate user we just validate earlier

@@ -2,7 +2,7 @@
 // https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-node-js-on-ubuntu-20-04
 
 import { Pool } from 'pg';
-import { Migration, User } from '../types';
+import { Migration, PublicUser, User } from '../types';
 import { DATABASE_URL } from './config';
 import { logger } from './logger';
 import { validators } from './validators';
@@ -72,10 +72,24 @@ const addUser = async (user: User): Promise<boolean> => {
   }
 };
 
-const getUser = async (username: string): Promise<User | undefined> => {
+const getUser = async (username: string): Promise<PublicUser | undefined> => {
   try {
-    const result = await pool.query('SELECT uid, username, password, name, email, admin, locked, stealth, created_on FROM users WHERE username = $1', [username]);
-    if (result.rowCount === 1 && validators.isUser(result.rows[0])) {
+    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, created_on FROM users WHERE username = $1', [username]);
+    if (result.rowCount === 1 && validators.isPublicUser(result.rows[0])) {
+      return result.rows[0];
+    }
+    return undefined;
+  } catch (error) {
+    logger.logError(error);
+    return undefined;
+  }
+};
+
+const getUserByCreds = async (username: string, passwordHash: string): Promise<PublicUser | undefined> => {
+  try {
+    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, created_on FROM users WHERE usename = $1 AND password = $2',
+      [username, passwordHash]);
+    if (result.rowCount === 1 && validators.isPublicUser(result.rows[0])) {
       return result.rows[0];
     }
     return undefined;
@@ -86,5 +100,5 @@ const getUser = async (username: string): Promise<User | undefined> => {
 };
 
 export const db = {
-  pool, runMigrations, addUser, getUser
+  pool, runMigrations, addUser, getUser, getUserByCreds
 };

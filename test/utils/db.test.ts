@@ -79,4 +79,17 @@ describe('database migration tests', () => {
     ]);
   });
 
+  it('should SELECT users without password', async () => {
+    // mock query results
+    (pool.query as jest.Mock).mockResolvedValue({ rows: [{}], rowCount: 1 });
+    await db.getUser('username');
+    await db.getUserByCreds('username', 'password');
+    expect(pool.query).toBeCalledTimes(2);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['SELECT uid, username, name, email, admin, locked, stealth, created_on FROM users WHERE username = $1', ['username']],
+      ['SELECT uid, username, name, email, admin, locked, stealth, created_on FROM users WHERE usename = $1 AND password = $2',
+        ['username', 'password']]
+    ]);
+  });
+
 });
