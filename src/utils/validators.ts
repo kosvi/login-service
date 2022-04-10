@@ -61,14 +61,6 @@ const userToPublicUser = (user: User): PublicUser => {
   return publicUser;
 };
 
-function validateQueryResult(obj: unknown): obj is { rows: [unknown], rowCount: number } {
-  if (obj && typeof obj === 'object' && 'rows' in obj && 'rowCount' in obj) {
-    // we still need to check typeof rows and rowCount, but we'll get to it
-    return true;
-  }
-  return false;
-}
-
 export const validators = {
-  isUser, userFailure, isPublicUser, userToPublicUser, validateQueryResult
+  isUser, userFailure, isPublicUser, userToPublicUser
 };

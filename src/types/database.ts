@@ -43,7 +43,7 @@ export const ZodUser = z.object({
   stealth: z.boolean().default(true),
   // created_on
   created_on: z.string().optional(),
-});
+}).strict();
 
 export type User = z.infer<typeof ZodUser>;
 export type PublicUser = Omit<User, 'password'>;
