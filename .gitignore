@@ -1,6 +1,6 @@
-node_modules
-dist
-coverage
-db
+/node_modules/
+/dist/
+/coverage/
+/db/
 .env
 
