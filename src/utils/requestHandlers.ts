@@ -5,6 +5,7 @@
 
 import { IncomingMessage } from 'http';
 import { HttpRequest } from '../types';
+import { logger } from './logger';
 
 // We parse body (if one exists) into a string
 // It will still need to be parsed as Object later
@@ -19,6 +20,7 @@ const parseBody = (req: IncomingMessage): Promise<string> => {
         resolv(body);
       });
     } catch (error) {
+      logger.debugError('parseBody', error);
       if (error instanceof Error) {
         reject(error.message);
       } else {

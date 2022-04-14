@@ -11,11 +11,11 @@ const isUser = (obj: unknown): obj is User => {
     ZodUser.parse(obj);
     return true;
   } catch (error) {
-    let message = 'parsing user failed';
+    let message = 'isUser() - parsing user failed';
     if (error instanceof Error) {
       message += `: ${error.message}`;
     }
-    logger.error(message);
+    logger.debug(message);
     return false;
   }
 };
@@ -46,11 +46,11 @@ const isPublicUser = (obj: unknown): obj is PublicUser => {
       return false;
     }
   } catch (error) {
-    let message = 'parsing user failed';
+    let message = 'isPublicUser() - parsing user failed';
     if (error instanceof Error) {
       message += `: ${error.message}`;
     }
-    logger.error(message);
+    logger.debug(message);
     return false;
   }
 };

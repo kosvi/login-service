@@ -4,7 +4,7 @@
 
 import { pool } from './db';
 import { Migration } from '../../types';
-import { logger } from '../logger';
+import { logger } from '../../utils/logger';
 
 export const runSingleMigration = async (sql: string): Promise<boolean> => {
   try {
@@ -22,7 +22,7 @@ export const runMigrations = async (migrations: Array<Migration>): Promise<boole
       'CREATE TABLE IF NOT EXISTS migration (id VARCHAR(50) PRIMARY KEY, created_on TIMESTAMP NOT NULL DEFAULT current_timestamp);'
     );
   } catch (error) {
-    logger.logError(error);
+    logger.debugError('runMigrations()', error);
     return false;
   }
   // next run all migrations
@@ -47,7 +47,7 @@ export const runMigrations = async (migrations: Array<Migration>): Promise<boole
       }
     }
   } catch (error) {
-    logger.logError(error);
+    logger.debugError('runMigrations()', error);
     return false;
   }
   return true;

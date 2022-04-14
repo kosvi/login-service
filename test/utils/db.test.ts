@@ -5,7 +5,7 @@
  */
 
 import { Pool } from 'pg';
-import { db } from '../../src/utils/db';
+import { db } from '../../src/services/database';
 
 // mock pg / pool.query 
 jest.mock('pg', () => {

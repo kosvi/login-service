@@ -5,26 +5,33 @@
 
 import { NODE_ENV } from './config';
 
+const handleLine = (type: string, line: string) => {
+  const date = new Date();
+  const fullLine = `${date.toISOString()} - ${type} - ${line}`;
+  // eslint-disable-next-line no-console
+  console.log(fullLine);
+};
+
 const log = (line: string) => {
-  if (NODE_ENV === 'dev') {
-    // eslint-disable-next-line no-console
-    console.log(line);
-  }
+  handleLine('LOG', line);
 };
 
 const error = (line: string) => {
+  handleLine('ERROR', line);
+};
+
+const debug = (line: string) => {
   if (NODE_ENV === 'dev') {
-    // eslint-disable-next-line no-console
-    console.error(line);
+    handleLine('DEBUG', line);
   }
 };
 
-const logError = (err: unknown) => {
-  if (err instanceof Error) {
-    error(`${err.name}: ${err.message}`);
+const debugError = (source: string, err: unknown) => {
+  if (NODE_ENV === 'dev' && err instanceof Error) {
+    debug(`${source} - ${err.name}: ${err.message}`);
   }
 };
 
 export const logger = {
-  log, error, logError
+  log, error, debug, debugError
 };

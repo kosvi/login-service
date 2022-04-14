@@ -4,8 +4,9 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { PublicUser, User } from '../types';
-import { db } from '../utils/db';
+import { db } from './database';
 import { validators } from '../utils/validators';
+import { logger } from '../utils/logger';
 
 const hashPassword = (password: string): string => {
   return password.split('').reverse().join('');
@@ -28,11 +29,14 @@ const addUser = async (username: string, password: string, name: string, email: 
   if (validators.isUser(newUser)) {
     const success: boolean = await db.addUser(newUser);
     if (success) {
+      logger.log('userService - addUser(): new user created');
       return validators.userToPublicUser(newUser);
     } else {
+      logger.error('userService - addUser(): database error');
       throw new Error('database error');
     }
   } else {
+    logger.debug(`userService - addUser(): invalid user (${validators.userFailure(newUser)})`);
     throw new Error(validators.userFailure(newUser));
   }
 };

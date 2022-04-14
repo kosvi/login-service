@@ -9,7 +9,7 @@ import { ErrorController, HelloController, ProfileController } from './controlle
 import { ControllerError } from './utils/customErrors';
 
 // Database stuff
-import { db } from './utils/db';
+import { db } from './services/database';
 import { migrations } from './migrations/migrations';
 
 // Import createServer so we can start taking in requests
@@ -19,12 +19,17 @@ import { createServer as HttpCreateServer } from 'http';
  * Create server and direct requests to correct Controllers
  */
 const server = HttpCreateServer((request, res) => {
+
   // This will allow us to use async - await here
   void (async () => {
+
     // let's parse the request
     const req = await requestHandlers.parseRequest(request);
+
     // we will initiate controller with correct Controller class depending on the requested URL
     let controller: Controller | undefined;
+
+    logger.log(`${req.method} - ${req.url}`);
     if (req.url?.startsWith('/hello')) {
       controller = new HelloController();
     } else if (req.url?.startsWith('/profile')) {
@@ -33,11 +38,13 @@ const server = HttpCreateServer((request, res) => {
       // This is the default controller to handle unexpected requests
       controller = new ErrorController();
     }
+
     // if controller was initialized, we can use handleRequest to handle the request in correct way
     if (controller) {
+
       try {
         await controller.handleRequest(req, res);
-        logger.log(`${controller?.controllerName} handled the request`);
+        logger.debug(`${controller?.controllerName} handled the request`);
       } catch (error) {
         // if for some reason the handleRequest failed, we want to log it
         let message = `${controller?.controllerName} failed: `;
@@ -49,8 +56,11 @@ const server = HttpCreateServer((request, res) => {
           res.end(JSON.stringify({ error: error.message }));
         }
       }
+
     }
+
   })();
+
 });
 
 const start = async (): Promise<void> => {

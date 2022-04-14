@@ -5,8 +5,8 @@
 
 import { pool } from './db';
 import { PublicUser, User } from '../../types';
-import { logger } from '../logger';
-import { validators } from '../validators';
+import { logger } from '../../utils/logger';
+import { validators } from '../../utils/validators';
 
 export const addUser = async (user: User): Promise<boolean> => {
   // Not quite sure if we handle failures properly...
@@ -17,7 +17,7 @@ export const addUser = async (user: User): Promise<boolean> => {
     );
     return true;
   } catch (error) {
-    logger.logError(error);
+    logger.debugError('db.addUser()', error);
     return false;
   }
 };
@@ -30,7 +30,7 @@ export const getUser = async (username: string): Promise<PublicUser | undefined>
     }
     return undefined;
   } catch (error) {
-    logger.logError(error);
+    logger.debugError('db.getUser()', error);
     return undefined;
   }
 };
@@ -44,7 +44,7 @@ export const getUserByCreds = async (username: string, passwordHash: string): Pr
     }
     return undefined;
   } catch (error) {
-    logger.logError(error);
+    logger.debugError('db.getUserByCreds', error);
     return undefined;
   }
 };
