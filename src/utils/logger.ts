@@ -6,6 +6,9 @@
 import { NODE_ENV } from './config';
 
 const handleLine = (type: string, line: string) => {
+  if (NODE_ENV === 'test') {
+    return;
+  }
   const date = new Date();
   const fullLine = `${date.toISOString()} - ${type} - ${line}`;
   // eslint-disable-next-line no-console

@@ -79,6 +79,17 @@ describe('database migration tests', () => {
     ]);
   });
 
+});
+
+describe('users tests', () => {
+
+  // this is our pool for the tests
+  const pool: Pool = new Pool();
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should SELECT users without password', async () => {
     // mock query results
     (pool.query as jest.Mock).mockResolvedValue({ rows: [{}], rowCount: 1 });

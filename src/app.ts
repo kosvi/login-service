@@ -1,5 +1,5 @@
 // import utilities and CONSTANTS
-import { NODE_ENV, PORT } from './utils/config';
+import { NODE_ENV } from './utils/config';
 import { logger } from './utils/logger';
 import { requestHandlers } from './utils/requestHandlers';
 
@@ -8,17 +8,13 @@ import { Controller } from './types';
 import { ErrorController, HelloController, ProfileController } from './controllers';
 import { ControllerError } from './utils/customErrors';
 
-// Database stuff
-import { db } from './services/database';
-import { migrations } from './migrations/migrations';
-
 // Import createServer so we can start taking in requests
-import { createServer as HttpCreateServer } from 'http';
+import { IncomingMessage, ServerResponse } from 'http';
 
 /*
- * Create server and direct requests to correct Controllers
+ * Create app and direct requests to correct Controllers
  */
-const server = HttpCreateServer((request, res) => {
+export const app = (request: IncomingMessage, res: ServerResponse) => {
 
   // This will allow us to use async - await here
   void (async () => {
@@ -54,7 +50,7 @@ const server = HttpCreateServer((request, res) => {
 
         // if we are in dev-mode, let's print stack trace
         if (NODE_ENV === 'dev' && error instanceof Error && error.stack) {
-          res.end(`<code>${error.stack}</code>`);
+          res.end(`${error.stack}`);
           return;
         }
 
@@ -73,19 +69,4 @@ const server = HttpCreateServer((request, res) => {
 
   })();
 
-});
-
-const start = async (): Promise<void> => {
-  // run database migrations
-  if (!(await db.runMigrations(migrations))) {
-    // migrations failed
-    logger.error('Database migrations failed, exiting...');
-    process.exit(1);
-  }
-  // Start server
-  server.listen(PORT, () => {
-    logger.log(`server started on port ${PORT}`);
-  });
 };
-
-void start();

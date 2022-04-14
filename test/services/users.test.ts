@@ -69,7 +69,7 @@ describe('users service tests', () => {
       stealth: false,
       created_on: '2022-04-09T17:27:38.378Z'
     };
-    // mock database query result
+    // mock database query result, the query used is tested in database-services unit-tests
     (pool.query as jest.Mock).mockResolvedValueOnce({
       rows: [user],
       rowCount: 1

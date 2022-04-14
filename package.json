@@ -2,12 +2,12 @@
   "name": "login-service",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --verbose --runInBand",
     "test:watch": "NODE_ENV=test jest --watch --runInBand",
     "build": "npx tsc",
-    "dev": "NODE_ENV=dev ts-node-dev src/app.ts",
+    "dev": "NODE_ENV=dev ts-node-dev src/index.ts",
     "lint": "eslint --ext .ts ."
   },
   "repository": {
