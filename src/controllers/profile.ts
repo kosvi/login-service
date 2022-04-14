@@ -1,5 +1,6 @@
 import { profileService } from '../services';
 import { Controller, HttpRequest, HttpResponse } from '../types';
+import { NODE_ENV } from '../utils/config';
 import { ControllerError } from '../utils/customErrors';
 import { responseHandlers } from '../utils/responseHandlers';
 
@@ -21,6 +22,9 @@ export class ProfileController implements Controller {
       responseHandlers.setStatus(200, res);
       res.end(content);
     } catch (error) {
+      if (NODE_ENV === 'dev') {
+        throw error;
+      }
       throw new ControllerError(500, 'server is missing a file');
     }
   }

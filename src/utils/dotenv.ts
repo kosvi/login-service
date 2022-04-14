@@ -8,7 +8,6 @@
 
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
-// import { logger } from './logger';
 
 const parseLine = (variableObj: Record<string, string>, line: string): Record<string, string> => {
   // let's make sure we have a name for the variable
