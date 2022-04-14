@@ -5,10 +5,13 @@
 - [Repository structure](#repository-structure)
 - [Database](#database)
 - [Environmental variables](#environmental-variables)
+- [Security](#security)
 
 ## Project description
 
 This project is supposed to simply provide authentication service and provide JSONWebTokens for authenticated clients. 
+
+![login-service](/docs/login-service.svg)
 
 ## Used technologies
 
@@ -59,3 +62,13 @@ App has following environmental variables and they can be set in `.env`.
 |NODE_ENV     |informs the server about the enviroment it's currently running | no | production |
 |DATABASE_URL | tell where to find database | **yes** | postgres://user:password@localhost:port/db |
 |PORT         | set the port the server listens on | no | 3000 |
+
+## Security
+
+Basics:
+- Passwords are hashed using bcrypt.
+- Passwords are NEVER queried from database! (will not accidentally leak from api)
+- All requests are logged, all database interactions are logged. 
+
+**Brute force** \
+This is an issue that needs to be solved. Possible solution is adding delay when suspecting abuse and finally stop responding for a period of time. 
