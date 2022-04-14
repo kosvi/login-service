@@ -36,11 +36,9 @@ const parseEnv = (content: string): Record<string, string> => {
 const initializeEnv = () => {
   const file = path.join(process.cwd(), '.env');
   if (!existsSync(file)) {
-    // logger.debug(`dotenv - no env to read from ${file}`);
     return;
   }
   const content = readFileSync(file, { encoding: 'utf-8' });
-  // logger.debug(`dotenv - env parsed from ${file}`);
   const envAdditions = parseEnv(content);
   // variables set in .env -file will be overwritten by those already in process.env
   process.env = {

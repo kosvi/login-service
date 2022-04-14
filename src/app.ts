@@ -1,7 +1,7 @@
 // import utilities and CONSTANTS
+import { NODE_ENV, PORT } from './utils/config';
 import { logger } from './utils/logger';
 import { requestHandlers } from './utils/requestHandlers';
-import { NODE_ENV, PORT } from './utils/config';
 
 // Import controllers
 import { Controller } from './types';
