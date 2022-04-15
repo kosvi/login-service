@@ -69,6 +69,7 @@ Basics:
 - Passwords are hashed using bcrypt.
 - Passwords are NEVER queried from database! (will not accidentally leak from api)
 - All requests are logged, all database interactions are logged. 
+- Requirements for passwords can be set via settings. 
 
 **Brute force** \
 This is an issue that needs to be solved. Possible solution is adding delay when suspecting abuse and finally stop responding for a period of time. 
