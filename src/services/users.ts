@@ -7,6 +7,8 @@ import { PublicUser, User } from '../types';
 import { db } from './database';
 import { validators } from '../utils/validators';
 import { logger } from '../utils/logger';
+import { PASSWORD_REQUIREMENTS } from '../utils/config';
+import { mostCommonPasswords } from '../data/mostCommonPasswords';
 
 const hashPassword = (password: string): string => {
   return password.split('').reverse().join('');
@@ -24,6 +26,10 @@ const addUser = async (username: string, password: string, name: string, email: 
     locked: false,
     stealth: true
   };
+  // check to make sure password is strong enough
+  if (!isValidPassword(password, newUser)) {
+    throw new Error('password not strong enough');
+  }
   // if user is valid, store to database and return public version of the user
   // otherwise just throw error and tell where we failed to match requirements for the new user
   if (validators.isUser(newUser)) {
@@ -49,6 +55,43 @@ const findByUsername = async (username: string): Promise<PublicUser | undefined>
 const findByUsernameAndPassword = async (username: string, password: string): Promise<PublicUser | undefined> => {
   const user: PublicUser | undefined = await db.getUserByCreds(username, hashPassword(password));
   return user;
+};
+
+const isValidPassword = (password: string, user: User): boolean => {
+  if (PASSWORD_REQUIREMENTS.MIN_LENGTH > password.length) {
+    return false;
+  }
+  if (PASSWORD_REQUIREMENTS.BOTH_CASES) {
+    if (password === password.toLowerCase() || password === password.toUpperCase()) {
+      return false;
+    }
+  }
+  if (PASSWORD_REQUIREMENTS.SPECIAL_CHARACTER) {
+    if (!(PASSWORD_REQUIREMENTS.VALID_SPECIAL_CHARACTERS_REGEX.test(password))) {
+      return false;
+    }
+  }
+  if (PASSWORD_REQUIREMENTS.NO_EASY) {
+    // first check if password contains name, username or email or similar
+    if (password.toLowerCase().includes(user.username) || user.email.includes(password.toLowerCase())) {
+      return false;
+    }
+    let easy = false;
+    user.name.split(' ').forEach(name => {
+      // 3 is just not fail from names like "Da Silva" or "Von Essen" if password contains "da" or "von"
+      if (name.length > 3 && password.toLowerCase().includes(name.toLowerCase())) {
+        easy = true;
+      }
+    });
+    if (easy) {
+      return false;
+    }
+    // next check for most common password
+    if (mostCommonPasswords.includes(password.toLowerCase())) {
+      return false;
+    }
+  }
+  return true;
 };
 
 export const userService = {

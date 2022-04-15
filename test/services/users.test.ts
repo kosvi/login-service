@@ -34,18 +34,18 @@ describe('users service tests', () => {
   it('should allow storing a user', async () => {
     // mock database query result
     (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{}], rowCount: 1 });
-    const newUser = await userService.addUser('username', 'password', 'full name', 'user@example.com');
+    const newUser = await userService.addUser('username', 'ExtraDifficultPassw0rd!', 'full name', 'user@example.com');
     expect(validators.isPublicUser(newUser)).toBe(true);
     // check that pool.query was called with correct params
     expect(pool.query).toHaveBeenCalledTimes(1);
     expect(pool.query).toHaveBeenCalledWith('INSERT INTO users (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
-      ['af3b325f-06f0-4b25-9fb8-27b07a55cd14', 'username', userService.hashPassword('password'), 'full name', 'user@example.com']);
+      ['af3b325f-06f0-4b25-9fb8-27b07a55cd14', 'username', userService.hashPassword('ExtraDifficultPassw0rd!'), 'full name', 'user@example.com']);
   });
 
   it('should fail to store invalid user', async () => {
     // we will give invalid email-address
     try {
-      await userService.addUser('username', 'password', 'full name', 'invalid email');
+      await userService.addUser('username', 'ExtraDifficultPassw0rd!', 'full name', 'invalid email');
       // addUser should fail, below line should never be run
       expect('').toBe('never end up here!');
     } catch (error) {
@@ -84,3 +84,31 @@ describe('users service tests', () => {
     }
   });
 });
+
+/*
+describe('test password validity checker', () => {
+  it('shouldn\'t allow too easy passwords', () => {
+    // short but contains lowercase, uppercase, letters, numbers and special char
+    const tooShort = 'IamT00S!';
+    // all lowercase
+    const allLowerCase = 'iamalll0wercase!';
+    // all UPPERCASE
+    const allUpperCase = allLowerCase.toUpperCase();
+    // no numbers
+    const onlyLetters = 'IhaveOnlyLetters!';
+    // contains only numbers
+    const onlyNumbers = '1!2.3!4,567890';
+    // contains username
+    const includesUsername = 'Iamusername1cluded!';
+    // contains first name
+    const includesFirstname = 'Iamfull1cluded!';
+    expect(async () => { await userService.addUser('username', tooShort, 'Full Name', 'user@example.com'); }).toThrow(Error);
+    expect(async () => { await userService.addUser('username', allLowerCase, 'Full Name', 'user@example.com'); }).toThrow(Error);
+    expect(async () => { await userService.addUser('username', allUpperCase, 'Full Name', 'user@example.com'); }).toThrow(Error);
+    expect(async () => { await userService.addUser('username', onlyLetters, 'Full Name', 'user@example.com'); }).toThrow(Error);
+    expect(async () => { await userService.addUser('username', onlyNumbers, 'Full Name', 'user@example.com'); }).toThrow(Error);
+    expect(async () => { await userService.addUser('username', includesUsername, 'Full Name', 'user@example.com'); }).toThrow(Error);
+    expect(async () => { await userService.addUser('username', includesFirstname, 'Full Name', 'user@example.com'); }).toThrow(Error);
+  });
+});
+*/

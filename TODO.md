@@ -7,3 +7,10 @@ TODO:
 - test that they work!
 - write api-documentation / plan api
 - implement the documented / planned api
+
+
+Current task:
+- fix tests for password validity testing
+- make sure username does not contain anything but a-z0-9 (no spaces!)
+- make tests for username validity!
+- document env variables to README
