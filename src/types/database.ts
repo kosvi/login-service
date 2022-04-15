@@ -22,7 +22,7 @@ export const ZodUser = z.object({
   // username
   username: z.string({
     required_error: 'username is required'
-  }).min(USER_CONSTANTS.USERNAME_MIN_LENGTH),
+  }).min(USER_CONSTANTS.USERNAME_MIN_LENGTH).regex(/^[a-z0-9]+$/, 'username must contain only letters and numbers'),
   // password
   password: z.string({
     required_error: 'password is required'

@@ -18,10 +18,10 @@ const addUser = async (username: string, password: string, name: string, email: 
   // Create user from parameters
   const newUser: User = {
     uid: uuidv4(),
-    username: username,
+    username: username.toLowerCase(),
     password: hashPassword(password),
     name: name,
-    email: email,
+    email: email.toLowerCase(),
     admin: false,
     locked: false,
     stealth: true
