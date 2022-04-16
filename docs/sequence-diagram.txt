@@ -1,0 +1,14 @@
+title login-service
+
+User->Website: User wants to access website
+User<--Website: Asks user to login
+User->login-service:Sends username & password
+User<--login-service: Sends token as response
+note over User, login-service: Response body from login-service: { token: <token>, content: { <token-content> }
+User->Website: Sends the token to website
+Website->login-service: Sends token to login-service
+Website<--login-service: Sends content of token as response
+User<--Website: Sends it's own token that is used during visit
+User->Website: Send request with token signed by Website
+User<--Website: Sends response
+note over User, Website: no more requests to login-service unless new authentication needed

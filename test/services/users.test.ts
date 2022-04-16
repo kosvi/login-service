@@ -5,6 +5,7 @@ import { PublicUser } from '../../src/types';
 // these are needed for mocking
 import { v4 as uuidv4 } from 'uuid';
 import { Pool } from 'pg';
+import { verifyAsyncThrows } from '../utils/helperFunctions';
 
 // mock pg / pool.query 
 jest.mock('pg', () => {
@@ -83,32 +84,74 @@ describe('users service tests', () => {
       expect('').toBe('user validation failed');
     }
   });
-});
 
-/*
-describe('test password validity checker', () => {
-  it('shouldn\'t allow too easy passwords', () => {
+  it('shouldn\'t allow too easy passwords', async () => {
+
+    // This is our helper to avoid writing same code over and over
+    const helper = async (password: string) => {
+      const result = await verifyAsyncThrows<PublicUser>(userService.addUser('username', password, 'Full Name', 'user@example.com'), 'password not strong enough');
+      if (!result) {
+        expect('failed password was').toBe(password);
+      }
+      expect(result).toBe(true);
+    };
+
     // short but contains lowercase, uppercase, letters, numbers and special char
     const tooShort = 'IamT00S!';
+    await helper(tooShort);
     // all lowercase
     const allLowerCase = 'iamalll0wercase!';
+    await helper(allLowerCase);
     // all UPPERCASE
     const allUpperCase = allLowerCase.toUpperCase();
+    await helper(allUpperCase);
     // no numbers
-    const onlyLetters = 'IhaveOnlyLetters!';
+    const onlyLetters = 'IhaveOnlyLetters';
+    await helper(onlyLetters);
     // contains only numbers
     const onlyNumbers = '1!2.3!4,567890';
+    await helper(onlyNumbers);
     // contains username
     const includesUsername = 'Iamusername1cluded!';
+    await helper(includesUsername);
     // contains first name
     const includesFirstname = 'Iamfull1cluded!';
-    expect(async () => { await userService.addUser('username', tooShort, 'Full Name', 'user@example.com'); }).toThrow(Error);
-    expect(async () => { await userService.addUser('username', allLowerCase, 'Full Name', 'user@example.com'); }).toThrow(Error);
-    expect(async () => { await userService.addUser('username', allUpperCase, 'Full Name', 'user@example.com'); }).toThrow(Error);
-    expect(async () => { await userService.addUser('username', onlyLetters, 'Full Name', 'user@example.com'); }).toThrow(Error);
-    expect(async () => { await userService.addUser('username', onlyNumbers, 'Full Name', 'user@example.com'); }).toThrow(Error);
-    expect(async () => { await userService.addUser('username', includesUsername, 'Full Name', 'user@example.com'); }).toThrow(Error);
-    expect(async () => { await userService.addUser('username', includesFirstname, 'Full Name', 'user@example.com'); }).toThrow(Error);
+    await helper(includesFirstname);
+    // is in the list of most common
+    const mostCommon = 'testpasswordW1th!';
+    await helper(mostCommon);
   });
+
+  it('username can only contain letters and numbers', async () => {
+    const helper = async (username: string) => {
+      const result = await verifyAsyncThrows<PublicUser>(userService.addUser(username, 'val1dPassword!!!', 'Full name', 'user@example.com'), 'username must contain only letters and numbers');
+      if (!result) {
+        expect('failed username was').toBe(username);
+      }
+      expect(result).toBe(true);
+    };
+
+    // contains empty space
+    const emptySpace = 'user name';
+    await helper(emptySpace);
+    // contains underscore
+    const underscore = 'user_name';
+    await helper(underscore);
+    // contains minus
+    const minus = 'user-name';
+    await helper(minus);
+    // contains questionmark
+    const qmark = 'username?';
+    await helper(qmark);
+
+    // valid username can contain numbers
+    const validUsername = 'Username12';
+    // mock database query result
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{}], rowCount: 1 });
+    const newUser = await userService.addUser(validUsername, 'val1dPassword!!!', 'Full Name', 'user@example.com');
+    expect(validators.isPublicUser(newUser)).toBe(true);
+    // username should be all lowercase
+    expect(newUser.username).toBe(validUsername.toLowerCase());
+  });
+
 });
-*/

@@ -58,3 +58,18 @@ export const verify404isReturned = async (req: HttpRequest, res: HttpResponse, c
     }
   }
 };
+
+/*
+ * This helper return true if promise is rejected and error message equals 'message',
+ * else false is returned
+ */
+export async function verifyAsyncThrows<T>(promise: Promise<T>, message: string): Promise<boolean> {
+  try {
+    await promise;
+  } catch (error) {
+    if (error instanceof Error && error.message === message) {
+      return true;
+    }
+  }
+  return false;
+}

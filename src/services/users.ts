@@ -87,8 +87,10 @@ const isValidPassword = (password: string, user: User): boolean => {
       return false;
     }
     // next check for most common password
-    if (mostCommonPasswords.includes(password.toLowerCase())) {
-      return false;
+    for (let i = 0; i < mostCommonPasswords.length; i++) {
+      if (mostCommonPasswords[i].toLowerCase() === password.toLowerCase()) {
+        return false;
+      }
     }
   }
   return true;

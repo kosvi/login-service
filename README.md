@@ -11,7 +11,7 @@
 
 This project is supposed to simply provide authentication service and provide JSONWebTokens for authenticated clients. 
 
-![login-service](/docs/login-service.svg)
+![Sequence diagram](/docs/sequence-diagram.svg)
 
 ## Used technologies
 
@@ -62,6 +62,14 @@ App has following environmental variables and they can be set in `.env`.
 |NODE_ENV     |informs the server about the enviroment it's currently running | no | production |
 |DATABASE_URL | tell where to find database | **yes** | postgres://user:password@localhost:port/db |
 |PORT         | set the port the server listens on | no | 3000 |
+
+**Password settings**
+|variable name| description | value type | default value |
+|-------------|-------------|------------|---------------|
+|PASSWORD_MIN_LENGTH| sets the minimum length required from a password | int | 10 |
+|PASSWORD_REQUIRE_BOTH_CASES | sets the requirement for passwords to contain at least one lowercase and uppercase letter | boolean | true |
+|PASSWORD_REQUIRE_SPECIAL_CHARACTER | sets the requirement for password to contain special character | boolean | true |
+|PASSWORD_REQUIRE_NO_EASY | checks passwords against the list of most common passwords (by OWASP) | boolean | true |
 
 ## Security
 
