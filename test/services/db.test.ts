@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/unbound-method */
 /*
  * Test migration function and other database functions

@@ -2,10 +2,10 @@
 import { validators } from '../../src/utils/validators';
 import { userService } from '../../src/services';
 import { PublicUser } from '../../src/types';
+import { verifyAsyncThrows } from '../utils/helperFunctions';
 // these are needed for mocking
 import { v4 as uuidv4 } from 'uuid';
 import { Pool } from 'pg';
-import { verifyAsyncThrows } from '../utils/helperFunctions';
 
 // mock pg / pool.query 
 jest.mock('pg', () => {
