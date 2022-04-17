@@ -30,7 +30,8 @@ POST / PUT (*) `/user/save`
   "username": "<username>",
   "password": "<password>",
   "name": "<full name>",
-  "email": "<email>"
+  "email": "<email>",
+  "stealth"?: boolean
 }
 ```
 
@@ -49,6 +50,7 @@ Status 201
 }
 ```
 (*) POST creates a new user on server, PUT updates existing user
+? = this is required only on PUT-request
 
 ### user password
 

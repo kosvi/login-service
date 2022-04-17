@@ -2,9 +2,9 @@ import { readFileSync } from 'fs';
 import { logger } from '../utils/logger';
 import path from 'path';
 
-const getPageContent = async (): Promise<string> => {
+const getContentOf = async (filename: string): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const file = path.join(process.cwd(), 'static/ui.html');
+    const file = path.join(process.cwd(), `static/${filename}`);
     try {
       const pageContent = readFileSync(file, 'utf-8');
       resolve(pageContent.toString());
@@ -15,6 +15,10 @@ const getPageContent = async (): Promise<string> => {
   });
 };
 
-export const profileService = {
-  getPageContent
+const getUI = async (): Promise<string> => {
+  return getContentOf('ui.html');
+};
+
+export const staticService = {
+  getContentOf, getUI
 };

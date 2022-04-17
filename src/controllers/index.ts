@@ -1,3 +1,3 @@
 export * from './error';
 export * from './hello';
-export * from './profile';
+export * from './static';

@@ -5,7 +5,7 @@ import { requestHandlers } from './utils/requestHandlers';
 
 // Import controllers
 import { Controller } from './types';
-import { ErrorController, HelloController, ProfileController } from './controllers';
+import { ErrorController, HelloController, StaticController } from './controllers';
 import { ControllerError } from './utils/customErrors';
 
 // Import createServer so we can start taking in requests
@@ -28,8 +28,8 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
     logger.log(`${req.method} - ${req.url}`);
     if (req.url?.startsWith('/hello')) {
       controller = new HelloController();
-    } else if (req.url?.startsWith('/profile')) {
-      controller = new ProfileController();
+    } else if (req.url?.startsWith('/static')) {
+      controller = new StaticController();
     } else {
       // This is the default controller to handle unexpected requests
       controller = new ErrorController();
