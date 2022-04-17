@@ -21,3 +21,5 @@ export const PASSWORD_REQUIREMENTS = {
   VALID_SPECIAL_CHARACTERS_REGEX: /['@#$%&_;:,.!?()]/,
   NO_EASY: process.env.PASSWORD_REQUIRE_NO_EASY || true
 };
+// token lifetime is set in minutes
+export const TOKEN_EXPIRE_TIME = process.env.TOKEN_EXPIRE_TIME || '5';
