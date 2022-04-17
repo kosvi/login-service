@@ -1,5 +1,5 @@
-import { ControllerError } from '../../src/utils/customErrors';
-import { ErrorController } from '../../src/controllers';
+import { ControllerError } from '../../../src/utils/customErrors';
+import { ErrorController } from '../../../src/controllers';
 import { mockResponse } from '../utils/mockers';
 
 describe('ErrorController tests', () => {

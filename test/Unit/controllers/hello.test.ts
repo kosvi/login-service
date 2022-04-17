@@ -1,5 +1,5 @@
-import { Controller, HttpRequest, HttpResponse } from '../../src/types';
-import { HelloController } from '../../src/controllers';
+import { Controller, HttpRequest, HttpResponse } from '../../../src/types';
+import { HelloController } from '../../../src/controllers';
 import { mockResponse } from '../utils/mockers';
 import { verify200isReturned, verify404isReturned } from '../utils/helperFunctions';
 

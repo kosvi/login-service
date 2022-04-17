@@ -1,6 +1,6 @@
-import { PublicUser, User } from '../../src/types';
+import { PublicUser, User } from '../../../src/types';
 import { v4 as uuidv4 } from 'uuid';
-import { validators } from '../../src/utils/validators';
+import { validators } from '../../../src/utils/validators';
 
 const validPublicUser: PublicUser = {
   username: 'username',

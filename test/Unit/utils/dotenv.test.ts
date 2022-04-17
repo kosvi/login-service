@@ -1,4 +1,4 @@
-import { dotenv } from '../../src/utils/dotenv';
+import { dotenv } from '../../../src/utils/dotenv';
 import fs from 'fs';
 
 // mock readFileSync

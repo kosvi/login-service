@@ -1,4 +1,4 @@
-import { HttpResponse } from '../../src/types';
+import { HttpResponse } from '../../../src/types';
 
 export const mockResponse = (): HttpResponse => {
   const res = {

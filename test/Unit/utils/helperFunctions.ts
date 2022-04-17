@@ -2,8 +2,8 @@
  * These are helpers to avoid writing same code over and over again
  */
 
-import { Controller, HttpRequest, HttpResponse } from '../../src/types';
-import { ControllerError } from '../../src/utils/customErrors';
+import { Controller, HttpRequest, HttpResponse } from '../../../src/types';
+import { ControllerError } from '../../../src/utils/customErrors';
 
 /*
  * Here is the helpers for testing if our controller has 
