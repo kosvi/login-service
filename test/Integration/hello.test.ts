@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 import { app } from '../../src/app';
-// import { db } from '../src/services/database';
 
 const api = supertest(app);
 
