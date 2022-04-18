@@ -35,7 +35,8 @@ const parseRequest = async (req: IncomingMessage): Promise<HttpRequest> => {
   return {
     url: req.url,
     method: req.method,
-    body: body
+    body: body,
+    headers: req.headers
   };
 };
 

@@ -30,13 +30,13 @@ describe('StaticController tests', () => {
     // mock readFileSync result
     (fs.readFileSync as jest.Mock).mockReturnValueOnce('file content');
     // and the actual test
-    req = { url: '/static', method: 'GET' };
+    req = { url: '/static', method: 'GET', headers: {} };
     await controller.handleRequest(req, res);
     verify200isReturned(req, res, 'text/html', 'file content');
   });
 
   it('should return 404 with any other path', async () => {
-    req = { url: '/static/some-other-path', method: 'GET' };
+    req = { url: '/static/some-other-path', method: 'GET', headers: {} };
     await verify404isReturned(req, res, controller);
   });
 

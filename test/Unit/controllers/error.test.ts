@@ -1,11 +1,12 @@
 import { ControllerError } from '../../../src/utils/customErrors';
 import { ErrorController } from '../../../src/controllers';
 import { mockResponse } from '../utils/mockers';
+import { HttpRequest } from '../../../src/types';
 
 describe('ErrorController tests', () => {
   it('should always throw ControllerError', async () => {
     const c = new ErrorController();
-    const req = { url: '/', method: 'GET' };
+    const req: HttpRequest = { url: '/', method: 'GET', headers: {} };
     const res = mockResponse();
     let success = false;
     try {

@@ -2,17 +2,22 @@ import { OutgoingHttpHeaders, OutgoingHttpHeader } from 'http';
 
 /* List of allowed status codes */
 
-export type StatusCode = 200 | 404 | 500;
+export type StatusCode = 200 | 400 | 401 | 404 | 500;
 
 /*
  * These are our custom stripped down request and response objects
  * It will make testing easier, since no non-needed garbage is carried around
  */
 
+interface RequestHeaders {
+  host?: string
+}
+
 export interface HttpRequest {
   url?: string,
   method?: string,
-  body?: string
+  body?: string,
+  headers: RequestHeaders
 }
 
 export interface HttpResponse {

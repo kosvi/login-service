@@ -20,6 +20,6 @@ export const migrations: Array<Migration> = [
   {
     id: 'add_admin_account',
     sql: `INSERT INTO account (uid, username, password, name, email, admin) \
-    VALUES ('${uuidv4()}', 'admin', '${userService.hashPassword('password')}', 'Admin Account', 'admin@example.com', TRUE);`
+    VALUES ('${uuidv4()}', 'admin', '${userService.hashPassword('Password!')}', 'Admin Account', 'admin@example.com', TRUE);`
   }
 ];

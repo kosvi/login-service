@@ -12,7 +12,7 @@ export const addUser = async (user: User): Promise<boolean> => {
   // Not quite sure if we handle failures properly...
   try {
     await pool.query(
-      'INSERT INTO users (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
+      'INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
       [user.uid, user.username, user.password, user.name, user.email]
     );
     return true;
@@ -24,7 +24,7 @@ export const addUser = async (user: User): Promise<boolean> => {
 
 export const getUser = async (username: string): Promise<PublicUser | undefined> => {
   try {
-    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, created_on FROM users WHERE username = $1', [username]);
+    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, created_on FROM account WHERE username = $1', [username]);
     if (result.rowCount === 1 && validators.isPublicUser(result.rows[0])) {
       return result.rows[0];
     }
@@ -37,7 +37,7 @@ export const getUser = async (username: string): Promise<PublicUser | undefined>
 
 export const getUserByCreds = async (username: string, passwordHash: string): Promise<PublicUser | undefined> => {
   try {
-    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, created_on FROM users WHERE usename = $1 AND password = $2',
+    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, created_on FROM account WHERE username = $1 AND password = $2',
       [username, passwordHash]);
     if (result.rowCount === 1 && validators.isPublicUser(result.rows[0])) {
       return result.rows[0];

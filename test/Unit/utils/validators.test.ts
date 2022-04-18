@@ -1,25 +1,13 @@
-import { PublicUser, User } from '../../../src/types';
+import { User } from '../../../src/types';
 import { v4 as uuidv4 } from 'uuid';
 import { validators } from '../../../src/utils/validators';
-
-const validPublicUser: PublicUser = {
-  username: 'username',
-  name: 'full name',
-  email: 'user@example.com',
-  admin: false,
-  locked: false,
-  stealth: false
-};
-const validUser: User = {
-  ...validPublicUser,
-  password: 'this-is-some-hashed-string',
-};
+import { testData } from './helperData';
 
 
 describe('validator tests', () => {
 
   it('should validate valid Users', () => {
-    const validUserWithoutUid: User = validUser;
+    const validUserWithoutUid: User = testData.validUser;
     expect(validators.isUser(validUserWithoutUid)).toBe(true);
     const validUserWithUid: User = {
       ...validUserWithoutUid,
@@ -29,7 +17,7 @@ describe('validator tests', () => {
   });
 
   it('shouldn\'t validate invalid Users', () => {
-    const invalidUserWithoutPassword: Omit<User, 'password'> = validPublicUser;
+    const invalidUserWithoutPassword: Omit<User, 'password'> = testData.validPublicUser;
     expect(validators.isUser(invalidUserWithoutPassword)).toBe(false);
     expect(validators.userFailure(invalidUserWithoutPassword)).toBe('password is required');
     const invalidUserWithEmptyPassword: User = {
@@ -48,29 +36,21 @@ describe('validator tests', () => {
   });
 
   it('shouldn\'t validate user with password as public user', () => {
-    expect(validators.isPublicUser(validUser)).toBe(false);
+    expect(validators.isPublicUser(testData.validUser)).toBe(false);
   });
 
   // This is important so that our API will not accidentally leak more information then it's supposed to!
   it('shouldn\'t validate users with extra attributes as valid', () => {
     const userWithExtras = {
-      ...validUser,
+      ...testData.validUser,
       extraProperty: 'extra value'
     };
     expect(validators.isUser(userWithExtras)).toBe(false);
     const publicUserWithExtras = {
-      ...validPublicUser,
+      ...testData.validPublicUser,
       extraProperty: 'extra value'
     };
     expect(validators.isPublicUser(publicUserWithExtras)).toBe(false);
-  });
-
-  it('should be able to make publicUser from User', () => {
-    expect(validators.isPublicUser(validUser)).toBe(false);
-    const newPublicUser = validators.userToPublicUser(validUser);
-    expect(validators.isPublicUser(newPublicUser)).toBe(true);
-    // newPublicUser should be exact the same as original, but only misses password
-    expect({ ...newPublicUser, password: validUser.password }).toEqual(validUser);
   });
 
 });

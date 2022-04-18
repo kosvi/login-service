@@ -39,7 +39,7 @@ describe('users service tests', () => {
     expect(validators.isPublicUser(newUser)).toBe(true);
     // check that pool.query was called with correct params
     expect(pool.query).toHaveBeenCalledTimes(1);
-    expect(pool.query).toHaveBeenCalledWith('INSERT INTO users (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
+    expect(pool.query).toHaveBeenCalledWith('INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
       ['af3b325f-06f0-4b25-9fb8-27b07a55cd14', 'username', userService.hashPassword('ExtraDifficultPassw0rd!'), 'full name', 'user@example.com']);
   });
 
@@ -68,7 +68,7 @@ describe('users service tests', () => {
       admin: false,
       locked: false,
       stealth: false,
-      created_on: '2022-04-09T17:27:38.378Z'
+      created_on: new Date()
     };
     // mock database query result, the query used is tested in database-services unit-tests
     (pool.query as jest.Mock).mockResolvedValueOnce({

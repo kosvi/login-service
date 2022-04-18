@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PublicUser, User } from '../types';
 import { db } from './database';
 import { validators } from '../utils/validators';
+import { converters } from '../utils/converters';
 import { logger } from '../utils/logger';
 import { PASSWORD_REQUIREMENTS } from '../utils/config';
 import { mostCommonPasswords } from '../data/mostCommonPasswords';
@@ -36,7 +37,7 @@ const addUser = async (username: string, password: string, name: string, email: 
     const success: boolean = await db.addUser(newUser);
     if (success) {
       logger.log('userService - addUser(): new user created');
-      return validators.userToPublicUser(newUser);
+      return converters.userToPublicUser(newUser);
     } else {
       logger.error('userService - addUser(): database error');
       throw new Error('database error');

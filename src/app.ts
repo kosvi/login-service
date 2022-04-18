@@ -1,5 +1,5 @@
 // import utilities and CONSTANTS
-import { NODE_ENV } from './utils/config';
+import { DEBUG_MODE, NODE_ENV } from './utils/config';
 import { logger } from './utils/logger';
 import { requestHandlers } from './utils/requestHandlers';
 
@@ -10,6 +10,7 @@ import { ControllerError } from './utils/customErrors';
 
 // Import createServer so we can start taking in requests
 import { IncomingMessage, ServerResponse } from 'http';
+import { LoginController } from './controllers/login';
 
 /*
  * Create app and direct requests to correct Controllers
@@ -30,6 +31,8 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
       controller = new HelloController();
     } else if (req.url?.startsWith('/static')) {
       controller = new StaticController();
+    } else if (req.url?.startsWith('/login')) {
+      controller = new LoginController();
     } else {
       // This is the default controller to handle unexpected requests
       controller = new ErrorController();
@@ -49,7 +52,7 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
         logger.error(message);
 
         // if we are in dev-mode, let's print stack trace
-        if (NODE_ENV === 'dev' && error instanceof Error && error.stack) {
+        if (DEBUG_MODE && NODE_ENV === 'dev' && error instanceof Error && error.stack) {
           res.end(`${error.stack}`);
           return;
         }

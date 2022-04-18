@@ -6,6 +6,16 @@ import { ZodError } from 'zod';
 import { PublicUser, User, ZodUser } from '../types';
 import { logger } from './logger';
 
+const isString = (text: unknown): text is string => {
+  if (text instanceof String) {
+    return true;
+  }
+  if (typeof text === 'string') {
+    return true;
+  }
+  return false;
+};
+
 const isUser = (obj: unknown): obj is User => {
   try {
     ZodUser.parse(obj);
@@ -55,12 +65,6 @@ const isPublicUser = (obj: unknown): obj is PublicUser => {
   }
 };
 
-const userToPublicUser = (user: User): PublicUser => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password, ...publicUser } = user;
-  return publicUser;
-};
-
 export const validators = {
-  isUser, userFailure, isPublicUser, userToPublicUser
+  isString, isUser, userFailure, isPublicUser
 };

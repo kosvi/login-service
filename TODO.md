@@ -14,3 +14,8 @@ Current task:
 - ~~make sure username does not contain anything but a-z0-9 (no spaces!)~~
 - ~~make tests for username validity!~~
 - ~~document env variables to README~~
+- write tests for number parser
+- implement JWT in login-controller
+- add bcrypt to password hasher
+- add (unit)tests to login controller! (mock user-service!)
+

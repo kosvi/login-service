@@ -65,6 +65,7 @@ App has following environmental variables and they can be set in `.env`.
 |variable name| description | required | default value |
 |-------------|-------------|----------|---------------|
 |NODE_ENV     |informs the server about the enviroment it's currently running | no | production |
+|DEBUG_MODE   | determines if stack traces are returned on error | no | false |
 |DATABASE_URL | tell where to find database | **yes** | postgres://user:password@localhost:port/db |
 |PORT         | set the port the server listens on | no | 3000 |
 |TOKEN_EXPIRE_TIME | tells how long the tokens are valid (in minutes) | no | 5 |

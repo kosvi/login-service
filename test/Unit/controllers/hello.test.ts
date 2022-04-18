@@ -16,13 +16,13 @@ describe('HelloController tests', () => {
   });
 
   it('should return 200 from GET to /hello', async () => {
-    req = { url: '/hello', method: 'GET' };
+    req = { url: '/hello', method: 'GET', headers: {} };
     await controller.handleRequest(req, res);
     verify200isReturned(req, res, 'application/json', JSON.stringify({ msg: 'Hello Api' }));
   });
 
   it('should return 404 with any other path', async () => {
-    req = { url: '/hello/world', method: 'GET' };
+    req = { url: '/hello/world', method: 'GET', headers: {} };
     await verify404isReturned(req, res, controller);
   });
 

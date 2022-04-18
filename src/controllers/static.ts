@@ -5,7 +5,8 @@ import { ControllerError } from '../utils/customErrors';
 import { responseHandlers } from '../utils/responseHandlers';
 
 export class StaticController implements Controller {
-  controllerName = 'ProfileController';
+
+  controllerName = 'StaticController';
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
     if (req.url === '/static' && req.method === 'GET') {
