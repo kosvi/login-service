@@ -3,12 +3,12 @@
  */
 
 import { ZodError } from 'zod';
-import { userService } from '../../services';
-import { Controller, HttpRequest, HttpResponse, PublicUser } from '../../types';
-import { ControllerError } from '../../utils/customErrors';
-import { logger } from '../../utils/logger';
-import { responseHandlers } from '../../utils/responseHandlers';
-import { createResponseFromPublicUser, LoginBody } from './helpers';
+import { userService } from '../services';
+import { Controller, HttpRequest, HttpResponse, PublicUser } from '../types';
+import { ControllerError } from '../utils/customErrors';
+import { logger } from '../utils/logger';
+import { responseHandlers } from '../utils/responseHandlers';
+import { loginService, LoginBody } from '../services';
 
 export class LoginController implements Controller {
 
@@ -35,7 +35,7 @@ export class LoginController implements Controller {
          * If user was fetched, create token and send response
          */
         responseHandlers.setHeaderJson(res);
-        res.end(JSON.stringify(createResponseFromPublicUser(user)));
+        res.end(JSON.stringify(loginService.createResponseFromPublicUser(user)));
       } else {
         /*
          * If user was not found, send 401

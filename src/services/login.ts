@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { PublicUser, TokenContent } from '../../types';
-import { TOKEN_EXPIRE_TIME } from '../../utils/config';
-import { ControllerError } from '../../utils/customErrors';
-import { parsers } from '../../utils/parsers';
-import { validators } from '../../utils/validators';
+import { sign } from 'jsonwebtoken';
+import { PublicUser, TokenContent } from '../types';
+import { SECRET, TOKEN_EXPIRE_TIME } from '../utils/config';
+import { parsers } from '../utils/parsers';
+import { validators } from '../utils/validators';
 
 export const LoginBody = z.object({
   username: z.string({ required_error: 'username is required' }).regex(/^[a-z0-9]+$/),
@@ -12,11 +12,12 @@ export const LoginBody = z.object({
 
 export type LoginBodyType = z.infer<typeof LoginBody>;
 
-export const createResponseFromPublicUser = (user: PublicUser): { token: string, content: TokenContent } => {
+const createResponseFromPublicUser = (user: PublicUser): { token: string, content: TokenContent } => {
 
   // handle content validity
   if (!validators.isString(user.uid)) {
-    throw new ControllerError(500, 'database request failed');
+    // ALL users in database MUST have UID
+    throw new Error('database request failed');
   }
 
   let privateContent: { name?: string, email?: string } = {};
@@ -28,11 +29,18 @@ export const createResponseFromPublicUser = (user: PublicUser): { token: string,
   }
   // create expiretime
   const currentTime = Math.floor(new Date().getTime() / 1000);
+  // create token content
   const content: TokenContent = {
     uid: user.uid,
     username: user.username,
     expires: (currentTime) + (parsers.parseNumber(TOKEN_EXPIRE_TIME) * 60),
     ...privateContent
   };
-  return { token: 'foobar', content: content };
+  // sign token
+  const token = sign(content, SECRET);
+  return { token: token, content: content };
+};
+
+export const loginService = {
+  createResponseFromPublicUser
 };

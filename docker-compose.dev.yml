@@ -20,6 +20,7 @@ services:
       DATABASE_URL: 'postgres://dev:password@login-db:5432/dev'
       NODE_ENV: 'dev'
       PORT: 3001
+      SECRET: 'secret'
     volumes:
       - ./:/usr/src/app
     ports:

@@ -15,7 +15,7 @@ Current task:
 - ~~make tests for username validity!~~
 - ~~document env variables to README~~
 - write tests for number parser
-- implement JWT in login-controller
+- ~~implement JWT in login-controller~~
 - add bcrypt to password hasher
 - add (unit)tests to login controller! (mock user-service!)
-
+- make some sense to NODE_ENV=dev and DEBUG env.-variables!
