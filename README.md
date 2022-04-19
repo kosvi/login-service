@@ -83,7 +83,6 @@ App has following environmental variables and they can be set in `.env`.
 
 Basics:
 - Passwords are hashed using bcrypt.
-- Passwords are NEVER queried from database! (will not accidentally leak from api)
 - All requests are logged, all database interactions are logged. 
 - Requirements for passwords can be set via settings. 
 

@@ -1,17 +1,9 @@
 import fs from 'fs';
+import path from 'path';
 import { Controller, HttpRequest, HttpResponse } from '../../../src/types';
 import { StaticController } from '../../../src/controllers';
 import { mockResponse } from '../utils/mockers';
 import { verify200isReturned, verify404isReturned } from '../utils/helperFunctions';
-
-// mock readFileSync (test will fail if you remove existsSync)
-jest.mock('fs', () => {
-  const mockFS = {
-    readFileSync: jest.fn(),
-    existsSync: jest.fn()
-  };
-  return mockFS;
-});
 
 describe('StaticController tests', () => {
 
@@ -27,12 +19,11 @@ describe('StaticController tests', () => {
   });
 
   it('should return 200 from GET to /static', async () => {
-    // mock readFileSync result
-    (fs.readFileSync as jest.Mock).mockReturnValueOnce('file content');
-    // and the actual test
     req = { url: '/static', method: 'GET', headers: {} };
     await controller.handleRequest(req, res);
-    verify200isReturned(req, res, 'text/html', 'file content');
+    // let's not mock, but instead compare actual file content
+    const content = fs.readFileSync(path.join(process.cwd(), 'static/ui.html'), 'utf-8');
+    verify200isReturned(req, res, 'text/html', content);
   });
 
   it('should return 404 with any other path', async () => {

@@ -3,6 +3,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
 import { PublicUser, User } from '../types';
 import { db } from './database';
 import { validators } from '../utils/validators';
@@ -11,16 +12,24 @@ import { logger } from '../utils/logger';
 import { PASSWORD_REQUIREMENTS } from '../utils/config';
 import { mostCommonPasswords } from '../data/mostCommonPasswords';
 
-const hashPassword = (password: string): string => {
-  return password.split('').reverse().join('');
+const hashPassword = async (password: string): Promise<string> => {
+  const saltRounds = 10;
+  const hash = await bcrypt.hash(password, saltRounds);
+  return hash;
+};
+
+const compareHashes = async (password: string, hash: string): Promise<boolean> => {
+  const success = await bcrypt.compare(password, hash);
+  return success;
 };
 
 const addUser = async (username: string, password: string, name: string, email: string): Promise<PublicUser> => {
+  const passwordHash = await hashPassword(password);
   // Create user from parameters
   const newUser: User = {
     uid: uuidv4(),
     username: username.toLowerCase(),
-    password: hashPassword(password),
+    password: passwordHash,
     name: name,
     email: email.toLowerCase(),
     admin: false,
@@ -54,7 +63,7 @@ const findByUsername = async (username: string): Promise<PublicUser | undefined>
 };
 
 const findByUsernameAndPassword = async (username: string, password: string): Promise<PublicUser | undefined> => {
-  const user: PublicUser | undefined = await db.getUserByCreds(username, hashPassword(password));
+  const user: PublicUser | undefined = await db.getUserByCreds(username, password);
   return user;
 };
 
@@ -98,5 +107,5 @@ const isValidPassword = (password: string, user: User): boolean => {
 };
 
 export const userService = {
-  hashPassword, addUser, findByUsername, findByUsernameAndPassword
+  hashPassword, compareHashes, addUser, findByUsername, findByUsernameAndPassword
 };

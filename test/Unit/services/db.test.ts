@@ -6,6 +6,12 @@
 import { Pool } from 'pg';
 import { db } from '../../../src/services/database';
 
+import { userService } from '../../../src/services';
+import { validators } from '../../../src/utils/validators';
+import { User } from '../../../src/types';
+// helper data
+import { testData } from '../utils/helperData';
+
 // mock pg / pool.query 
 jest.mock('pg', () => {
   const mockPool = {
@@ -93,13 +99,24 @@ describe('users tests', () => {
     // mock query results
     (pool.query as jest.Mock).mockResolvedValue({ rows: [{}], rowCount: 1 });
     await db.getUser('username');
-    await db.getUserByCreds('username', 'password');
-    expect(pool.query).toBeCalledTimes(2);
+    expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['SELECT uid, username, name, email, admin, locked, stealth, created_on FROM account WHERE username = $1', ['username']],
-      ['SELECT uid, username, name, email, admin, locked, stealth, created_on FROM account WHERE username = $1 AND password = $2',
-        ['username', 'password']]
+      ['SELECT uid, username, name, email, admin, locked, stealth, created_on FROM account WHERE username = $1', ['username']]
     ]);
+  });
+
+  it('should SELECT users with password, but not return one', async () => {
+    // mock query results
+    const userWithMockPassword: User = { ...testData.validPublicUser, password: await userService.hashPassword('Password!') };
+    (pool.query as jest.Mock).mockResolvedValue({ rows: [userWithMockPassword], rowCount: 1 });
+    const publicUser = await db.getUserByCreds('username', 'Password!');
+    expect(pool.query).toBeCalledTimes(1);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['SELECT uid, username, password, name, email, admin, locked, stealth, created_on FROM account WHERE username = $1',
+        ['username']]
+    ]);
+    const returnValue = validators.isPublicUser(publicUser);
+    expect(returnValue).toBe(true);
   });
 
 });

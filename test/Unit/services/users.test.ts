@@ -32,15 +32,25 @@ describe('users service tests', () => {
     jest.clearAllMocks();
   });
 
+  it('password hasher should hash passwords', async () => {
+    const password = 'some-random-string';
+    const hashedPassword = await userService.hashPassword(password);
+    expect(hashedPassword.startsWith('$2b$')).toBe(true);
+    const foobar = await userService.hashPassword('Password!');
+    // eslint-disable-next-line no-console
+    console.log(foobar);
+  });
+
   it('should allow storing a user', async () => {
     // mock database query result
+    const password = 'ExtraDifficultPassw0rd!';
     (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{}], rowCount: 1 });
-    const newUser = await userService.addUser('username', 'ExtraDifficultPassw0rd!', 'full name', 'user@example.com');
+    const newUser = await userService.addUser('username', password, 'full name', 'user@example.com');
     expect(validators.isPublicUser(newUser)).toBe(true);
-    // check that pool.query was called with correct params
+    // check that pool.query was called with correct params (password hash can be any string)
     expect(pool.query).toHaveBeenCalledTimes(1);
     expect(pool.query).toHaveBeenCalledWith('INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
-      ['af3b325f-06f0-4b25-9fb8-27b07a55cd14', 'username', userService.hashPassword('ExtraDifficultPassw0rd!'), 'full name', 'user@example.com']);
+      ['af3b325f-06f0-4b25-9fb8-27b07a55cd14', 'username', expect.any(String), 'full name', 'user@example.com']);
   });
 
   it('should fail to store invalid user', async () => {

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/kosvi/login-service#readme",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/jest": "^27.4.1",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.23",
@@ -37,6 +38,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
     "uuid": "^8.3.2",

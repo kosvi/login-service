@@ -23,6 +23,10 @@ const error = (line: string) => {
   handleLine('ERROR', line);
 };
 
+const db = (line: string) => {
+  handleLine('DATABASE', line);
+};
+
 const debug = (line: string) => {
   if (NODE_ENV === 'dev') {
     handleLine('DEBUG', line);
@@ -36,5 +40,5 @@ const debugError = (source: string, err: unknown) => {
 };
 
 export const logger = {
-  log, error, debug, debugError
+  log, error, db, debug, debugError
 };
