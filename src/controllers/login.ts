@@ -35,6 +35,7 @@ export class LoginController implements Controller {
          * If user was fetched, create token and send response
          */
         responseHandlers.setHeaderJson(res);
+        responseHandlers.setStatus(200, res);
         res.end(JSON.stringify(loginService.createResponseFromPublicUser(user)));
       } else {
         /*

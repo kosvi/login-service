@@ -18,6 +18,7 @@ export const migrations: Array<Migration> = [
   },
   {
     id: 'add_admin_account',
+    // admin:Password!
     sql: `INSERT INTO account (uid, username, password, name, email, admin) \
     VALUES ('${uuidv4()}', 'admin', '$2b$10$hJrr3K5tTpOdGW7l4suvXeDnoiy/t0UPZl/H57E9KVJK7ZznNieR.', 'Admin Account', 'admin@example.com', TRUE);`
   }

@@ -17,7 +17,7 @@ const createResponseFromPublicUser = (user: PublicUser): { token: string, conten
   // handle content validity
   if (!validators.isString(user.uid)) {
     // ALL users in database MUST have UID
-    throw new Error('database request failed');
+    throw new Error('no UID found');
   }
 
   let privateContent: { name?: string, email?: string } = {};

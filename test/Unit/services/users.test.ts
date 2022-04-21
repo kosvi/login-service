@@ -36,9 +36,8 @@ describe('users service tests', () => {
     const password = 'some-random-string';
     const hashedPassword = await userService.hashPassword(password);
     expect(hashedPassword.startsWith('$2b$')).toBe(true);
-    const foobar = await userService.hashPassword('Password!');
-    // eslint-disable-next-line no-console
-    console.log(foobar);
+    const valid = await userService.compareHashes(password, hashedPassword);
+    expect(valid).toBe(true);
   });
 
   it('should allow storing a user', async () => {
