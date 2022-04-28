@@ -3,7 +3,7 @@ import { LoginController } from '../../../src/controllers';
 import { HttpRequest, HttpResponse, Controller } from '../../../src/types';
 import { mockResponse } from '../utils/mockers';
 import { testData } from '../utils/helperData';
-import { verify200isReturned } from '../utils/helperFunctions';
+import { verify200isReturned, verify401isThrown } from '../utils/helperFunctions';
 
 // mock userService 
 // https://jestjs.io/docs/mock-functions#mocking-partials
@@ -42,6 +42,14 @@ describe('LoginController tests', () => {
     expect(userService.findByUsernameAndPassword).toHaveBeenCalledWith('username', 'Password!');
     // now let's validate response has been altered correctly
     verify200isReturned(req, res, 'application/json');
+  });
+
+  it('should return 401, if userService doesn\'t find match', async () => {
+    // mock userService
+    (userService.findByUsernameAndPassword as jest.Mock).mockResolvedValueOnce(undefined);
+    // mock request
+    req = { url: '/login', method: 'POST', headers: {}, body: JSON.stringify({ username: 'username', password: 'Password!' }) };
+    await verify401isThrown(req, res, controller, 'incorrect username or password');
   });
 
 });

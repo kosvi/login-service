@@ -17,5 +17,5 @@ Current task:
 - ~~write tests for number parser~~
 - ~~implement JWT in login-controller~~
 - ~~add bcrypt to password hasher~~
-- add (unit)tests to login controller! (mock user-service!)
+- ~~add (unit)tests to login controller! (mock user-service!)~~
 - make some sense to NODE_ENV=dev and DEBUG env.-variables!

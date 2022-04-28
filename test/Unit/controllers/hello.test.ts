@@ -1,7 +1,7 @@
 import { Controller, HttpRequest, HttpResponse } from '../../../src/types';
 import { HelloController } from '../../../src/controllers';
 import { mockResponse } from '../utils/mockers';
-import { verify200isReturned, verify404isReturned } from '../utils/helperFunctions';
+import { verify200isReturned, verify404isThrown } from '../utils/helperFunctions';
 
 describe('HelloController tests', () => {
 
@@ -23,7 +23,7 @@ describe('HelloController tests', () => {
 
   it('should return 404 with any other path', async () => {
     req = { url: '/hello/world', method: 'GET', headers: {} };
-    await verify404isReturned(req, res, controller);
+    await verify404isThrown(req, res, controller);
   });
 
 });
