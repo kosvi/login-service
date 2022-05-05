@@ -28,7 +28,8 @@ Source code of the project is located in `./src`. It is organized in the followi
 
 | path | description |
 |------|-------------|
-|app.js| Contains the main server that is used to fire up the application. |
+|index.js| Contains the startup script that is used to fire up the application. |
+|app.js | Contains the actual app that is started from index.js | 
 |./controllers| Contains a single Controller class in every file. Controllers handle requests and send responses. |
 |./services | Services are used to handle the main business logic. They provide data for controllers to send to user and they take the input from Controllers and handle it accordingly. |
 |./utils| Contains additional support utilities for the application. |
@@ -59,6 +60,7 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 *whitelist*
 
 | field | type | description |
+|-------|------|-------------|
 | id    | int, primary key | id of the whitelisted host |
 | name  | string, unique | a name to identify the whitelisted site | 
 | host  | string, unique | a host(:port) that is whitelisted to allow requests to this login-service |
