@@ -38,6 +38,7 @@ Serves static files...
 | [/user](API/user.md#user)    | GET    | any           | 200     | 401        |
 | [/user/save](API/user.md#user-save) | POST | none          | 201     | 400, 409, 422 |
 | [/user/save](API/user.md#user-save) | PUT  | any           | 200     | 401, 409, 422 |
+| [/user/delete](API/user.md#user-delete) | DELETE | any | 204 | 401 |
 | [/user/password](API/user.md#user-password) | PATCH | any      | 204     | 401, 422   |
 
 ## verify
