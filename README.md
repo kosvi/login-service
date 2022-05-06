@@ -64,9 +64,11 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 | id    | int, primary key | id of the whitelisted host |
 | name  | string, unique | a name to identify the whitelisted site | 
 | host  | string, unique | a host(:port) that is whitelisted to allow requests to this login-service |
-| limited | boolean | if true, only allows methods: OPTIONS and POST. Else will also allow GET, PUT, PATCH and DELETE. | 
+| trusted(*) | boolean | if false, only allowed methods are: OPTIONS and POST. Else will also allow GET, PUT, PATCH and DELETE. | 
 
-*possibility for a settings-table is reserver for the future*
+(*) setting this to false does NOT provide any additional security. It simply limits the features available on whitelisted site to "register" and "login". 
+
+*possibility for a settings-table is reserved for the future*
 
 ## Environmental variables
 
