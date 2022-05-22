@@ -19,3 +19,4 @@ Current task:
 - ~~add bcrypt to password hasher~~
 - ~~add (unit)tests to login controller! (mock user-service!)~~
 - make some sense to NODE_ENV=dev and DEBUG env.-variables!
+- make a whitelist of allowed sites that can use login-service!

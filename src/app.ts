@@ -5,7 +5,7 @@ import { requestHandlers } from './utils/requestHandlers';
 
 // Import controllers
 import { Controller } from './types';
-import { ErrorController, HelloController, StaticController } from './controllers';
+import { ErrorController, HelloController, StaticController, VerifyController } from './controllers';
 import { ControllerError } from './utils/customErrors';
 
 // Import createServer so we can start taking in requests
@@ -33,6 +33,8 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
       controller = new StaticController();
     } else if (req.url?.startsWith('/login')) {
       controller = new LoginController();
+    } else if (req.url?.startsWith('/verify')) {
+      controller = new VerifyController();
     } else {
       // This is the default controller to handle unexpected requests
       controller = new ErrorController();

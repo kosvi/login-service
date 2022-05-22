@@ -9,5 +9,11 @@ export class ControllerError extends Error {
     super(...params);
     this.name = 'ControllerError';
     this.statusCode = statusCode;
+    // some default error messages
+    if (statusCode === 404) {
+      this.message = 'not found';
+    } else if (statusCode === 500) {
+      this.message = 'internal server error';
+    }
   }
 }

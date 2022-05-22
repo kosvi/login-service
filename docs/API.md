@@ -11,7 +11,7 @@ If authorization is needed, token has to be sent in 'Authorization'-header in fo
 | [/hello](#hello) | used by tests to ensure service is up |
 | [/login](#login) | used to request token |
 | [/static](#static) | serves static files, like viewing / editing profile |
-| [/user](#user) | allows CRUD-operations for viewing / editing user | 
+| [/users](#users) | allows CRUD-operations for viewing / editing user | 
 | [/verify](#verify) | verifies a token |
 | [/settings](¤settings) | allows viewing server settings (like password requirements) |
 
@@ -31,15 +31,15 @@ If authorization is needed, token has to be sent in 'Authorization'-header in fo
 
 Serves static files...
 
-## user
+## users
 
 | endpoint | method | authorization | success | failure(s) |
 |----------|--------|---------------|---------|------------|
-| [/user](API/user.md#user)    | GET    | any           | 200     | 401        |
-| [/user/save](API/user.md#user-save) | POST | none          | 201     | 400, 409, 422 |
-| [/user/save](API/user.md#user-save) | PUT  | any           | 200     | 401, 409, 422 |
-| [/user/delete](API/user.md#user-delete) | DELETE | any | 204 | 401 |
-| [/user/password](API/user.md#user-password) | PATCH | any      | 204     | 401, 422   |
+| [/users/me](API/users.md#user-me)    | GET    | any           | 200     | 401        |
+| [/users/save](API/users.md#user-save) | POST | none          | 201     | 400, 409, 422 |
+| [/users/save](API/users.md#user-save) | PUT  | any           | 200     | 401, 409, 422 |
+| [/users/delete](API/users.md#user-delete) | DELETE | any | 204 | 401 |
+| [/users/password](API/users.md#user-password) | PATCH | any      | 204     | 401, 422   |
 
 ## verify
 

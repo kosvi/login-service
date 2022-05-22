@@ -1,8 +1,8 @@
-### user
+### user me
 
 **Success**
 
-GET `/user`
+GET `/users/me`
 
 Status 200
 
@@ -23,7 +23,7 @@ Status 200
 
 **Success**
 
-POST / PUT (*) `/user/save`
+POST / PUT (*) `/users/save`
 
 ```
 {
@@ -56,7 +56,7 @@ Status 201
 
 **Success**
 
-PATCH `/user/password`
+PATCH `/users/password`
 
 ```
 {

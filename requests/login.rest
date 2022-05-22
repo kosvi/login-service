@@ -5,3 +5,12 @@ Content-Type: application/json
   "username": "admin",
   "password": "Password!"
 }
+
+###
+
+GET http://localhost:3001/verify
+Content-Type: application/json
+Authorization: bearer <token>
+
+{
+}

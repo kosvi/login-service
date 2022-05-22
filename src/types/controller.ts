@@ -10,7 +10,8 @@ export type StatusCode = 200 | 400 | 401 | 404 | 500;
  */
 
 interface RequestHeaders {
-  host?: string
+  host?: string,
+  authorization?: string
 }
 
 export interface HttpRequest {
@@ -32,7 +33,7 @@ export interface HttpResponse {
  */
 export interface Controller {
   // handleRequest is the method that takes care of the request and handles the response
-  handleRequest(req: HttpRequest, res: HttpResponse): Promise<void>,
+  handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> | void,
   // this is just in case we want to know what controller we are using
   controllerName: string
 }
