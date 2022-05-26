@@ -1,0 +1,64 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize]
+  
+
+jobs:
+  test: 
+    runs-on: ubuntu-20.04
+
+#    services:
+#      postgres:
+#        image: postgres
+#        env:
+#          POSTGRES_DB: "database-name"
+#          POSTGRES_USER: "database-user"
+#          POSTGRES_PASSWORD: "database-password"
+#        # Set health checks to wait until postgres has started
+#        options: >-
+#          --health-cmd pg_isready
+#          --health-interval 10s
+#          --health-timeout 5s
+#          --health-retries 5
+#        ports:
+#          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with: 
+          node-version: '16.x'
+      # Install, lint and test backend
+      - name: install dependencies
+        run: CI=true npm install
+      - name: lint
+        run: npm run lint
+      - name: test backend
+        run: npm test
+        env:
+          NODE_ENV: "test"
+
+# Add Heroku-deployment later or don't, make sure to add required files if you deploy to Heroku!
+#  deploy-heroku:
+#    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '#skip') }}
+#    runs-on: ubuntu-20.04
+#    needs: [test]
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: akhileshns/heroku-deploy@v3.12.12
+#        with: 
+#          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+#          heroku_app_name: "add-app-name-here"
+#          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+#          branch: "master"
+#          delay: 5
+#          healthcheck: "add-health-check-url-here"
+#          checkstring: "OK!"
+#          rollbackonhealthcheckfailed: true
+
+# Also add e2e-tests if you deploy to Heroku!!!
