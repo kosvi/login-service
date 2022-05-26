@@ -49,7 +49,7 @@ Status 201
   "created_on": "<date-in-iso-format>"
 }
 ```
-(*) POST creates a new user on server, PUT updates existing user
+(*) POST creates a new user on server, PUT updates existing user \
 ? = this is required only on PUT-request
 
 ### user password
