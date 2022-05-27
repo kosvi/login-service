@@ -3,7 +3,7 @@
  */
 
 import { ZodError } from 'zod';
-import { PublicUser, User, ZodUser } from '../types';
+import { PublicUser, TokenContent, User, ZodTokenContent, ZodUser } from '../types';
 import { logger } from './logger';
 
 const isString = (text: unknown): text is string => {
@@ -65,6 +65,24 @@ const isPublicUser = (obj: unknown): obj is PublicUser => {
   }
 };
 
+const isTokenContent = (obj: unknown): obj is TokenContent => {
+  try {
+    if (obj && typeof obj === 'object') {
+      ZodTokenContent.parse(obj);
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    let message = 'isTokenContent() - parsing tokenContent failed';
+    if (error instanceof Error) {
+      message += `: ${error.message}`;
+    }
+    logger.debug(message);
+    return false;
+  }
+};
+
 export const validators = {
-  isString, isUser, userFailure, isPublicUser
+  isString, isUser, userFailure, isPublicUser, isTokenContent
 };

@@ -9,7 +9,14 @@ const getContentFromToken = (token: string): TokenContent => {
     throw new ControllerError(500);
   }
   const tokenContent = verify(token, SECRET) as TokenContent;
-  return tokenContent;
+  return {
+    uid: tokenContent.uid,
+    username: tokenContent.username,
+    expires: tokenContent.expires,
+    // these are only added if they are in the actual token
+    ...(tokenContent.name && { name: tokenContent.name }),
+    ...(tokenContent.email && { email: tokenContent.email })
+  };
 };
 
 export const VerifyService = {

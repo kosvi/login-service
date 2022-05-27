@@ -2,10 +2,12 @@
  * This controller verifies the token provided and returns the information about the user
  */
 
+import { JsonWebTokenError } from 'jsonwebtoken';
 import { VerifyService } from '../services/verify';
 import { Controller, HttpRequest, HttpResponse, TokenContent } from '../types';
 import { ControllerError } from '../utils/customErrors';
 import { logger } from '../utils/logger';
+import { responseHandlers } from '../utils/responseHandlers';
 import { validators } from '../utils/validators';
 
 export class VerifyController implements Controller {
@@ -21,17 +23,22 @@ export class VerifyController implements Controller {
   }
 
   verifyToken(req: HttpRequest, res: HttpResponse) {
-    if (!req.headers.authorization || !validators.isString(req.headers.authorization || !req.headers.authorization.toLowerCase().startsWith('bearer '))) {
+    if (!req.headers.authorization || !validators.isString(req.headers.authorization) || !req.headers.authorization.toLowerCase().startsWith('bearer ')) {
       // no authorzation token given, failure:
       logger.log(`${this.controllerName} - malformed authorization header`);
-      throw new ControllerError(400, 'malformed token');
+      throw new ControllerError(401, 'malformed or missing token');
     }
     try {
       const tokenString = req.headers.authorization.substring(7);
       const tokenContent: TokenContent = VerifyService.getContentFromToken(tokenString);
       logger.debug(`${this.controllerName} - verified user ${tokenContent.username}`);
+      responseHandlers.setHeaderJson(res);
       res.end(JSON.stringify(tokenContent));
     } catch (error) {
+      if (error instanceof JsonWebTokenError) {
+        logger.log(`${this.controllerName} - JsonWebTokenError - ${error.message}`);
+        throw new ControllerError(400, 'malformed token');
+      }
       if (error instanceof ControllerError) {
         logger.debug(`${this.controllerName} - ControllerError thrown`);
         throw error;

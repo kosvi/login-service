@@ -1,4 +1,4 @@
-import { User } from '../../../src/types';
+import { TokenContent, User } from '../../../src/types';
 import { v4 as uuidv4 } from 'uuid';
 import { validators } from '../../../src/utils/validators';
 import { testData } from './helperData';
@@ -51,6 +51,34 @@ describe('validator tests', () => {
       extraProperty: 'extra value'
     };
     expect(validators.isPublicUser(publicUserWithExtras)).toBe(false);
+  });
+
+  // These are to validate token content
+  it('should not validate as token if extra attributes exist', () => {
+    const tokenWithExtraContent = {
+      uid: testData.validPublicUser.uid,
+      username: testData.validPublicUser.username,
+      expires: Math.floor(new Date().getTime() / 1000),
+      name: testData.validPublicUser.name,
+      email: testData.validPublicUser.email,
+      iat: Math.floor(new Date().getTime() / 1000)
+    };
+    expect(validators.isTokenContent(tokenWithExtraContent)).toBe(false);
+  });
+  it('should validate valid token contents', () => {
+    let validTokenContent: TokenContent = {
+      uid: testData.validPublicUser.uid as string,
+      username: testData.validPublicUser.username,
+      expires: Math.floor(new Date().getTime() / 1000),
+    };
+    expect(validators.isTokenContent(validTokenContent)).toBe(true);
+    // Add optional properties
+    validTokenContent = {
+      ...validTokenContent,
+      name: testData.validPublicUser.name,
+      email: testData.validPublicUser.email
+    };
+    expect(validators.isTokenContent(validTokenContent)).toBe(true);
   });
 
 });

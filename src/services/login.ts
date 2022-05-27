@@ -27,7 +27,7 @@ const createResponseFromPublicUser = (user: PublicUser): { token: string, conten
       email: user.email
     };
   }
-  // create expiretime
+  // create current time (to later create expiretime)
   const currentTime = Math.floor(new Date().getTime() / 1000);
   // create token content
   const content: TokenContent = {

@@ -20,3 +20,4 @@ Current task:
 - ~~add (unit)tests to login controller! (mock user-service!)~~
 - make some sense to NODE_ENV=dev and DEBUG env.-variables!
 - make a whitelist of allowed sites that can use login-service!
+- make a test to test if expired tokens are still verified
