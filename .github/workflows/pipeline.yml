@@ -36,9 +36,9 @@ jobs:
       # Install, lint and test backend
       - name: install dependencies
         run: CI=true npm install
-      - name: lint
+      - name: run lint
         run: npm run lint
-      - name: test backend
+      - name: run tests
         run: npm test
         env:
           NODE_ENV: "test"

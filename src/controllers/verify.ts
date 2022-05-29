@@ -29,12 +29,16 @@ export class VerifyController implements Controller {
       throw new ControllerError(401, 'malformed or missing token');
     }
     try {
+      // Extract the actual token from header
       const tokenString = req.headers.authorization.substring(7);
+      // Extract the content from the token
       const tokenContent: TokenContent = VerifyService.getContentFromToken(tokenString);
       logger.debug(`${this.controllerName} - verified user ${tokenContent.username}`);
+      // Return the content as response (in json format)
       responseHandlers.setHeaderJson(res);
       res.end(JSON.stringify(tokenContent));
     } catch (error) {
+      // Handle different error cases
       if (error instanceof JsonWebTokenError) {
         logger.log(`${this.controllerName} - JsonWebTokenError - ${error.message}`);
         throw new ControllerError(400, 'malformed token');

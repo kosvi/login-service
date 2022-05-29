@@ -27,13 +27,11 @@ const createResponseFromPublicUser = (user: PublicUser): { token: string, conten
       email: user.email
     };
   }
-  // create current time (to later create expiretime)
-  const currentTime = Math.floor(new Date().getTime() / 1000);
   // create token content
   const content: TokenContent = {
     uid: user.uid,
     username: user.username,
-    expires: (currentTime) + (parsers.parseNumber(TOKEN_EXPIRE_TIME) * 60),
+    expires: createExpireTime(),
     ...privateContent
   };
   // sign token
@@ -41,6 +39,11 @@ const createResponseFromPublicUser = (user: PublicUser): { token: string, conten
   return { token: token, content: content };
 };
 
+// We export this function to make testing easier (I haven't figured out an easier way)
+const createExpireTime = (): number => {
+  return Math.floor(new Date().getTime() / 1000) + (parsers.parseNumber(TOKEN_EXPIRE_TIME) * 60);
+};
+
 export const loginService = {
-  createResponseFromPublicUser
+  createResponseFromPublicUser, createExpireTime
 };
