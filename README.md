@@ -1,7 +1,7 @@
 # Login Service
 
 - [Description](#project-description)
-- [Specs](#specs)
+- [Specifications](#specifications)
 - [API](#api)
 - [Installation](#installation)
 - [Environmental variables](#environmental-variables)
@@ -12,7 +12,7 @@ This project is supposed to simply provide authentication service and provide JS
 
 ![Sequence diagram](/docs/sequence-diagram.svg)
 
-## Specs
+## Specifications
 
 Specs are in their [own file](docs/specs.md). 
 

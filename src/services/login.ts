@@ -1,16 +1,8 @@
-import { z } from 'zod';
 import { sign } from 'jsonwebtoken';
 import { PublicUser, TokenContent } from '../types';
 import { SECRET, TOKEN_EXPIRE_TIME } from '../utils/config';
 import { parsers } from '../utils/parsers';
 import { validators } from '../utils/validators';
-
-export const LoginBody = z.object({
-  username: z.string({ required_error: 'username is required' }).regex(/^[a-z0-9]+$/),
-  password: z.string({ required_error: 'password is required' })
-}).strict();
-
-export type LoginBodyType = z.infer<typeof LoginBody>;
 
 const createResponseFromPublicUser = (user: PublicUser): { token: string, content: TokenContent } => {
 
@@ -39,11 +31,11 @@ const createResponseFromPublicUser = (user: PublicUser): { token: string, conten
   return { token: token, content: content };
 };
 
-// We export this function to make testing easier (I haven't figured out an easier way)
+// add TOKEN_EXPIRE_TIME as minutes to current time before token is expired
 const createExpireTime = (): number => {
   return Math.floor(new Date().getTime() / 1000) + (parsers.parseNumber(TOKEN_EXPIRE_TIME) * 60);
 };
 
 export const loginService = {
-  createResponseFromPublicUser, createExpireTime
+  createResponseFromPublicUser
 };

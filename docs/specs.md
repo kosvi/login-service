@@ -57,6 +57,7 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 |admin| boolean | simply marks if the user is admin (can manage user database) |
 |locked | boolean | user is locked or not |
 |stealth | boolean | affects the information added to tokens |
+|deleted | boolean | if set to true, accound is deleted |
 | created_on | timestamp | current timestamp on time of creation |
 
 *whitelist*

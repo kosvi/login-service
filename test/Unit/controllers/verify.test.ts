@@ -1,32 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { HttpRequest, HttpResponse, Controller } from '../../../src/types';
 import { loginService } from '../../../src/services';
 import { mockResponse } from '../utils/mockers';
 import { VerifyController } from '../../../src/controllers';
 import { testData } from '../utils/helperData';
-// import { verify401isThrown } from '../utils/helperFunctions';
-
-
-jest.mock('../../../src/services', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const originalModules = jest.requireActual('../../../src/services');
-  const createResponseFromPublicUser = originalModules.loginService.createResponseFromPublicUser;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return {
-    ...originalModules,
-    loginService: {
-      // this does not work, let's try something else next time Im working on this...
-      createExpireTime: jest.fn(),
-      createResponseFromPublicUser: createResponseFromPublicUser
-    }
-  };
-});
+import { verify401isThrown } from '../utils/helperFunctions';
 
 describe('VerfyController tests', () => {
 
   let req: HttpRequest | undefined, res: HttpResponse;
   let controller: Controller;
+
+  // we use fake timers to fake the timestamps in token
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date());
+  });
 
   beforeEach(() => {
     // to make sure we always have a new request for a test
@@ -37,15 +25,19 @@ describe('VerfyController tests', () => {
   });
 
   it('shouldn\'t validate an expired token', async () => {
-    // create token with expire time set to 24 hours ago
-    (loginService.createExpireTime as jest.Mock).mockReturnValue(Math.floor(new Date().getTime() / 1000) - (60 * 60 * 24));
+    // the token is signed on 2022/10/10
+    jest.setSystemTime(new Date(2022, 10, 10));
     const loginResponse = loginService.createResponseFromPublicUser(testData.validPublicUser);
     const token = loginResponse.token;
     req = { url: '/verify', method: 'GET', headers: { authorization: `bearer ${token}` } };
-    // await verify401isThrown(req, res, controller);
-    await controller.handleRequest(req, res);
-    // eslint-disable-next-line no-console
-    console.log('foobar');
-    expect(true).toBe(true);
+    // the token is tried to verify on 2022/10/12 (two days later!)
+    jest.setSystemTime(new Date(2022, 10, 12));
+    // 401 should be thrown by the verify-controller
+    await verify401isThrown(req, res, controller);
   });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
 });

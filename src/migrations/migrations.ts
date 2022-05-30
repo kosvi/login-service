@@ -13,6 +13,7 @@ export const migrations: Array<Migration> = [
     admin BOOLEAN NOT NULL DEFAULT FALSE, \
     locked BOOLEAN NOT NULL DEFAULT FALSE, \
     stealth BOOLEAN NOT NULL DEFAULT TRUE, \
+    deleted BOOLEAN NOT NULL DEFAULT FALSE, \
     created_on TIMESTAMP NOT NULL DEFAULT current_timestamp \
     );'
   },
@@ -21,5 +22,14 @@ export const migrations: Array<Migration> = [
     // admin:Password!
     sql: `INSERT INTO account (uid, username, password, name, email, admin) \
     VALUES ('${uuidv4()}', 'admin', '$2b$10$hJrr3K5tTpOdGW7l4suvXeDnoiy/t0UPZl/H57E9KVJK7ZznNieR.', 'Admin Account', 'admin@example.com', TRUE);`
+  },
+  {
+    id: 'add_whitelist_table',
+    sql: 'CREATE TABLE IF NOT EXISTS whitelist (\
+    id INT PRIMARY KEY, \
+    name VARCHAR(100) UNIQUE NOT NULL, \
+    host VARCHAR(200) UNIQUE NOT NULL, \
+    trusted BOOLEAN NOT NULL DEFAULT FALSE \
+    );'
   }
 ];

@@ -19,12 +19,11 @@ export const ZodTokenContent = z.object({
 }).strict();
 
 export type TokenContent = z.infer<typeof ZodTokenContent>;
-/*
-export interface TokenContent {
-  uid: string,
-  username: string,
-  name?: string,
-  email?: string,
-  expires: number
-}
-*/
+
+export const LoginBody = z.object({
+  username: z.string({ required_error: 'username is required' }).regex(/^[a-z0-9]+$/),
+  password: z.string({ required_error: 'password is required' })
+}).strict();
+
+export type LoginBodyType = z.infer<typeof LoginBody>;
+

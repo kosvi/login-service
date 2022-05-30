@@ -4,7 +4,7 @@
  */
 
 import { Pool } from 'pg';
-import { db } from '../../../src/services/database';
+import { db } from '../../../src/services';
 
 import { userService } from '../../../src/services';
 import { validators } from '../../../src/utils/validators';

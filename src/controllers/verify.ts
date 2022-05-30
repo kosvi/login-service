@@ -3,12 +3,11 @@
  */
 
 import { JsonWebTokenError } from 'jsonwebtoken';
-import { VerifyService } from '../services/verify';
-import { Controller, HttpRequest, HttpResponse, TokenContent } from '../types';
+import { VerifyService } from '../services';
+import { Controller, HttpRequest, HttpResponse } from '../types';
 import { ControllerError } from '../utils/customErrors';
 import { logger } from '../utils/logger';
 import { responseHandlers } from '../utils/responseHandlers';
-import { validators } from '../utils/validators';
 
 export class VerifyController implements Controller {
 
@@ -23,16 +22,9 @@ export class VerifyController implements Controller {
   }
 
   verifyToken(req: HttpRequest, res: HttpResponse) {
-    if (!req.headers.authorization || !validators.isString(req.headers.authorization) || !req.headers.authorization.toLowerCase().startsWith('bearer ')) {
-      // no authorzation token given, failure:
-      logger.log(`${this.controllerName} - malformed authorization header`);
-      throw new ControllerError(401, 'malformed or missing token');
-    }
     try {
-      // Extract the actual token from header
-      const tokenString = req.headers.authorization.substring(7);
-      // Extract the content from the token
-      const tokenContent: TokenContent = VerifyService.getContentFromToken(tokenString);
+      // Extract the token content from the auth header (throws 401 if header malformed or token expired)
+      const tokenContent = VerifyService.extractTokenContentFromAuthHeader(req.headers.authorization);
       logger.debug(`${this.controllerName} - verified user ${tokenContent.username}`);
       // Return the content as response (in json format)
       responseHandlers.setHeaderJson(res);

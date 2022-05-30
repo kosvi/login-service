@@ -8,7 +8,8 @@ import { Controller, HttpRequest, HttpResponse, PublicUser } from '../types';
 import { ControllerError } from '../utils/customErrors';
 import { logger } from '../utils/logger';
 import { responseHandlers } from '../utils/responseHandlers';
-import { loginService, LoginBody } from '../services';
+import { loginService } from '../services';
+import { LoginBody } from '../types';
 
 export class LoginController implements Controller {
 
