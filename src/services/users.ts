@@ -34,7 +34,8 @@ const addUser = async (username: string, password: string, name: string, email: 
     email: email.toLowerCase(),
     admin: false,
     locked: false,
-    stealth: true
+    stealth: true,
+    deleted: false
   };
   // check to make sure password is strong enough
   if (!isValidPassword(password, newUser)) {
@@ -57,8 +58,13 @@ const addUser = async (username: string, password: string, name: string, email: 
   }
 };
 
+const findUserByUid = async (uid: string): Promise<PublicUser | undefined> => {
+  const user: PublicUser | undefined = await db.getUserByUid(uid);
+  return user;
+};
+
 const findByUsername = async (username: string): Promise<PublicUser | undefined> => {
-  const user: PublicUser | undefined = await db.getUser(username);
+  const user: PublicUser | undefined = await db.getUserByUsername(username);
   return user;
 };
 
@@ -107,5 +113,5 @@ const isValidPassword = (password: string, user: User): boolean => {
 };
 
 export const userService = {
-  hashPassword, compareHashes, addUser, findByUsername, findByUsernameAndPassword
+  hashPassword, compareHashes, addUser, findUserByUid, findByUsername, findByUsernameAndPassword
 };

@@ -7,11 +7,12 @@ const validPublicUser: PublicUser = {
   email: 'user@example.com',
   admin: false,
   locked: false,
-  stealth: false
+  stealth: false,
+  deleted: false
 };
 const validUser: User = {
   ...validPublicUser,
-  password: 'this-is-some-hashed-string',
+  password: 'this-is-some-hashed-string'
 };
 
 export const testData = {

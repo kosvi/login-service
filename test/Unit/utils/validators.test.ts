@@ -22,7 +22,7 @@ describe('validator tests', () => {
     expect(validators.userFailure(invalidUserWithoutPassword)).toBe('password is required');
     const invalidUserWithEmptyPassword: User = {
       ...invalidUserWithoutPassword,
-      password: ''
+      password: '',
     };
     expect(validators.isUser(invalidUserWithEmptyPassword)).toBe(false);
     expect(validators.userFailure(invalidUserWithEmptyPassword)).toBe('String must contain at least 1 character(s)');

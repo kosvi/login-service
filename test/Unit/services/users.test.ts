@@ -27,6 +27,19 @@ describe('users service tests', () => {
   // this is our pool for the tests
   const pool: Pool = new Pool();
 
+  // our testuser
+  const user: PublicUser = {
+    uid: uuidv4(),
+    username: 'username',
+    name: 'full name',
+    email: 'user@example.com',
+    admin: false,
+    locked: false,
+    stealth: false,
+    deleted: false,
+    created_on: new Date()
+  };
+
   // reset jest.fn after each so we can start counting from 0
   afterEach(() => {
     jest.clearAllMocks();
@@ -68,17 +81,25 @@ describe('users service tests', () => {
     }
   });
 
+  // Below is two very similar tests -> could be refactored??
+
+  it('should return user by uid', async () => {
+    // mock database query result, the query used is tested in database-services unit-tests
+    (pool.query as jest.Mock).mockResolvedValueOnce({
+      rows: [user],
+      rowCount: 1
+    });
+    const resultUser = await userService.findUserByUid('af3b325f-06f0-4b25-9fb8-27b07a55cd14');
+    if (validators.isPublicUser(resultUser)) {
+      expect(resultUser.email).toBe(user.email);
+      expect(resultUser.email.length).toBeGreaterThan(1);
+    } else {
+      // for some mind melting reason, we failed to validate user we just validate earlier
+      expect('').toBe('user validation failed');
+    }
+  });
+
   it('should return user by username', async () => {
-    const user: PublicUser = {
-      uid: uuidv4(),
-      username: 'username',
-      name: 'full name',
-      email: 'user@example.com',
-      admin: false,
-      locked: false,
-      stealth: false,
-      created_on: new Date()
-    };
     // mock database query result, the query used is tested in database-services unit-tests
     (pool.query as jest.Mock).mockResolvedValueOnce({
       rows: [user],

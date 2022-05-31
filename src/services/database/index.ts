@@ -5,9 +5,9 @@
  */
 
 import { runMigrations, runSingleMigration } from './migrations';
-import { addUser, getUser, getUserByCreds } from './users';
+import { addUser, getUserByUid, getUserByUsername, getUserByCreds, deleteUser } from './users';
 
 export const db = {
   runMigrations, runSingleMigration,
-  addUser, getUser, getUserByCreds
+  addUser, getUserByUid, getUserByUsername, getUserByCreds, deleteUser
 };

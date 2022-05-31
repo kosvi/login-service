@@ -15,6 +15,7 @@ Status 200
   "admin": boolean,
   "locked": boolean,
   "stealth": boolean,
+  "deleted": boolean,
   "created_on": "<date-in-iso-format>"
 }
 ```
@@ -46,6 +47,7 @@ Status 201
   "admin": boolean,
   "locked": boolean,
   "stealth": boolean,
+  "deleted": boolean,
   "created_on": "<date-in-iso-format>"
 }
 ```

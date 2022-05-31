@@ -41,6 +41,8 @@ export const ZodUser = z.object({
   locked: z.boolean().default(false),
   // stealth
   stealth: z.boolean().default(true),
+  // deleted
+  deleted: z.boolean().default(false),
   // created_on
   created_on: z.date().optional(),
 }).strict();

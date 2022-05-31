@@ -97,11 +97,19 @@ describe('users tests', () => {
 
   it('should SELECT users without password', async () => {
     // mock query results
-    (pool.query as jest.Mock).mockResolvedValue({ rows: [{}], rowCount: 1 });
-    await db.getUser('username');
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{}], rowCount: 1 });
+    await db.getUserByUsername('username');
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['SELECT uid, username, name, email, admin, locked, stealth, created_on FROM account WHERE username = $1', ['username']]
+      ['SELECT uid, username, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE username = $1', ['username']]
+    ]);
+    // and the same when selecting by UID
+    jest.clearAllMocks();
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{}], rowCount: 1 });
+    await db.getUserByUid('mock-uid');
+    expect(pool.query).toBeCalledTimes(1);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['SELECT uid, username, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE uid = $1', ['mock-uid']]
     ]);
   });
 
@@ -112,11 +120,23 @@ describe('users tests', () => {
     const publicUser = await db.getUserByCreds('username', 'Password!');
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['SELECT uid, username, password, name, email, admin, locked, stealth, created_on FROM account WHERE username = $1',
+      ['SELECT uid, username, password, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE username = $1',
         ['username']]
     ]);
     const returnValue = validators.isPublicUser(publicUser);
     expect(returnValue).toBe(true);
+  });
+
+  it('should UPDATE user when deleting by UID', async () => {
+    const testUID = 'our-test-uid';
+    // mock query results
+    (pool.query as jest.Mock).mockResolvedValue({ rows: [], rowCount: 1 });
+    const success = await db.deleteUser(testUID);
+    expect(pool.query).toBeCalledTimes(1);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['UPDATE account SET name = \'\', email = \'\', deleted = TRUE WHERE uid = $1', [testUID]]
+    ]);
+    expect(success).toBe(true);
   });
 
 });
