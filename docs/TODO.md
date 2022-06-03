@@ -22,4 +22,4 @@ Current task:
 - make a whitelist of allowed sites that can use login-service!
 - ~~make a test to test if expired tokens are still verified~~
 - TAKE AWAY THE CORS STUFF FROM /hello
-- move cors tests to Unit-tests (also add tests to: isWhitehost)
+- move cors tests to Unit-tests (also add tests to: isWhitehost, setCors)
