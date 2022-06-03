@@ -3,7 +3,7 @@
  */
 
 import { ZodError } from 'zod';
-import { PublicUser, TokenContent, User, ZodTokenContent, ZodUser } from '../types';
+import { PublicUser, TokenContent, User, Whitehost, ZodTokenContent, ZodUser, ZodWhitehost } from '../types';
 import { logger } from './logger';
 
 const isString = (text: unknown): text is string => {
@@ -65,6 +65,19 @@ const isPublicUser = (obj: unknown): obj is PublicUser => {
   }
 };
 
+const isWhitehost = (obj: unknown): obj is Whitehost => {
+  try {
+    if (obj && typeof obj === 'object') {
+      ZodWhitehost.parse(obj);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    logger.debugError('isWhitehost', error);
+    return false;
+  }
+};
+
 const isTokenContent = (obj: unknown): obj is TokenContent => {
   try {
     if (obj && typeof obj === 'object') {
@@ -84,5 +97,5 @@ const isTokenContent = (obj: unknown): obj is TokenContent => {
 };
 
 export const validators = {
-  isString, isUser, userFailure, isPublicUser, isTokenContent
+  isString, isUser, userFailure, isPublicUser, isWhitehost, isTokenContent
 };

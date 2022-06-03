@@ -11,6 +11,7 @@ export type StatusCode = 200 | 400 | 401 | 404 | 500;
 
 interface RequestHeaders {
   host?: string,
+  origin?: string,
   authorization?: string
 }
 

@@ -6,8 +6,10 @@
 
 import { runMigrations, runSingleMigration } from './migrations';
 import { addUser, getUserByUid, getUserByUsername, getUserByCreds, deleteUser } from './users';
+import { findHost } from './whitelist';
 
 export const db = {
   runMigrations, runSingleMigration,
-  addUser, getUserByUid, getUserByUsername, getUserByCreds, deleteUser
+  addUser, getUserByUid, getUserByUsername, getUserByCreds, deleteUser,
+  findHost
 };

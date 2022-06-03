@@ -3,11 +3,11 @@
  */
 
 import supertest from 'supertest';
-import { TokenContent, PublicUser } from '../../src/types';
-import { app } from '../../src/app';
-import { loginService } from '../../src/services';
-import { testData } from '../Unit/utils/helperData';
-import { validators } from '../../src/utils/validators';
+import { TokenContent, PublicUser } from '../../../src/types';
+import { app } from '../../../src/app';
+import { loginService } from '../../../src/services';
+import { testData } from '../../Unit/utils/helperData';
+import { validators } from '../../../src/utils/validators';
 
 const api = supertest(app);
 

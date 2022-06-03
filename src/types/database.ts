@@ -9,7 +9,7 @@
  */
 
 import { z } from 'zod';
-import { USER_CONSTANTS } from '../utils/config';
+import { HOST_CONSTANTS, USER_CONSTANTS } from '../utils/config';
 
 export interface Migration {
   id: string,
@@ -49,3 +49,20 @@ export const ZodUser = z.object({
 
 export type User = z.infer<typeof ZodUser>;
 export type PublicUser = Omit<User, 'password'>;
+
+export const ZodWhitehost = z.object({
+  // id
+  id: z.number(),
+  // name
+  name: z.string({
+    required_error: 'host needs a unique name'
+  }).min(HOST_CONSTANTS.NAME_MIN_LENGTH),
+  // host
+  host: z.string({
+    required_error: 'host needs a unique domain'
+  }).min(HOST_CONSTANTS.DOMAIN_MIN_LENGTH),
+  // trusted
+  trusted: z.boolean().default(false)
+}).strict();
+
+export type Whitehost = z.infer<typeof ZodWhitehost>;
