@@ -17,6 +17,10 @@ export class LoginController implements Controller {
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
     if (req.url === '/login' && req.method === 'POST') {
+      // let's handle cors
+      if (req.headers.origin) {
+        await responseHandlers.setCors(res, req.headers.origin);
+      }
       await this.login(req, res);
     } else {
       throw new ControllerError(404, 'not found');

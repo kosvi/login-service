@@ -26,7 +26,7 @@ export const migrations: Array<Migration> = [
   {
     id: 'add_whitelist_table',
     sql: 'CREATE TABLE IF NOT EXISTS whitelist (\
-    id INT PRIMARY KEY, \
+    id SERIAL PRIMARY KEY, \
     name VARCHAR(100) UNIQUE NOT NULL, \
     host VARCHAR(200) UNIQUE NOT NULL, \
     trusted BOOLEAN NOT NULL DEFAULT FALSE \

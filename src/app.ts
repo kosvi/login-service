@@ -11,6 +11,7 @@ import { ControllerError } from './utils/customErrors';
 // Import createServer so we can start taking in requests
 import { IncomingMessage, ServerResponse } from 'http';
 import { LoginController } from './controllers/login';
+import { responseHandlers } from './utils/responseHandlers';
 
 /*
  * Create app and direct requests to correct Controllers
@@ -27,6 +28,14 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
     let controller: Controller | undefined;
 
     logger.log(`${req.method} - ${req.url}`);
+    // first handle OPTIONS requests
+    if (req.method === 'OPTIONS' && req.headers.origin) {
+      await responseHandlers.setCors(res, req.headers.origin);
+      logger.debug('Options : headers set if origin allowed');
+      res.end();
+      return;
+    }
+    // If request wasn't an OPTIONS request -> initialize correct controller to handle request
     if (req.url?.startsWith('/hello')) {
       controller = new HelloController();
     } else if (req.url?.startsWith('/static')) {

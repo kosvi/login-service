@@ -1,5 +1,5 @@
 /* 
- * This file contains all the functions needed when accessing users table in the database
+ * This file contains all the functions needed when accessing whitelist table in the database
  */
 
 

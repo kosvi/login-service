@@ -22,13 +22,7 @@ export class HelloController implements Controller {
   }
 
   async getHello(_req: HttpRequest, res: HttpResponse) {
-    /* FIX THIS LATER */
     try {
-      if (_req.headers && _req.headers.origin) {
-        // eslint-disable-next-line no-console
-        console.log(_req.headers);
-        await responseHandlers.setCors(res, _req.headers.origin);
-      }
       responseHandlers.setHeaderJson(res);
       responseHandlers.setStatus(200, res);
       const content = await helloService.sayHello();

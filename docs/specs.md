@@ -64,7 +64,7 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 
 | field | type | description |
 |-------|------|-------------|
-| id    | int, primary key | id of the whitelisted host |
+| id    | serial, primary key | id of the whitelisted host |
 | name  | string, unique | a name to identify the whitelisted site | 
 | host  | string, unique | a host(:port) that is whitelisted to allow requests to this login-service |
 | trusted(*) | boolean | if false, only allowed methods are: OPTIONS and POST. Else will also allow GET, PUT, PATCH and DELETE. | 

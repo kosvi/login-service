@@ -1,4 +1,12 @@
 /* eslint-disable no-console */
+
+/*
+ * THIS FILE IS NOT "READY FOR PRODUCTION"
+ * it should be moved to Unit-tests and made to test what it is supposed to test
+ * 
+ * CORS should be handled differently during integration tests...
+ */
+
 import { Pool } from 'pg';
 import supertest from 'supertest';
 import { app } from '../../../src/app';
@@ -31,7 +39,6 @@ describe('cors tests', () => {
       }], rowCount: 1
     });
     const response = await api.get('/hello').set('Origin', 'http://foo.example.com');
-    console.log(response.headers);
     expect(response.body).toHaveProperty('msg');
   });
 });

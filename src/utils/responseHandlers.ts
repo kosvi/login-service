@@ -24,6 +24,7 @@ const setCors = async (res: HttpResponse, origin: string): Promise<HttpResponse>
       // set headers correctly
       res.setHeader('Access-Control-Allow-Origin', whitehost.host);
       res.setHeader('Access-Control-Allow-Methods', permissions);
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     }
     // if host was not found -> don't update headers
     return res;

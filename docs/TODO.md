@@ -21,5 +21,5 @@ Current task:
 - make some sense to NODE_ENV=dev and DEBUG env.-variables!
 - make a whitelist of allowed sites that can use login-service!
 - ~~make a test to test if expired tokens are still verified~~
-- TAKE AWAY THE CORS STUFF FROM /hello
+- ~~TAKE AWAY THE CORS STUFF FROM /hello~~
 - move cors tests to Unit-tests (also add tests to: isWhitehost, setCors)
