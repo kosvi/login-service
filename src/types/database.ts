@@ -62,7 +62,7 @@ export const ZodWhitehost = z.object({
     required_error: 'host needs a unique domain'
   }).min(HOST_CONSTANTS.DOMAIN_MIN_LENGTH),
   // trusted
-  trusted: z.boolean().default(false)
+  trusted: z.boolean()
 }).strict();
 
 export type Whitehost = z.infer<typeof ZodWhitehost>;

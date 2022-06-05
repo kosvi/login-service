@@ -81,4 +81,18 @@ describe('validator tests', () => {
     expect(validators.isTokenContent(validTokenContent)).toBe(true);
   });
 
+  // These are to validate objects as whitelist-hosts
+  it('should validate valid whitehost', () => {
+    expect(validators.isWhitehost(testData.validWhitehost)).toBe(true);
+  });
+  it('shouldn\'t allow extra properties for a whitehost', () => {
+    expect(validators.isWhitehost({ ...testData.validWhitehost, extraProperty: 'foobar' })).toBe(false);
+  });
+  it('shouldn\'t validate objects that miss an property', () => {
+    expect(validators.isWhitehost({ id: 1, name: 'foo', host: 'http://foo.example.com' })).toBe(false);
+    expect(validators.isWhitehost({ id: 1, name: 'foo', trusted: false })).toBe(false);
+    expect(validators.isWhitehost({ id: 1, host: 'http://foo.example.com', trusted: false })).toBe(false);
+    expect(validators.isWhitehost({ name: 'foo', host: 'http://foo.example.com', trusted: false })).toBe(false);
+  });
+
 });
