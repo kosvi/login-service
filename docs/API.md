@@ -13,7 +13,8 @@ If authorization is needed, token has to be sent in 'Authorization'-header in fo
 | [/static](#static) | serves static files, like viewing / editing profile |
 | [/users](#users) | allows CRUD-operations for viewing / editing user | 
 | [/verify](#verify) | verifies a token |
-| [/settings](¤settings) | allows viewing server settings (like password requirements) |
+| [/settings](#settings) | allows viewing server settings (like password requirements) |
+| [/hosts](#hosts) | allows adding, editing and removing of client services |
 
 ## hello
 
@@ -52,3 +53,12 @@ Serves static files...
 | endpoint | method | authorization | success | failure(s) |
 |----------|--------|---------------|---------|------------|
 | [/settings](API/settings.md#settings) | GET | none | 200 | - |
+
+## hosts
+
+| endpoint | method | authorization | success | failure(s) |
+|----------|--------|---------------|---------|------------|
+| [/hosts] | GET    | admin         | 200     | 401, 403   |
+| [/hosts] | POST   | admin         | 201     | 401, 403   |
+| [/hosts/:id] | PUT    | admin         | 200     | 401, 403   |
+| [/hosts/:id] | DELETE | admin         | 204     | 401, 403   |

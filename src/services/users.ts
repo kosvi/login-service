@@ -73,6 +73,30 @@ const findByUsernameAndPassword = async (username: string, password: string): Pr
   return user;
 };
 
+/* FINISH THIS */
+// (and write tests!)
+const updateUser = async (user: User): Promise<PublicUser | undefined> => {
+  try {
+    const publicUser = await db.getUserByCreds(user.username, user.password);
+    if (!publicUser) {
+      // password failed
+      return undefined;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const newPublicUser: PublicUser = {
+      ...publicUser,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      stealth: user.stealth
+    };
+    logger.log(newPublicUser.username);
+  } catch (error) {
+    logger.debugError('userService.updateUser()', error);
+  }
+  return undefined;
+};
+
 const isValidPassword = (password: string, user: User): boolean => {
   if (PASSWORD_REQUIREMENTS.MIN_LENGTH > password.length) {
     return false;
@@ -113,5 +137,5 @@ const isValidPassword = (password: string, user: User): boolean => {
 };
 
 export const userService = {
-  hashPassword, compareHashes, addUser, findUserByUid, findByUsername, findByUsernameAndPassword
+  hashPassword, compareHashes, addUser, findUserByUid, findByUsername, findByUsernameAndPassword, updateUser
 };

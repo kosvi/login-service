@@ -74,6 +74,47 @@ export const getUserByCreds = async (username: string, password: string): Promis
   }
 };
 
+export const updateUser = async (user: PublicUser): Promise<boolean> => {
+  logger.db(`UPDATE user '${user.uid}' and SET username, name, email and stealth`);
+  // make sure user REALLY is valid and that UID is set
+  if (!user.uid || !validators.isPublicUser(user)) {
+    logger.log('db.updateUser() - malformed parameters given');
+    return false;
+  }
+  try {
+    // We expect that the user has been verified before
+    const result = await pool.query('UPDATE account SET username = $1, name = $2, email = $3, stealth = $4 WHERE uid = $5',
+      [user.username, user.name, user.email, user.stealth, user.uid]);
+    if (result.rowCount === 1) {
+      logger.log('db.updateUser() - update successfull');
+      return true;
+    } else {
+      logger.error('db.updateUser() - update failed');
+      return false;
+    }
+  } catch (error) {
+    logger.debugError('db.updateUser()', error);
+    return false;
+  }
+};
+
+export const updatePassword = async (uid: string, newPassword: string): Promise<boolean> => {
+  // We expect password being hashed before being passed to this function
+  logger.db(`UPDATE user '${uid}' and SET password`);
+  try {
+    const result = await pool.query('UPDATE account SET password = $1 WHERE uid = $2', [newPassword, uid]);
+    if (result.rowCount === 1) {
+      logger.log('db.updatePassword() - success');
+      return true;
+    }
+    logger.log('db.updatePassword() - failure');
+    return false;
+  } catch (error) {
+    logger.debugError('db.updatePassword()', error);
+    return false;
+  }
+};
+
 export const deleteUser = async (uid: string): Promise<boolean> => {
   try {
     logger.db(`UPDATE user '${uid}' and SET delete = true`);

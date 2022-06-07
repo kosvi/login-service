@@ -23,4 +23,6 @@ Current task:
 - ~~make a test to test if expired tokens are still verified~~
 - ~~TAKE AWAY THE CORS STUFF FROM /hello~~
 - ~~(don't!!!) move cors tests to Unit-tests (also add tests to: isWhitehost, setCors)~~
-- add CORS tests to following paths: /login, /users, /verify and /settings
+- working on updateUser 
+- write whitelist api-documentation!
+- add tests to: db.updateUser, db.updatePassword, db.deleteUser

@@ -10,6 +10,7 @@ import { logger } from '../utils/logger';
 import { responseHandlers } from '../utils/responseHandlers';
 import { loginService } from '../services';
 import { LoginBody } from '../types';
+import { parsers } from '../utils/parsers';
 
 export class LoginController implements Controller {
 
@@ -17,10 +18,6 @@ export class LoginController implements Controller {
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
     if (req.url === '/login' && req.method === 'POST') {
-      // let's handle cors
-      if (req.headers.origin) {
-        await responseHandlers.setCors(res, req.headers.origin);
-      }
       await this.login(req, res);
     } else {
       throw new ControllerError(404, 'not found');
@@ -32,8 +29,7 @@ export class LoginController implements Controller {
       /*
        * Parse request body and use 'username' and 'password' to fetch PublicUser from database
        */
-      const body = (req.body) ? req.body : '{}';
-      const parsedBody = LoginBody.parse(JSON.parse(body));
+      const parsedBody = LoginBody.parse(parsers.parseStringToJson(req.body));
       const user: PublicUser | undefined = await userService.findByUsernameAndPassword(parsedBody.username, parsedBody.password);
       if (user) {
         /*
