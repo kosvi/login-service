@@ -43,6 +43,7 @@ describe('users service tests', () => {
   // reset jest.fn after each so we can start counting from 0
   afterEach(() => {
     jest.clearAllMocks();
+    (pool.query as jest.Mock).mockReset();
   });
 
   it('password hasher should hash passwords', async () => {
@@ -79,6 +80,14 @@ describe('users service tests', () => {
         expect('').toBe('impossible just happened');
       }
     }
+  });
+
+  it('should allow updating user with valid values', async () => {
+    // mock database results
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{ ...user, password: await userService.hashPassword('just-a-password') }], rowCount: 1 }).mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const result = await userService.updateUser({ ...user, password: 'just-a-password' });
+    expect(validators.isPublicUser(result)).toBe(true);
+    expect(result).toEqual(user);
   });
 
   // Below is two very similar tests -> could be refactored??

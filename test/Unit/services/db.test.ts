@@ -8,7 +8,7 @@ import { db } from '../../../src/services';
 
 import { userService } from '../../../src/services';
 import { validators } from '../../../src/utils/validators';
-import { User } from '../../../src/types';
+import { PublicUser, User } from '../../../src/types';
 // helper data
 import { testData } from '../utils/helperData';
 
@@ -125,6 +125,35 @@ describe('users tests', () => {
     ]);
     const returnValue = validators.isPublicUser(publicUser);
     expect(returnValue).toBe(true);
+  });
+
+  it('should UPDATE user correctly', async () => {
+    const testUser: PublicUser = testData.validPublicUser;
+    // mock query results
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const success = await db.updateUser(testUser);
+    expect(success).toBe(true);
+    // now let's make sure the query is what we expect it to be 
+    expect(pool.query).toBeCalledTimes(1);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['UPDATE account SET username = $1, name = $2, email = $3, stealth = $4 WHERE uid = $5',
+        [testUser.username, testUser.name, testUser.email, testUser.stealth, testUser.uid]]
+    ]);
+  });
+
+  it('should UPDATE password correctly', async () => {
+    const uid = testData.validUser.uid ? testData.validUser.uid : '';
+    // just to make sure there is something in the uid
+    expect(uid?.length).toBeGreaterThan(1);
+    const password = 'SomeD1ff1cultPwd!';
+    // mock query results
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const success = await db.updatePassword(uid, password);
+    expect(success).toBe(true);
+    expect(pool.query).toBeCalledTimes(1);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['UPDATE account SET password = $1 WHERE uid = $2', [password, uid]]
+    ]);
   });
 
   it('should UPDATE user when deleting by UID', async () => {

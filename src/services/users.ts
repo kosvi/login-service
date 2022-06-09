@@ -82,7 +82,7 @@ const updateUser = async (user: User): Promise<PublicUser | undefined> => {
       // password failed
       return undefined;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // use the profile in db as the base and update username, name, email and stealth-mode
     const newPublicUser: PublicUser = {
       ...publicUser,
       username: user.username,
@@ -90,11 +90,21 @@ const updateUser = async (user: User): Promise<PublicUser | undefined> => {
       email: user.email,
       stealth: user.stealth
     };
-    logger.log(newPublicUser.username);
+    // now validate input 
+    if (validators.isPublicUser(newPublicUser)) {
+      // given new values are valid
+      const success = await db.updateUser(newPublicUser);
+      if (success) {
+        // updated succesfully
+        return newPublicUser;
+      }
+    }
+    // else a failure occurred (username taken? email in use?)
+    return undefined;
   } catch (error) {
     logger.debugError('userService.updateUser()', error);
+    return undefined;
   }
-  return undefined;
 };
 
 const isValidPassword = (password: string, user: User): boolean => {

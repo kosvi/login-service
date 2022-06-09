@@ -25,4 +25,5 @@ Current task:
 - ~~(don't!!!) move cors tests to Unit-tests (also add tests to: isWhitehost, setCors)~~
 - working on updateUser 
 - write whitelist api-documentation!
-- add tests to: db.updateUser, db.updatePassword, db.deleteUser
+- ~~add tests to: db.updateUser, db.updatePassword, db.deleteUser~~
+- one could add tests when db-promises are rejected ;)
