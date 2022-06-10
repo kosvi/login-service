@@ -1,0 +1,23 @@
+POST http://localhost:3001/users/save
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "£MyTet132!!!",
+  "name": "test user",
+  "email": "example@mailinator.com"
+}
+
+###
+
+PUT http://localhost:3001/users/save
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJhY2YzMDFhZS0zZGU2LTQ5OGItOGI1NS0wZGQ4MGM5NjU5YTMiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwaXJlcyI6MTY1NDg4MzI5MSwiaWF0IjoxNjU0ODgyOTkxfQ.6Ui_s1vZyDMM0N9KApU-koq09K2od6Vjns7EDX3tdsg
+
+{
+  "username": "testuser",
+  "password": "£MyTet132!!!",
+  "name": "test user",
+  "email": "example@mailinator.com",
+  "stealth": false
+}

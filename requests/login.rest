@@ -14,3 +14,13 @@ Authorization: bearer <token>
 
 {
 }
+
+### 
+
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "£MyTet132!!!"
+}
