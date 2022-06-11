@@ -2,7 +2,7 @@ import { OutgoingHttpHeaders, OutgoingHttpHeader } from 'http';
 
 /* List of allowed status codes */
 
-export type StatusCode = 200 | 201 | 400 | 401 | 404 | 500;
+export type StatusCode = 200 | 201 | 204 | 400 | 401 | 404 | 500;
 
 /*
  * These are our custom stripped down request and response objects

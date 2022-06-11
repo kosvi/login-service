@@ -73,8 +73,6 @@ const findByUsernameAndPassword = async (username: string, password: string): Pr
   return user;
 };
 
-/* FINISH THIS */
-// (and write tests!)
 const updateUser = async (user: User): Promise<PublicUser | undefined> => {
   try {
     const publicUser = await db.getUserByCreds(user.username, user.password);
@@ -105,6 +103,31 @@ const updateUser = async (user: User): Promise<PublicUser | undefined> => {
     logger.debugError('userService.updateUser()', error);
     return undefined;
   }
+};
+
+const updatePassword = async (uid: string, oldPassword: string, newPassword: string): Promise<PublicUser | undefined> => {
+  // we expect new password has been entered twice & compared before
+  try {
+    const user = await db.getUserByUidAndPassword(uid, oldPassword);
+    // if old password is valid, try updating password. If success -> return true
+    if (user) {
+      const userWithPassword: User = {
+        ...user,
+        password: newPassword
+      };
+      // check new password for validity &6 try to update new one
+      if (isValidPassword(newPassword, userWithPassword) && await db.updatePassword(uid, await hashPassword(newPassword))) {
+        return user;
+      } else {
+        // new password was not valid
+        // should we throw? ControllerError(?) WhHaAaT?!?
+        logger.debug('userService.updatePassword() - new password didn\'t validate');
+      }
+    }
+  } catch (error) {
+    logger.debugError('userService.updatePassword()', error);
+  }
+  return undefined;
 };
 
 const isValidPassword = (password: string, user: User): boolean => {
@@ -147,5 +170,5 @@ const isValidPassword = (password: string, user: User): boolean => {
 };
 
 export const userService = {
-  hashPassword, compareHashes, addUser, findUserByUid, findByUsername, findByUsernameAndPassword, updateUser
+  hashPassword, compareHashes, addUser, findUserByUid, findByUsername, findByUsernameAndPassword, updateUser, updatePassword, isValidPassword
 };

@@ -1,5 +1,5 @@
 import { userService, VerifyService } from '../services';
-import { Controller, HttpRequest, HttpResponse, TokenContent, ZodUser } from '../types';
+import { Controller, HttpRequest, HttpResponse, TokenContent, UpdatePasswordBody, UpdatePasswordBodyType, ZodUser } from '../types';
 import { ControllerError } from '../utils/customErrors';
 import { ZodError } from 'zod';
 import { logger } from '../utils/logger';
@@ -26,6 +26,8 @@ export class UserController implements Controller {
       await this.addUser(req, res);
     } else if (req.url === '/users/save' && req.method === 'PUT') {
       await this.updateMe(req, res);
+    } else if (req.url === '/users/password' && req.method === 'PATCH') {
+      await this.updateMyPassword(req, res);
     } else {
       throw new ControllerError(404);
     }
@@ -81,6 +83,50 @@ export class UserController implements Controller {
         }
         throw new ControllerError(500);
       }
+    }
+  }
+
+  /*
+   * Update password for currently logged in user
+   */
+  async updateMyPassword(req: HttpRequest, res: HttpResponse) {
+    // make sure user is logged in
+    if (!this.tokenContent) {
+      throw new ControllerError(401, 'not logged in');
+    }
+    if (!req.body) {
+      throw new ControllerError(400, 'no content in request body');
+    }
+    try {
+      // validate body of the request
+      const body: unknown = {
+        ...parsers.parseStringToJson(req.body)
+      };
+      // This can throw ZodError
+      const passwords: UpdatePasswordBodyType = UpdatePasswordBody.parse(body);
+      const publicUser = await userService.updatePassword(this.tokenContent.uid, passwords.password, passwords.newPassword);
+      if (publicUser) {
+        responseHandlers.setHeaderJson(res);
+        responseHandlers.setStatus(204, res);
+        res.end();
+      } else {
+        responseHandlers.setHeaderJson(res);
+        responseHandlers.setStatus(400, res);
+        // We should check if there was an issue with the new password
+        const user = await userService.findUserByUid(this.tokenContent.uid);
+        if (user && userService.isValidPassword(passwords.newPassword, { ...user, password: '' })) {
+          res.end(JSON.stringify({ error: 'old password was incorrect' }));
+        } else {
+          res.end(JSON.stringify({ error: 'new password was not strong enough' }));
+        }
+      }
+    } catch (error) {
+      logger.debugError(`${this.controllerName}`, error);
+      if (error instanceof ZodError) {
+        throw new ControllerError(400, error.issues[0].message);
+      }
+      // Else just return 500
+      throw new ControllerError(500);
     }
   }
 

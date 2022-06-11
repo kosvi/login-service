@@ -74,6 +74,24 @@ export const getUserByCreds = async (username: string, password: string): Promis
   }
 };
 
+export const getUserByUidAndPassword = async (uid: string, password: string): Promise<PublicUser | undefined> => {
+  try {
+    logger.db(`SELECT user ${uid} and check password`);
+    const result = await pool.query('SELECT uid, username, password, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE uid = $1', [uid]);
+    if (result.rowCount === 1 && validators.isUser(result.rows[0])) {
+      // if password is valid -> return found user (as public user)
+      const success = await userService.compareHashes(password, result.rows[0].password);
+      if (success) {
+        return converters.userToPublicUser(result.rows[0]);
+      }
+    }
+  } catch (error) {
+    logger.debugError('db.checkPasswordByUid()', error);
+  }
+  // default to undefined
+  return undefined;
+};
+
 export const updateUser = async (user: PublicUser): Promise<boolean> => {
   logger.db(`UPDATE user '${user.uid}' and SET username, name, email and stealth`);
   // make sure user REALLY is valid and that UID is set

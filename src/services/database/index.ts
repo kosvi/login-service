@@ -5,11 +5,11 @@
  */
 
 import { runMigrations, runSingleMigration } from './migrations';
-import { addUser, getUserByUid, getUserByUsername, getUserByCreds, updateUser, updatePassword, deleteUser } from './users';
+import { addUser, getUserByUid, getUserByUsername, getUserByCreds, getUserByUidAndPassword, updateUser, updatePassword, deleteUser } from './users';
 import { findHost } from './whitelist';
 
 export const db = {
   runMigrations, runSingleMigration,
-  addUser, getUserByUid, getUserByUsername, getUserByCreds, updateUser, updatePassword, deleteUser,
+  addUser, getUserByUid, getUserByUsername, getUserByCreds, getUserByUidAndPassword, updateUser, updatePassword, deleteUser,
   findHost
 };
