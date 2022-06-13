@@ -12,22 +12,24 @@ jobs:
   test: 
     runs-on: ubuntu-20.04
 
-#    services:
-#      postgres:
-#        image: postgres
-#        env:
-#          POSTGRES_DB: "database-name"
-#          POSTGRES_USER: "database-user"
-#          POSTGRES_PASSWORD: "database-password"
-#        # Set health checks to wait until postgres has started
-#        options: >-
-#          --health-cmd pg_isready
-#          --health-interval 10s
-#          --health-timeout 5s
-#          --health-retries 5
-#        ports:
-#          - 5432:5432
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: "test_db"
+          POSTGRES_USER: "tester"
+          POSTGRES_PASSWORD: "test_password"
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
+    env:
+      DATABASE_URL: "postgres://tester:test_password@localhost:5432/test_db"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1

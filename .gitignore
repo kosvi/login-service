@@ -3,4 +3,5 @@
 /coverage/
 /db/
 .env
+/test/db/
 

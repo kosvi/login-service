@@ -13,7 +13,8 @@ import { HOST_CONSTANTS, USER_CONSTANTS } from '../utils/config';
 
 export interface Migration {
   id: string,
-  sql: string
+  up: string,
+  down: string
 }
 
 export const ZodUser = z.object({

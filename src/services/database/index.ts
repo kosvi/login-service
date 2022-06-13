@@ -4,12 +4,12 @@
  * This file exports all the functions in the files found in this directory
  */
 
-import { runMigrations, runSingleMigration } from './migrations';
+import { runMigrations, revertMigrations, runSingleQuery } from './migrations';
 import { addUser, getUserByUid, getUserByUsername, getUserByCreds, getUserByUidAndPassword, updateUser, updatePassword, deleteUser } from './users';
 import { findHost } from './whitelist';
 
 export const db = {
-  runMigrations, runSingleMigration,
+  runMigrations, revertMigrations, runSingleQuery,
   addUser, getUserByUid, getUserByUsername, getUserByCreds, getUserByUidAndPassword, updateUser, updatePassword, deleteUser,
   findHost
 };

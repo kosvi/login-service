@@ -90,6 +90,34 @@ describe('users service tests', () => {
     expect(result).toEqual(user);
   });
 
+  it('should fail to update user if incorrect password is provided', async () => {
+    // mock database results
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{ ...user, password: await userService.hashPassword('just-a-password') }], rowCount: 1 }).mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const result = await userService.updateUser({ ...user, password: 'just-another-password' });
+    expect(validators.isPublicUser(result)).toBe(false);
+    expect(result).toBe(undefined);
+  });
+
+  it('should be able to update password with valid input', async () => {
+    const validOldPassword = 'V4lidPwd5#!moreLength';
+    const validNewPassword = 'N3wPwdFor##OurUs3r!';
+    // mock database results
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{ ...user, password: await userService.hashPassword(validOldPassword) }], rowCount: 1 }).mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const result = await userService.updatePassword(user.uid || 'some-made-up-uid', validOldPassword, validNewPassword);
+    expect(validators.isPublicUser(result)).toBe(true);
+    expect(result).toEqual(user);
+  });
+
+  it('should fail to update password if invalid password is given', async () => {
+    const validOldPassword = 'V4lidPwd5#!moreLength';
+    const validNewPassword = 'N3wPwdFor##OurUs3r!';
+    // mock database results
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{ ...user, password: await userService.hashPassword(validOldPassword) }], rowCount: 1 }).mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const result = await userService.updatePassword(user.uid || 'some-made-up-uid', `${validOldPassword}Extra`, validNewPassword);
+    expect(validators.isPublicUser(result)).toBe(false);
+    expect(result).toBe(undefined);
+  });
+
   // Below is two very similar tests -> could be refactored??
 
   it('should return user by uid', async () => {

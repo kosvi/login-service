@@ -35,11 +35,13 @@ describe('database migration tests', () => {
   // and these are our test migration queries
   const migrations = [{
     id: 'mig1',
-    sql: 'CREATE TABLE foo (id VARCHAR(40) PRIMARY KEY, somevalue TEXT);'
+    up: 'CREATE TABLE foo (id VARCHAR(40) PRIMARY KEY, somevalue TEXT);',
+    down: 'DROP TABLE IF EXISTS foo'
   },
   {
     id: 'mig2',
-    sql: 'INSERT INTO foo (id, somevalue) VALUES (\'foo\', \'bar\')'
+    up: 'INSERT INTO foo (id, somevalue) VALUES (\'foo\', \'bar\')',
+    down: 'DELETE FROM foo WHERE if = \'foo\''
   }
   ];
 
@@ -76,10 +78,10 @@ describe('database migration tests', () => {
     expect((pool.query as jest.Mock).mock.calls).toEqual([
       ['CREATE TABLE IF NOT EXISTS migration (id VARCHAR(50) PRIMARY KEY, created_on TIMESTAMP NOT NULL DEFAULT current_timestamp);'],
       ['SELECT * FROM migration WHERE id = $1', [migrations[0].id]],
-      [migrations[0].sql],
+      [migrations[0].up],
       ['INSERT INTO migration (id) VALUES ($1)', [migrations[0].id]],
       ['SELECT * FROM migration WHERE id = $1', [migrations[1].id]],
-      [migrations[1].sql],
+      [migrations[1].up],
       ['INSERT INTO migration (id) VALUES ($1)', [migrations[1].id]]
     ]);
   });
@@ -125,6 +127,14 @@ describe('users tests', () => {
     ]);
     const returnValue = validators.isPublicUser(publicUser);
     expect(returnValue).toBe(true);
+    // run the same test for getUserByUidAndPassword()
+    (pool.query as jest.Mock).mockClear();
+    const anotherPublicUser = await db.getUserByUidAndPassword('some-long-uid', 'Password!');
+    expect(pool.query).toBeCalledTimes(1);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['SELECT uid, username, password, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE uid = $1', ['some-long-uid']]
+    ]);
+    expect(validators.isPublicUser(anotherPublicUser)).toBe(true);
   });
 
   it('should UPDATE user correctly', async () => {
