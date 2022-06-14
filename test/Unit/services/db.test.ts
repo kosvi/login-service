@@ -36,12 +36,12 @@ describe('database migration tests', () => {
   const migrations = [{
     id: 'mig1',
     up: 'CREATE TABLE foo (id VARCHAR(40) PRIMARY KEY, somevalue TEXT);',
-    down: 'DROP TABLE IF EXISTS foo'
+    down: 'DROP TABLE IF EXISTS foo;'
   },
   {
     id: 'mig2',
-    up: 'INSERT INTO foo (id, somevalue) VALUES (\'foo\', \'bar\')',
-    down: 'DELETE FROM foo WHERE if = \'foo\''
+    up: 'INSERT INTO foo (id, somevalue) VALUES (\'foo\', \'bar\');',
+    down: 'DELETE FROM foo WHERE id = \'foo\';'
   }
   ];
 
@@ -53,12 +53,14 @@ describe('database migration tests', () => {
   // and reset jest.fn after each so we can start counting from 0
   afterEach(() => {
     jest.clearAllMocks();
+    (pool.query as jest.Mock).mockReset();
   });
 
   it('should try to create migration table', async () => {
     (pool.query as jest.Mock).mockResolvedValue({ rows: [{}], rowCount: 1 });
     // these migrations are found from db (mockedValue / rowCount: 1)
-    await db.runMigrations(migrations);
+    const result = await db.runMigrations(migrations);
+    expect(result).toBe(true);
     // CREATE migration + two migrations as params (SELECT = found) = 3 queries
     expect(pool.query).toBeCalledTimes(3);
     expect(pool.query).toHaveBeenNthCalledWith(1, 'CREATE TABLE IF NOT EXISTS migration (id VARCHAR(50) PRIMARY KEY, created_on TIMESTAMP NOT NULL DEFAULT current_timestamp);');
@@ -68,7 +70,8 @@ describe('database migration tests', () => {
 
   it('should do the migrations', async () => {
     (pool.query as jest.Mock).mockResolvedValue({ rows: [], rowCount: 0 });
-    await db.runMigrations(migrations);
+    const result = await db.runMigrations(migrations);
+    expect(result).toBe(true);
     // This becomes more tricky to count:
     // - 1 for creating migration table
     // - 1 SELECT to see if migration exists, 1 for actual migration + 1 for adding to migration table
@@ -84,6 +87,48 @@ describe('database migration tests', () => {
       [migrations[1].up],
       ['INSERT INTO migration (id) VALUES ($1)', [migrations[1].id]]
     ]);
+  });
+
+  it('should revert migrations by request', async () => {
+    // We need to mock the following queries:
+    // - 1 for creating migration table if not exists
+    // - 2 we need to find the migration from migration table to be able to revert it
+    // - 3 run the down-query to revert the migration 
+    // - 4 delete the migration from migrations table
+    // - another iteraton of 2, 3 and 4 => total of 7 calls
+    (pool.query as jest.Mock)
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    // now we have mocked the "everything went fine" -case
+    const result = await db.revertMigrations(migrations, [migrations[0].id, migrations[1].id]);
+    expect(result).toBe(true);
+    expect(pool.query).toBeCalledTimes(7);
+    // notable here is that the array is gone trough in reverse order!
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['CREATE TABLE IF NOT EXISTS migration (id VARCHAR(50) PRIMARY KEY, created_on TIMESTAMP NOT NULL DEFAULT current_timestamp);'],
+      ['SELECT * FROM migration WHERE id = $1', [migrations[1].id]],
+      [migrations[1].down],
+      ['DELETE FROM migration WHERE id = $1', [migrations[1].id]],
+      ['SELECT * FROM migration WHERE id = $1', [migrations[0].id]],
+      [migrations[0].down],
+      ['DELETE FROM migration WHERE id = $1', [migrations[0].id]]
+    ]);
+  });
+
+  it('should return false if a query fails', async () => {
+    (pool.query as jest.Mock).mockRejectedValueOnce({});
+    const firstQueryfails = await db.runMigrations(migrations);
+    expect(firstQueryfails).toBe(false);
+    jest.clearAllMocks();
+    (pool.query as jest.Mock).mockReset();
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [], rowCount: 1 }).mockRejectedValueOnce({});
+    const secondQueryFails = await db.revertMigrations(migrations, [migrations[0].id]);
+    expect(secondQueryFails).toBe(false);
   });
 
 });

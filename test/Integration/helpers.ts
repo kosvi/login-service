@@ -1,6 +1,16 @@
+/*
+ * This file contains all sorts of helpers for integration tests
+ */
+
 import { db } from '../../src/services';
 import { migrations } from '../../src/migrations/migrations';
 import { pool } from '../../src/services/database/db';
+import { z } from 'zod';
+
+/*
+ * The functions below are used to setup database at the beginning of the test
+ * and to close connection after the test (so that jest finished correctly)
+ */
 
 export const resetDatabase = async () => {
   const allMigrations: Array<string> = migrations.reduce((prev: Array<string>, curr) => {
@@ -12,4 +22,18 @@ export const resetDatabase = async () => {
 
 export const closeDatabase = async () => {
   await pool.end();
+};
+
+/*
+ * Here is a simple parser for error messages returned by api
+ */
+
+export const ApiError = z.object({
+  error: z.string()
+}).strict();
+
+export type ApiErrorType = z.infer<typeof ApiError>;
+
+export const isApiError = (obj: unknown): obj is ApiErrorType => {
+  return ApiError.safeParse(obj).success;
 };

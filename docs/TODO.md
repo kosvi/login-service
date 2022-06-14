@@ -24,10 +24,10 @@ Current task:
 - ~~TAKE AWAY THE CORS STUFF FROM /hello~~
 - ~~(don't!!!) move cors tests to Unit-tests (also add tests to: isWhitehost, setCors)~~
 - ~~working on updateUser~~
-- write whitelist api-documentation!
+- ~~write whitelist api-documentation! (a bit incomplete tho)~~
 - ~~add tests to: db.updateUser, db.updatePassword, db.deleteUser~~
 - one could add tests when db-promises are rejected ;)
 - add (integration) tests to /users
 - ~~write tests: db.getUserByUidAndPassword(), ...~~
 - WRITE A LOT OF TESTS!!! especially tests that do something unexpecting...
-- Write tests for down-migrations
+- ~~Write tests for down-migrations~~

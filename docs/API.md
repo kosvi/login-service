@@ -58,7 +58,7 @@ Serves static files...
 
 | endpoint | method | authorization | success | failure(s) |
 |----------|--------|---------------|---------|------------|
-| [/hosts] | GET    | admin         | 200     | 401, 403   |
-| [/hosts] | POST   | admin         | 201     | 401, 403   |
-| [/hosts/:id] | PUT    | admin         | 200     | 401, 403   |
-| [/hosts/:id] | DELETE | admin         | 204     | 401, 403   |
+| [/hosts](API/hosts.md#hosts) | GET    | admin         | 200     | 401, 403   |
+| [/hosts](API/hosts.md#hosts) | POST   | admin         | 201     | 401, 403   |
+| [/hosts/:id](API/hosts.md#hosts-id) | PUT    | admin         | 200     | 401, 403   |
+| [/hosts/:id](API/hosts.md#hosts-id) | DELETE | admin         | 204     | 401, 403   |
