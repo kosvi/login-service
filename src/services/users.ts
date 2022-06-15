@@ -60,6 +60,7 @@ const addUser = async (username: string, password: string, name: string, email: 
 
 const findUserByUid = async (uid: string): Promise<PublicUser | undefined> => {
   const user: PublicUser | undefined = await db.getUserByUid(uid);
+  logger.debug(`userService.findUserByUid() returned: ${user?.username || undefined}`);
   return user;
 };
 
@@ -130,6 +131,11 @@ const updatePassword = async (uid: string, oldPassword: string, newPassword: str
   return undefined;
 };
 
+const deleteUser = async (uid: string): Promise<boolean> => {
+  // we expect authorization has been check before
+  return await db.deleteUser(uid);
+};
+
 const isValidPassword = (password: string, user: User): boolean => {
   if (PASSWORD_REQUIREMENTS.MIN_LENGTH > password.length) {
     return false;
@@ -170,5 +176,5 @@ const isValidPassword = (password: string, user: User): boolean => {
 };
 
 export const userService = {
-  hashPassword, compareHashes, addUser, findUserByUid, findByUsername, findByUsernameAndPassword, updateUser, updatePassword, isValidPassword
+  hashPassword, compareHashes, addUser, findUserByUid, findByUsername, findByUsernameAndPassword, updateUser, updatePassword, deleteUser, isValidPassword
 };

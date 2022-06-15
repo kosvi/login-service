@@ -21,13 +21,15 @@ export class UserController implements Controller {
       this.tokenContent = undefined;
     }
     if (req.url === '/users/me' && req.method === 'GET') {
-      this.returnMe(req, res);
+      await this.returnMe(req, res);
     } else if (req.url === '/users/save' && req.method === 'POST') {
       await this.addUser(req, res);
     } else if (req.url === '/users/save' && req.method === 'PUT') {
       await this.updateMe(req, res);
     } else if (req.url === '/users/password' && req.method === 'PATCH') {
       await this.updateMyPassword(req, res);
+    } else if (req.url === '/users/delete' && req.method === 'DELETE') {
+      await this.deleteMe(req, res);
     } else {
       throw new ControllerError(404);
     }
@@ -36,12 +38,12 @@ export class UserController implements Controller {
   /*
    * This function simply returns the information of the logged in user 
    */
-  returnMe(_req: HttpRequest, res: HttpResponse) {
+  async returnMe(_req: HttpRequest, res: HttpResponse) {
     if (!this.tokenContent) {
       // user not logged in -> 401
       throw new ControllerError(401, 'not logged in');
     }
-    const me = userService.findUserByUid(this.tokenContent.uid);
+    const me = await userService.findUserByUid(this.tokenContent.uid);
     responseHandlers.setHeaderJson(res);
     res.end(JSON.stringify(me));
   }
@@ -126,6 +128,33 @@ export class UserController implements Controller {
         throw new ControllerError(400, error.issues[0].message);
       }
       // Else just return 500
+      throw new ControllerError(500);
+    }
+  }
+
+  /*
+   * This function simply deletes the user currently logged in
+   */
+  async deleteMe(_req: HttpRequest, res: HttpResponse) {
+    // make sure user is logged in
+    if (!this.tokenContent) {
+      throw new ControllerError(401, 'not logged in');
+    }
+    try {
+      if (await userService.deleteUser(this.tokenContent.uid)) {
+        responseHandlers.setHeaderJson(res);
+        responseHandlers.setStatus(204, res);
+        res.end();
+      } else {
+        throw new ControllerError(500);
+      }
+    } catch (error) {
+      // this could be simply removed as we don't really need the try - catch here
+      // deleting should be pretty straight forward job and failures are all 500 at this point
+      logger.debugError('deleteMe()', error);
+      if (error instanceof ControllerError) {
+        throw error;
+      }
       throw new ControllerError(500);
     }
   }

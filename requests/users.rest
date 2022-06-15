@@ -29,14 +29,22 @@ Content-Type: application/json
 
 {
   "username": "testuser",
-  "password": "Password!"
+  "password": "£MyTet132!!!"
 }
+
+###
+
+GET http://localhost:3001/users/me
+Content-Type: application/json
+Authorization: bearer <token>
+
+
 
 ### 
 
 PATCH http://localhost:3001/users/password
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJhY2YzMDFhZS0zZGU2LTQ5OGItOGI1NS0wZGQ4MGM5NjU5YTMiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwaXJlcyI6MTY1NDk3MTEzMSwibmFtZSI6InRlc3QgdXNlciIsImVtYWlsIjoiZXhhbXBsZUBtYWlsaW5hdG9yLmNvbSIsImlhdCI6MTY1NDk3MDgzMX0.jobDRQaIw3ivadPRPqKpm4KaX9rsho0Jqxu6Eyax24g
+Authorization: bearer <token>
 
 {
   "password": "Password!",

@@ -3,9 +3,14 @@ import { validators } from '../../../src/utils/validators';
 import { userService } from '../../../src/services';
 import { PublicUser } from '../../../src/types';
 import { verifyAsyncThrows } from '../utils/helperFunctions';
+import { testData } from '../utils/helperData';
 // these are needed for mocking
 import { v4 as uuidv4 } from 'uuid';
 import { Pool } from 'pg';
+
+
+// this is the uid used in tests where we need to know the uid 
+const testUid = 'af3b325f-06f0-4b25-9fb8-27b07a55cd14';
 
 // mock pg / pool.query 
 jest.mock('pg', () => {
@@ -17,7 +22,7 @@ jest.mock('pg', () => {
 // mock uuid
 jest.mock('uuid', () => {
   const mockUuid = {
-    v4: jest.fn().mockImplementation(() => { return 'af3b325f-06f0-4b25-9fb8-27b07a55cd14'; })
+    v4: jest.fn().mockImplementation(() => { return testUid; })
   };
   return mockUuid;
 });
@@ -27,17 +32,9 @@ describe('users service tests', () => {
   // this is our pool for the tests
   const pool: Pool = new Pool();
 
-  // our testuser
   const user: PublicUser = {
-    uid: uuidv4(),
-    username: 'username',
-    name: 'full name',
-    email: 'user@example.com',
-    admin: false,
-    locked: false,
-    stealth: false,
-    deleted: false,
-    created_on: new Date()
+    ...testData.validPublicUser,
+    uid: uuidv4()
   };
 
   // reset jest.fn after each so we can start counting from 0
@@ -63,7 +60,7 @@ describe('users service tests', () => {
     // check that pool.query was called with correct params (password hash can be any string)
     expect(pool.query).toHaveBeenCalledTimes(1);
     expect(pool.query).toHaveBeenCalledWith('INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
-      ['af3b325f-06f0-4b25-9fb8-27b07a55cd14', 'username', expect.any(String), 'full name', 'user@example.com']);
+      [testUid, 'username', expect.any(String), 'full name', 'user@example.com']);
   });
 
   it('should fail to store invalid user', async () => {
@@ -126,7 +123,7 @@ describe('users service tests', () => {
       rows: [user],
       rowCount: 1
     });
-    const resultUser = await userService.findUserByUid('af3b325f-06f0-4b25-9fb8-27b07a55cd14');
+    const resultUser = await userService.findUserByUid(testUid);
     if (validators.isPublicUser(resultUser)) {
       expect(resultUser.email).toBe(user.email);
       expect(resultUser.email.length).toBeGreaterThan(1);
@@ -150,6 +147,14 @@ describe('users service tests', () => {
       // for some mind melting reason, we failed to validate user we just validate earlier
       expect('').toBe('user validation failed');
     }
+  });
+
+  it('should be pretty simple job to remove account', async () => {
+    // mock database query result
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const result = await userService.deleteUser(testUid);
+    expect(result).toBe(true);
+    expect(pool.query).toBeCalledTimes(1);
   });
 
   it('shouldn\'t allow too easy passwords', async () => {

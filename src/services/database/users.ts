@@ -136,7 +136,7 @@ export const updatePassword = async (uid: string, newPassword: string): Promise<
 export const deleteUser = async (uid: string): Promise<boolean> => {
   try {
     logger.db(`UPDATE user '${uid}' and SET delete = true`);
-    const result = await pool.query('UPDATE account SET name = \'\', email = \'\', deleted = TRUE WHERE uid = $1', [uid]);
+    const result = await pool.query('UPDATE account SET name = \'\', email = \'\', password = \'\', deleted = TRUE WHERE uid = $1', [uid]);
     if (result.rowCount === 1) {
       // We have updated a row
       logger.log(`db.deleteUser - ${uid} deleted`);

@@ -37,3 +37,24 @@ export type ApiErrorType = z.infer<typeof ApiError>;
 export const isApiError = (obj: unknown): obj is ApiErrorType => {
   return ApiError.safeParse(obj).success;
 };
+
+/*
+ * Here is a simple parser for parsing login responses from api
+ */
+
+export const LoginBody = z.object({
+  token: z.string(),
+  content: z.object({
+    uid: z.string().uuid(),
+    username: z.string(),
+    name: z.string().optional(),
+    email: z.string().email().optional(),
+    expires: z.number()
+  })
+}).strict();
+
+export type LoginBodyType = z.infer<typeof LoginBody>;
+
+export const isLoginBody = (obj: unknown): obj is LoginBodyType => {
+  return LoginBody.safeParse(obj).success;
+};

@@ -218,7 +218,7 @@ describe('users tests', () => {
     const success = await db.deleteUser(testUID);
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['UPDATE account SET name = \'\', email = \'\', deleted = TRUE WHERE uid = $1', [testUID]]
+      ['UPDATE account SET name = \'\', email = \'\', password = \'\', deleted = TRUE WHERE uid = $1', [testUID]]
     ]);
     expect(success).toBe(true);
   });
