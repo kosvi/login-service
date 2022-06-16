@@ -31,7 +31,7 @@ App has following environmental variables and they can be set in `.env`.
 |variable name| description | required | default value |
 |-------------|-------------|----------|---------------|
 |NODE_ENV     |informs the server about the enviroment it's currently running | no | production |
-|DEBUG_MODE   | determines if stack traces are returned on error | no | false |
+|DEBUG_MODE   | determines if debug lines are written on log and if stack traces are returned on error | no | false |
 |DATABASE_URL | tell where to find database | **yes** | postgres://user:password@localhost:port/db |
 |PORT         | set the port the server listens on | no | 3000 |
 |SECRET       | secret that is used when signing JSON web tokens | **yes** | process.exit(2) |

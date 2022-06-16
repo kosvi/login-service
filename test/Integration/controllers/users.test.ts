@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import { app } from '../../../src/app';
+import { db } from '../../../src/services';
 import { PublicUser } from '../../../src/types';
 import { validators } from '../../../src/utils/validators';
 import { closeDatabase, isLoginBody, resetDatabase } from '../helpers';
@@ -59,6 +60,10 @@ describe('UsersController integration tests', () => {
     }
   });
 
+  /*
+   * HERE ARE THE ACTUAL TESTS
+   */
+
   it('should give users details on /me', async () => {
     const response = await api.get(`${base}/me`).set('Authorization', `bearer ${token}`).expect(200);
     const user = toPublicUser(response.body);
@@ -72,6 +77,52 @@ describe('UsersController integration tests', () => {
       expect(user.locked).toBe(false);
       expect(user.stealth).toBe(true);
       expect(user.deleted).toBe(false);
+    }
+  });
+
+  it('should be able to store new users', async () => {
+    const userDetails = {
+      username: 'newdude',
+      password: 'JustT0M4ke$ure!',
+      name: 'New Dude',
+      email: 'newdude@example.com'
+    };
+    const response = await api.post(`${base}/save`).send(userDetails).expect(201);
+    // response should return PublicUser
+    const publicUser = toPublicUser(response.body);
+    expect(publicUser).not.toBe(undefined);
+    // we should have a user created, make sure it exists in database ()
+    const queryResult = await db.getUserByCreds(userDetails.username, userDetails.password);
+    expect(queryResult).not.toBe(undefined);
+    // queryresult should equal to publicuser returned by api (if we just add the created_on)
+    expect(queryResult).toEqual({ ...publicUser, created_on: queryResult?.created_on });
+  });
+
+  it('should be able to edit existing users', async () => {
+    const response = await api.put(`${base}/save`).set('Authorization', `bearer ${token}`).send({
+      username: 'tester2',
+      password: newUser.password,
+      name: 'New Name',
+      email: 'tester2@example.net',
+      stealth: false
+    }).expect(200);
+    expect(response.body).not.toBe(undefined);
+    const publicUser = toPublicUser(response.body);
+    expect(validators.isPublicUser(publicUser)).toBe(true);
+    if (validators.isPublicUser(publicUser)) {
+      expect(publicUser.username).toBe('tester2');
+      expect(publicUser.name).toBe('New Name');
+      expect(publicUser.email).toBe('tester2@example.net');
+      expect(publicUser.stealth).toBe(false);
+    }
+    // let's see that things look good at database also
+    const queryResult = await db.getUserByUid(publicUser?.uid || '');
+    expect(validators.isPublicUser(queryResult)).toBe(true);
+    if (validators.isPublicUser(queryResult)) {
+      expect(queryResult.username).toBe('tester2');
+      expect(queryResult.name).toBe('New Name');
+      expect(queryResult.email).toBe('tester2@example.net');
+      expect(queryResult.stealth).toBe(false);
     }
   });
 

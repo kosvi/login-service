@@ -47,8 +47,7 @@ Status 201
   "admin": boolean,
   "locked": boolean,
   "stealth": boolean,
-  "deleted": boolean,
-  "created_on": "<date-in-iso-format>"
+  "deleted": boolean
 }
 ```
 (*) POST creates a new user on server, PUT updates existing user \

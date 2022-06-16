@@ -3,10 +3,10 @@
  *  once the application grows bigger
  */
 
-import { NODE_ENV } from './config';
+import { DEBUG_MODE, NODE_ENV } from './config';
 
 const handleLine = (type: string, line: string) => {
-  if (NODE_ENV === 'test') {
+  if (NODE_ENV === 'test' && !DEBUG_MODE) {
     return;
   }
   const date = new Date();
@@ -28,13 +28,13 @@ const db = (line: string) => {
 };
 
 const debug = (line: string) => {
-  if (NODE_ENV === 'dev') {
+  if (DEBUG_MODE) {
     handleLine('DEBUG', line);
   }
 };
 
 const debugError = (source: string, err: unknown) => {
-  if (NODE_ENV === 'dev' && err instanceof Error) {
+  if (DEBUG_MODE && err instanceof Error) {
     debug(`${source} - ${err.name}: ${err.message}`);
   }
 };

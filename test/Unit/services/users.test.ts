@@ -82,7 +82,7 @@ describe('users service tests', () => {
   it('should allow updating user with valid values', async () => {
     // mock database results
     (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{ ...user, password: await userService.hashPassword('just-a-password') }], rowCount: 1 }).mockResolvedValueOnce({ rows: [], rowCount: 1 });
-    const result = await userService.updateUser({ ...user, password: 'just-a-password' });
+    const result = await userService.updateUser(user.uid || '', 'just-a-password', user);
     expect(validators.isPublicUser(result)).toBe(true);
     expect(result).toEqual(user);
   });
@@ -90,7 +90,7 @@ describe('users service tests', () => {
   it('should fail to update user if incorrect password is provided', async () => {
     // mock database results
     (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [{ ...user, password: await userService.hashPassword('just-a-password') }], rowCount: 1 }).mockResolvedValueOnce({ rows: [], rowCount: 1 });
-    const result = await userService.updateUser({ ...user, password: 'just-another-password' });
+    const result = await userService.updateUser(user.uid || '', 'just-a-password2', user);
     expect(validators.isPublicUser(result)).toBe(false);
     expect(result).toBe(undefined);
   });

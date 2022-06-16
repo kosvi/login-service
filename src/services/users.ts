@@ -74,28 +74,31 @@ const findByUsernameAndPassword = async (username: string, password: string): Pr
   return user;
 };
 
-const updateUser = async (user: User): Promise<PublicUser | undefined> => {
+const updateUser = async (uid: string, password: string, newValues: PublicUser): Promise<PublicUser | undefined> => {
   try {
-    const publicUser = await db.getUserByCreds(user.username, user.password);
-    if (!publicUser) {
+    if (!uid) {
+      return undefined;
+    }
+    const oldValues = await db.getUserByUidAndPassword(uid, password);
+    if (!oldValues) {
       // password failed
       return undefined;
     }
     // use the profile in db as the base and update username, name, email and stealth-mode
-    const newPublicUser: PublicUser = {
-      ...publicUser,
-      username: user.username,
-      name: user.name,
-      email: user.email,
-      stealth: user.stealth
+    const newUser: PublicUser = {
+      ...oldValues,
+      username: newValues.username,
+      name: newValues.name,
+      email: newValues.email,
+      stealth: newValues.stealth
     };
     // now validate input 
-    if (validators.isPublicUser(newPublicUser)) {
+    if (validators.isPublicUser(newUser)) {
       // given new values are valid
-      const success = await db.updateUser(newPublicUser);
+      const success = await db.updateUser(newUser);
       if (success) {
         // updated succesfully
-        return newPublicUser;
+        return newUser;
       }
     }
     // else a failure occurred (username taken? email in use?)

@@ -1,11 +1,12 @@
 import { userService, VerifyService } from '../services';
-import { Controller, HttpRequest, HttpResponse, TokenContent, UpdatePasswordBody, UpdatePasswordBodyType, ZodUser } from '../types';
+import { Controller, HttpRequest, HttpResponse, PublicUser, TokenContent, UpdatePasswordBody, UpdatePasswordBodyType, ZodUser } from '../types';
 import { ControllerError } from '../utils/customErrors';
 import { ZodError } from 'zod';
 import { logger } from '../utils/logger';
 import { parsers } from '../utils/parsers';
 import { responseHandlers } from '../utils/responseHandlers';
 import { validators } from '../utils/validators';
+import { converters } from '../utils/converters';
 
 export class UserController implements Controller {
 
@@ -60,31 +61,31 @@ export class UserController implements Controller {
       // no body set -> malformed request
       throw new ControllerError(400, 'no body found from request');
     }
-    const currentUser = await userService.findUserByUid(this.tokenContent.uid);
-    if (!currentUser) {
-      // user was not found with UID in token (?!??!)
-      throw new ControllerError(500);
+    // parse the request body (body should include the current password!)
+    const parseResult = ZodUser.safeParse({ ...parsers.parseStringToJson(req.body) });
+    let givenValues: PublicUser | undefined;
+    if (parseResult.success) {
+      givenValues = parseResult.data;
     }
-    const user: unknown = {
-      ...currentUser,
-      ...parsers.parseStringToJson(req.body)
-    };
-    if (validators.isUser(user)) {
-      try {
-        const updatedUser = await userService.updateUser(user);
-        if (updatedUser) {
-          responseHandlers.setHeaderJson(res);
-          res.end(JSON.stringify(updatedUser));
-        } else {
-          throw new ControllerError(500);
-        }
-      } catch (error) {
-        logger.debugError(`${this.controllerName}`, error);
-        if (error instanceof ControllerError) {
-          throw error;
-        }
+    if (!validators.isUser(givenValues)) {
+      // failure -> couldn't parse the request body
+      throw new ControllerError(400, 'malformed request');
+    }
+    try {
+      // update the user and see if we succeeded
+      const updatedUser = await userService.updateUser(this.tokenContent.uid, givenValues.password, converters.userToPublicUser(givenValues));
+      if (updatedUser) {
+        responseHandlers.setHeaderJson(res);
+        res.end(JSON.stringify(updatedUser));
+      } else {
         throw new ControllerError(500);
       }
+    } catch (error) {
+      logger.debugError(`${this.controllerName}`, error);
+      if (error instanceof ControllerError) {
+        throw error;
+      }
+      throw new ControllerError(500);
     }
   }
 
