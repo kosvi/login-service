@@ -3,7 +3,7 @@ import { app } from '../../../src/app';
 import { db } from '../../../src/services';
 import { PublicUser } from '../../../src/types';
 import { validators } from '../../../src/utils/validators';
-import { closeDatabase, isLoginBody, resetDatabase } from '../helpers';
+import { checkApiError, closeDatabase, isLoginBody, resetDatabase } from '../helpers';
 
 const api = supertest(app);
 const base = '/users';
@@ -25,9 +25,20 @@ const toPublicUser = (obj: unknown): PublicUser | undefined => {
   return undefined;
 };
 
+// let's store current env
+const ORIGINAL_ENV = process.env;
+
 // setup database for tests
 beforeAll(async () => {
   await resetDatabase();
+  // Set password settings so we won't fail tests because of .env settings
+  process.env = {
+    ...ORIGINAL_ENV,
+    PASSWORD_MIN_LENGTH: '5',
+    PASSWORD_REQUIRE_BOTH_CASES: 'true',
+    PASSWORD_REQUIRE_SPECIAL_CHARACTER: 'true',
+    PASSWORD_REQUIRE_NO_EASY: 'true'
+  };
 });
 
 describe('UsersController integration tests', () => {
@@ -126,9 +137,66 @@ describe('UsersController integration tests', () => {
     }
   });
 
+  it('should be able to update password', async () => {
+    const newPwd = 'Th1s!sL4NuPwd#1';
+    await api.patch(`${base}/password`).set('Authorization', `bearer ${token}`).send({
+      password: newUser.password,
+      newPassword: newPwd
+    }).expect(204);
+    // now, let's try to login with the new password
+    const response = await api.post('/login').send({
+      username: newUser.username,
+      password: newPwd
+    }).expect(200);
+    expect(response.body).toHaveProperty('token');
+  });
+
+  /*
+   * Now we have tested all successfull cases, let's try to break things up a bit
+   */
+
+  it('should give proper error instead of info if token missing', async () => {
+    const noTokenResponse = await api.get(`${base}/me`).expect(401);
+    checkApiError(noTokenResponse.body, 'not logged in');
+  });
+
+  it('shouldn\'t accept new users with weak passwords', async () => {
+    const userValues = {
+      username: 'user',
+      password: 'simple',
+      name: 'User Name',
+      email: 'user@example.net'
+    };
+    const newUserResponse = await api.post(`${base}/save`).send(userValues).expect(400);
+    checkApiError(newUserResponse.body, 'password not strong enough');
+  });
+
+  it('shouldn\'t allow updating password to a weak password', async () => {
+    const newPasswordResponse = await api.patch(`${base}/password`).set('Authorization', `bearer ${token}`).send({
+      password: newUser.password,
+      newPassword: 'too_weak'
+    }).expect(400);
+    checkApiError(newPasswordResponse.body, 'new password was not strong enough');
+  });
+
+  it('should tell if password failed on password update', async () => {
+    const newPasswordResponse = await api.patch(`${base}/password`).set('Authorization', `bearer ${token}`).send({
+      password: 'wrong_password',
+      newPassword: 'T0tally!AV4lidPwd!!'
+    }).expect(400);
+    checkApiError(newPasswordResponse.body, 'old password was incorrect');
+  });
+
+  it('should handle malformed request body correctly', async () => {
+    const noBodyResponse = await api.patch(`${base}/password`).set('Authorization', `bearer ${token}`).send({}).expect(400);
+    checkApiError(noBodyResponse.body, 'old password is required');
+  });
+
 });
 
 // close connections to database to let jest exit without problems
 afterAll(async () => {
   await closeDatabase();
+  // set env to it's original state
+  process.env = { ...ORIGINAL_ENV };
 });

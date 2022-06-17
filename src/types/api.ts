@@ -37,8 +37,8 @@ export type LoginBodyType = z.infer<typeof LoginBody>;
  * This is the content send by user when updating password
  */
 export const UpdatePasswordBody = z.object({
-  password: z.string({ required_error: 'old password is needed' }),
-  newPassword: z.string({ required_error: 'new password is needed' })
+  password: z.string({ required_error: 'old password is required' }),
+  newPassword: z.string({ required_error: 'new password is required' })
 });
 
 export type UpdatePasswordBodyType = z.infer<typeof UpdatePasswordBody>;

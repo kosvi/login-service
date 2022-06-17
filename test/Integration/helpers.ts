@@ -25,6 +25,17 @@ export const closeDatabase = async () => {
 };
 
 /*
+ * This function is to check apiErrors and if they match what was expected from them
+ */
+
+export const checkApiError = (body: unknown, message: string): void => {
+  expect(isApiError(body)).toBe(true);
+  if (isApiError(body)) {
+    expect(body.error).toBe(message);
+  }
+};
+
+/*
  * Here is a simple parser for error messages returned by api
  */
 
