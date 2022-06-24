@@ -1,29 +1,11 @@
 import supertest from 'supertest';
 import { app } from '../../../src/app';
 import { db } from '../../../src/services';
-import { PublicUser } from '../../../src/types';
 import { validators } from '../../../src/utils/validators';
-import { checkApiError, closeDatabase, isLoginBody, resetDatabase } from '../helpers';
+import { checkApiError, closeDatabase, isLoginBody, resetDatabase, toPublicUser } from '../helpers';
 
 const api = supertest(app);
 const base = '/users';
-
-const toPublicUser = (obj: unknown): PublicUser | undefined => {
-  if (validators.isPublicUser(obj)) {
-    return obj;
-  }
-  if (typeof obj === 'object' && Object.prototype.hasOwnProperty.call(obj, 'created_on')) {
-    const createdOn = (obj as { created_on: unknown }).created_on;
-    if (validators.isString(createdOn)) {
-      const date = new Date(createdOn);
-      const newObj = { ...obj, created_on: date };
-      if (validators.isPublicUser(newObj)) {
-        return newObj;
-      }
-    }
-  }
-  return undefined;
-};
 
 // let's store current env
 const ORIGINAL_ENV = process.env;

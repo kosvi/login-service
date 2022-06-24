@@ -5,6 +5,8 @@
 import { db } from '../../src/services';
 import { migrations } from '../../src/migrations/migrations';
 import { pool } from '../../src/services/database/db';
+import { validators } from '../../src/utils/validators';
+import { PublicUser } from '../../src/types';
 import { z } from 'zod';
 
 /*
@@ -22,6 +24,27 @@ export const resetDatabase = async () => {
 
 export const closeDatabase = async () => {
   await pool.end();
+};
+
+/*
+ * This function returns PublicUser if parameter is PublicUser or undefined if it's not
+ */
+
+export const toPublicUser = (obj: unknown): PublicUser | undefined => {
+  if (validators.isPublicUser(obj)) {
+    return obj;
+  }
+  if (typeof obj === 'object' && Object.prototype.hasOwnProperty.call(obj, 'created_on')) {
+    const createdOn = (obj as { created_on: unknown }).created_on;
+    if (validators.isString(createdOn)) {
+      const date = new Date(createdOn);
+      const newObj = { ...obj, created_on: date };
+      if (validators.isPublicUser(newObj)) {
+        return newObj;
+      }
+    }
+  }
+  return undefined;
 };
 
 /*
