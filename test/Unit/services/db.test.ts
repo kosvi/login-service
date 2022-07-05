@@ -8,7 +8,7 @@ import { db } from '../../../src/services';
 
 import { userService } from '../../../src/services';
 import { validators } from '../../../src/utils/validators';
-import { PublicUser, User } from '../../../src/types';
+import { PublicUser, User, Whitehost } from '../../../src/types';
 // helper data
 import { testData } from '../utils/helperData';
 
@@ -221,6 +221,33 @@ describe('users tests', () => {
       ['UPDATE account SET name = \'\', email = \'\', password = \'\', deleted = TRUE WHERE uid = $1', [testUID]]
     ]);
     expect(success).toBe(true);
+  });
+
+});
+
+describe('whitelist tests', () => {
+  // this is our pool for the tests
+  const pool: Pool = new Pool();
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should add new host correctly', async () => {
+    // mock query result
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [testData.validWhitehost], rowCount: 1 });
+    // our testdata
+    const newHost: Omit<Whitehost, 'id'> = {
+      name: testData.validWhitehost.name,
+      host: testData.validWhitehost.host,
+      trusted: testData.validWhitehost.trusted
+    };
+    const success = await db.addHost(newHost);
+    expect(pool.query).toBeCalledTimes(1);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['INSERT INTO whitelist (name, host trusted) VALUES ($1, $2, $3) RETURNING *', [newHost.name, newHost.host, newHost.trusted]]
+    ]);
+    expect(success).toEqual(testData.validWhitehost);
   });
 
 });

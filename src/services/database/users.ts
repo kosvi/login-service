@@ -14,15 +14,21 @@ export const addUser = async (user: User): Promise<boolean> => {
   // Not quite sure if we handle failures properly...
   try {
     logger.db(`INSERT user '${user.username}'`);
-    await pool.query(
-      'INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
+    const result = await pool.query(
+      'INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5) RETURNING *',
       [user.uid, user.username, user.password, user.name, user.email]
     );
-    return true;
+    if (result.rowCount === 1) {
+      // we don't want to mess around with the password, so let's keep this like this for now
+      const publicUser = converters.userToPublicUser(result.rows[0] as User);
+      logger.debug(`added user: ${JSON.stringify(publicUser)}`);
+      // this should probably be returned instead of boolean!
+      return true;
+    }
   } catch (error) {
     logger.debugError('db.addUser()', error);
-    return false;
   }
+  return false;
 };
 
 export const getUserByUid = async (uid: string): Promise<PublicUser | undefined> => {

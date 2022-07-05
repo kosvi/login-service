@@ -59,7 +59,7 @@ describe('users service tests', () => {
     expect(validators.isPublicUser(newUser)).toBe(true);
     // check that pool.query was called with correct params (password hash can be any string)
     expect(pool.query).toHaveBeenCalledTimes(1);
-    expect(pool.query).toHaveBeenCalledWith('INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
+    expect(pool.query).toHaveBeenCalledWith('INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5) RETURNING *',
       [testUid, 'username', expect.any(String), 'full name', 'user@example.com']);
   });
 
