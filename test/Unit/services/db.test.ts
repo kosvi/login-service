@@ -245,7 +245,7 @@ describe('whitelist tests', () => {
     const success = await db.addHost(newHost);
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['INSERT INTO whitelist (name, host trusted) VALUES ($1, $2, $3) RETURNING *', [newHost.name, newHost.host, newHost.trusted]]
+      ['INSERT INTO whitelist (name, host, trusted) VALUES ($1, $2, $3) RETURNING *', [newHost.name, newHost.host, newHost.trusted]]
     ]);
     expect(success).toEqual(testData.validWhitehost);
   });

@@ -44,7 +44,7 @@ const addUser = async (username: string, password: string, name: string, email: 
   // if user is valid, store to database and return public version of the user
   // otherwise just throw error and tell where we failed to match requirements for the new user
   if (validators.isUser(newUser)) {
-    const success: boolean = await db.addUser(newUser);
+    const success = await db.addUser(newUser);
     if (success) {
       logger.log('userService - addUser(): new user created');
       return converters.userToPublicUser(newUser);

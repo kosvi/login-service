@@ -1,5 +1,9 @@
 import { User, PublicUser, Whitehost } from '../../../src/types';
 
+const defaultAdmin = {
+  username: 'admin',
+  password: 'Password!'
+};
 const validPublicUser: PublicUser = {
   uid: 'af3b325f-06f0-4b25-9fb8-27b07a55cd14',
   username: 'username',
@@ -22,5 +26,5 @@ const validWhitehost: Whitehost = {
 };
 
 export const testData = {
-  validPublicUser, validUser, validWhitehost
+  defaultAdmin, validPublicUser, validUser, validWhitehost
 };

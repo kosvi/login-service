@@ -30,7 +30,7 @@ export const addHost = async (host: Omit<Whitehost, 'id'>): Promise<Whitehost | 
   }
   try {
     logger.db(`INSERT INTO whitelist ADD ${host.host}`);
-    const result = await pool.query('INSERT INTO whitelist (name, host trusted) VALUES ($1, $2, $3) RETURNING *', [host.name, host.host, host.trusted]);
+    const result = await pool.query('INSERT INTO whitelist (name, host, trusted) VALUES ($1, $2, $3) RETURNING *', [host.name, host.host, host.trusted]);
     if (result.rowCount === 1) {
       // this should probably be written better to ensure we get some information logged if returned row is not valid
       return validators.isWhitehost(result.rows[0]) ? result.rows[0] : undefined;

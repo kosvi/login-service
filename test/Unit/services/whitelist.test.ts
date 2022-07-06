@@ -34,4 +34,17 @@ describe('hosts service tests', () => {
     expect(result).toEqual(testData.validWhitehost);
   });
 
+  it('should fail nicely if request body is invalid', async () => {
+    // mock success in db query to make sure we actually fail before it
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [testData.validWhitehost], rowCount: 1 });
+    // this is invalid new host
+    const newHost: unknown = {
+      name: 'valid name',
+      host: 'invalid-host-name',
+      trusted: false
+    };
+    const result = await hostService.addHost(newHost);
+    expect(result).toBe(undefined);
+  });
+
 });

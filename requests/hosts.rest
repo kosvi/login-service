@@ -1,0 +1,9 @@
+POST http://localhost:3001/hosts
+Content-Type: application/json
+Authorization: bearer <token>
+
+{
+  "name": "foobar",
+  "host": "http://www.example.com",
+  "trusted": true
+}

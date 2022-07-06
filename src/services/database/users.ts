@@ -15,14 +15,11 @@ export const addUser = async (user: User): Promise<boolean> => {
   try {
     logger.db(`INSERT user '${user.username}'`);
     const result = await pool.query(
-      'INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      'INSERT INTO account (uid, username, password, name, email) VALUES ($1, $2, $3, $4, $5)',
       [user.uid, user.username, user.password, user.name, user.email]
     );
     if (result.rowCount === 1) {
-      // we don't want to mess around with the password, so let's keep this like this for now
-      const publicUser = converters.userToPublicUser(result.rows[0] as User);
-      logger.debug(`added user: ${JSON.stringify(publicUser)}`);
-      // this should probably be returned instead of boolean!
+      logger.debug(`added user: ${JSON.stringify(user.username)}`);
       return true;
     }
   } catch (error) {

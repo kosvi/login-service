@@ -19,6 +19,7 @@ services:
     environment:
       DATABASE_URL: 'postgres://dev:password@login-db:5432/dev'
       NODE_ENV: 'dev'
+      DEBUG_MODE: 'true'
       PORT: 3001
       SECRET: 'secret'
     volumes:

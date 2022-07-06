@@ -61,6 +61,8 @@ export const ZodWhitehost = z.object({
   // host
   host: z.string({
     required_error: 'host needs a unique domain'
+  }).url({
+    message: 'invalid host'
   }).min(HOST_CONSTANTS.DOMAIN_MIN_LENGTH),
   // trusted
   trusted: z.boolean()
