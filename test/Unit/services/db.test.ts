@@ -250,4 +250,17 @@ describe('whitelist tests', () => {
     expect(success).toEqual(testData.validWhitehost);
   });
 
+  it('should edit a host correctly', async () => {
+    // mock query result
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [testData.validWhitehost], rowCount: 1 });
+    // run edit
+    const result = await db.editHost(testData.validWhitehost);
+    expect(pool.query).toBeCalledTimes(1);
+    expect((pool.query as jest.Mock).mock.calls).toEqual([
+      ['UPDATE whitelist SET name = $1, host = $2, trusted = $3 WHERE id = $4 RETURNING *',
+        [testData.validWhitehost.name, testData.validWhitehost.host, testData.validWhitehost.trusted, testData.validWhitehost.id]]
+    ]);
+    expect(result).toEqual(testData.validWhitehost);
+  });
+
 });

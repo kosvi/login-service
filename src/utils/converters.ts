@@ -6,6 +6,22 @@ const userToPublicUser = (user: User): PublicUser => {
   return publicUser;
 };
 
+const unknownToInteger = (value: unknown): number => {
+  if (typeof value === 'number') {
+    return value;
+  }
+  if (value instanceof Number) {
+    return value.valueOf();
+  }
+  if (typeof value === 'string') {
+    return +value;
+  }
+  if (value instanceof String) {
+    return +(value.valueOf());
+  }
+  return NaN;
+};
+
 export const converters = {
-  userToPublicUser
+  userToPublicUser, unknownToInteger
 };

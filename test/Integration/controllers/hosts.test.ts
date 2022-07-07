@@ -3,6 +3,7 @@ import { Whitehost } from '../../../src/types';
 import { app } from '../../../src/app';
 import { testData } from '../../Unit/utils/helperData';
 import { closeDatabase, isLoginBody, resetDatabase } from '../helpers';
+import { validators } from '../../../src/utils/validators';
 
 const api = supertest(app);
 const base = '/hosts';
@@ -38,6 +39,30 @@ describe('hostController integration tests', () => {
     // let's send this as request body
     const response = await api.post(base).set('Authorization', authContent).send(newHost).expect(201);
     expect(response.body).toHaveProperty('id');
+  });
+
+  it('should allow editing a stored host', async () => {
+    const newHost: Omit<Whitehost, 'id'> = {
+      name: testData.validWhitehost.name,
+      host: testData.validWhitehost.host,
+      trusted: testData.validWhitehost.trusted
+    };
+    // let's add the host
+    const addResponse = await api.post(base).set('Authorization', authContent).send(newHost).expect(201);
+    expect(validators.isWhitehost(addResponse.body)).toBe(true);
+    let id = 0;
+    const data: Omit<Whitehost, 'id'> = {
+      name: 'another cool service',
+      host: 'http://must-be-a-valid.host.name',
+      trusted: !testData.validWhitehost.trusted
+    };
+    if (validators.isWhitehost(addResponse.body)) {
+      id = addResponse.body.id;
+    }
+    // ok, we have the id and new data
+    const editResponse = await api.put(`${base}/${id}`).set('Authorization', authContent).send(data).expect(200);
+    expect(validators.isWhitehost(editResponse.body)).toBe(true);
+    expect(editResponse.body).toEqual({ id: id, ...data });
   });
 
 });

@@ -41,3 +41,21 @@ export const addHost = async (host: Omit<Whitehost, 'id'>): Promise<Whitehost | 
   }
   return undefined;
 };
+
+export const editHost = async (host: Whitehost): Promise<Whitehost | undefined> => {
+  // validate input
+  if (!validators.isWhitehost(host)) {
+    return undefined;
+  }
+  try {
+    logger.db(`UPDATE whitelist WHERE id = ${host.id}`);
+    const result = await pool.query('UPDATE whitelist SET name = $1, host = $2, trusted = $3 WHERE id = $4 RETURNING *', [host.name, host.host, host.trusted, host.id]);
+    if (result.rowCount === 1) {
+      return validators.isWhitehost(result.rows[0]) ? result.rows[0] : undefined;
+    }
+    logger.debug(`db.editHost() - failed to update host id ${host.id}`);
+  } catch (error) {
+    logger.debugError('db.editHost()', error);
+  }
+  return undefined;
+};

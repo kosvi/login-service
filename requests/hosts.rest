@@ -1,9 +1,21 @@
 POST http://localhost:3001/hosts
 Content-Type: application/json
-Authorization: bearer <token>
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJhMjQ1OGNmMC01MWQwLTQ1YWUtYTQ4OC03YThiNWEwNWU5ZTEiLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwaXJlcyI6MTY1NzIyMzkzNiwiaWF0IjoxNjU3MjE2NzM2fQ.ZM-fTBCkVJzoqutM8dZ4M8QaXx1jhp-6FxVcO4AhxBU
 
 {
-  "name": "foobar",
-  "host": "http://www.example.com",
+  "name": "test-service",
+  "host": "http://test.example.com",
+  "trusted": false
+}
+
+###
+
+PUT http://localhost:3001/hosts/3
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJhMjQ1OGNmMC01MWQwLTQ1YWUtYTQ4OC03YThiNWEwNWU5ZTEiLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwaXJlcyI6MTY1NzIyMzkzNiwiaWF0IjoxNjU3MjE2NzM2fQ.ZM-fTBCkVJzoqutM8dZ4M8QaXx1jhp-6FxVcO4AhxBU
+
+{
+  "name": "test2 service",
+  "host": "http://test2.example.com",
   "trusted": true
 }

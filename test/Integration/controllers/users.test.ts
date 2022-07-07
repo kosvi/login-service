@@ -174,6 +174,22 @@ describe('UsersController integration tests', () => {
     checkApiError(noBodyResponse.body, 'old password is required');
   });
 
+  it('should be possible to delete account', async () => {
+    // first get the UID from /me
+    const meResponse = await api.get(`${base}/me`).set('Authorization', `bearer ${token}`).expect(200);
+    const userData = toPublicUser(meResponse.body);
+    const uid: string = userData ? (userData.uid || 'invalid') : 'invalid';
+    // now make sure user is found from db
+    const beforeDeleteResult = await db.getUserByUid(uid);
+    expect(validators.isPublicUser(beforeDeleteResult)).toBe(true);
+    // now delete the user
+    await api.delete(`${base}/delete`).set('Authorization', `bearer ${token}`).expect(204);
+    // user shouldn't exist in the database
+    const afterDeleteResult = await db.getUserByUid(uid);
+    expect(validators.isPublicUser(afterDeleteResult)).toBe(false);
+    expect(afterDeleteResult).toBe(undefined);
+  });
+
 });
 
 // close connections to database to let jest exit without problems
