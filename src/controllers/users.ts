@@ -21,19 +21,32 @@ export class UserController implements Controller {
       // we can just ignore errors
       this.tokenContent = undefined;
     }
-    if (req.url === '/users/me' && req.method === 'GET') {
+    if (req.url?.startsWith('/users/') && this.checkUid(req, res) && req.method === 'GET') {
       await this.returnMe(req, res);
-    } else if (req.url === '/users/save' && req.method === 'POST') {
+    } else if (req.url === '/users' && req.method === 'POST') {
       await this.addUser(req, res);
-    } else if (req.url === '/users/save' && req.method === 'PUT') {
+    } else if (req.url?.startsWith('/users/') && this.checkUid(req, res) && req.method === 'PUT') {
       await this.updateMe(req, res);
-    } else if (req.url === '/users/password' && req.method === 'PATCH') {
+    } else if (req.url?.startsWith('/users/') && this.checkUid(req, res) && req.method === 'PATCH') {
       await this.updateMyPassword(req, res);
-    } else if (req.url === '/users/delete' && req.method === 'DELETE') {
+    } else if (req.url?.startsWith('/users/') && this.checkUid(req, res) && req.method === 'DELETE') {
       await this.deleteMe(req, res);
     } else {
       throw new ControllerError(404);
     }
+  }
+
+  /*
+   * This simply makes sure UID in URL matches the one in the token
+   */
+  checkUid(req: HttpRequest, _res: HttpResponse) {
+    if (!this.tokenContent) {
+      throw new ControllerError(401, 'not logged in');
+    }
+    if (req.url?.substring(7) === this.tokenContent?.uid) {
+      return true;
+    }
+    throw new ControllerError(400, 'uid mismatch');
   }
 
   /*

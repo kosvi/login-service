@@ -1,8 +1,36 @@
-### user me
+### users
+
+POST `/users`
+
+```
+{
+  "username": "<username>",
+  "password": "<password>",
+  "name": "<full name>",
+  "email": "<email>"
+}
+```
+Status 201
+
+```
+{
+  "uid": "<uid>",
+  "username": "<username>",
+  "name": "<name>",
+  "email": "<email>",
+  "admin": boolean,
+  "locked": boolean,
+  "stealth": boolean,
+  "deleted": boolean
+}
+```
+
+
+### users id
 
 **Success**
 
-GET `/users/me`
+GET `/users/:id`
 
 Status 200
 
@@ -20,11 +48,9 @@ Status 200
 }
 ```
 
-### user save
-
 **Success**
 
-POST / PUT (*) `/users/save`
+PUT `/users/:id`
 
 ```
 {
@@ -32,7 +58,7 @@ POST / PUT (*) `/users/save`
   "password": "<password>",
   "name": "<full name>",
   "email": "<email>",
-  "stealth"?: boolean
+  "stealth": boolean
 }
 ```
 
@@ -50,14 +76,10 @@ Status 201
   "deleted": boolean
 }
 ```
-(*) POST creates a new user on server, PUT updates existing user \
-? = this is required only on PUT-request
-
-### user password
 
 **Success**
 
-PATCH `/users/password`
+PATCH `/users/:id`
 
 ```
 {
@@ -65,5 +87,11 @@ PATCH `/users/password`
   "newPassword": "<newPassword>"
 }
 ```
+
+Status 204
+
+**Success**
+
+DELETE `/users/:id`
 
 Status 204

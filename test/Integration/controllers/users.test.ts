@@ -35,13 +35,14 @@ describe('UsersController integration tests', () => {
 
   // this token can be send in requests as logged in user
   let token: string;
+  let uid: string;
 
   // first make sure to get a fresh token before each test
   beforeEach(async () => {
     // first reset database content
     await resetDatabase();
     // and add our default user
-    await api.post(`${base}/save`).send(newUser).expect(201);
+    await api.post(`${base}`).send(newUser).expect(201);
     // login and get token
     const response = await api.post('/login').send({
       username: newUser.username,
@@ -50,6 +51,7 @@ describe('UsersController integration tests', () => {
     expect(isLoginBody(response.body)).toBe(true);
     if (isLoginBody(response.body)) {
       token = response.body.token;
+      uid = response.body.content.uid;
     }
   });
 
@@ -58,7 +60,7 @@ describe('UsersController integration tests', () => {
    */
 
   it('should give users details on /me', async () => {
-    const response = await api.get(`${base}/me`).set('Authorization', `bearer ${token}`).expect(200);
+    const response = await api.get(`${base}/${uid}`).set('Authorization', `bearer ${token}`).expect(200);
     const user = toPublicUser(response.body);
     expect(validators.isPublicUser(user)).toBe(true);
     if (validators.isPublicUser(user)) {
@@ -80,7 +82,7 @@ describe('UsersController integration tests', () => {
       name: 'New Dude',
       email: 'newdude@example.com'
     };
-    const response = await api.post(`${base}/save`).send(userDetails).expect(201);
+    const response = await api.post(`${base}`).send(userDetails).expect(201);
     // response should return PublicUser
     const publicUser = toPublicUser(response.body);
     expect(publicUser).not.toBe(undefined);
@@ -92,7 +94,7 @@ describe('UsersController integration tests', () => {
   });
 
   it('should be able to edit existing users', async () => {
-    const response = await api.put(`${base}/save`).set('Authorization', `bearer ${token}`).send({
+    const response = await api.put(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({
       username: 'tester2',
       password: newUser.password,
       name: 'New Name',
@@ -121,7 +123,7 @@ describe('UsersController integration tests', () => {
 
   it('should be able to update password', async () => {
     const newPwd = 'Th1s!sL4NuPwd#1';
-    await api.patch(`${base}/password`).set('Authorization', `bearer ${token}`).send({
+    await api.patch(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({
       password: newUser.password,
       newPassword: newPwd
     }).expect(204);
@@ -138,7 +140,7 @@ describe('UsersController integration tests', () => {
    */
 
   it('should give proper error instead of info if token missing', async () => {
-    const noTokenResponse = await api.get(`${base}/me`).expect(401);
+    const noTokenResponse = await api.get(`${base}/${uid}`).expect(401);
     checkApiError(noTokenResponse.body, 'not logged in');
   });
 
@@ -149,12 +151,12 @@ describe('UsersController integration tests', () => {
       name: 'User Name',
       email: 'user@example.net'
     };
-    const newUserResponse = await api.post(`${base}/save`).send(userValues).expect(400);
+    const newUserResponse = await api.post(`${base}`).send(userValues).expect(400);
     checkApiError(newUserResponse.body, 'password not strong enough');
   });
 
   it('shouldn\'t allow updating password to a weak password', async () => {
-    const newPasswordResponse = await api.patch(`${base}/password`).set('Authorization', `bearer ${token}`).send({
+    const newPasswordResponse = await api.patch(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({
       password: newUser.password,
       newPassword: 'too_weak'
     }).expect(400);
@@ -162,7 +164,7 @@ describe('UsersController integration tests', () => {
   });
 
   it('should tell if password failed on password update', async () => {
-    const newPasswordResponse = await api.patch(`${base}/password`).set('Authorization', `bearer ${token}`).send({
+    const newPasswordResponse = await api.patch(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({
       password: 'wrong_password',
       newPassword: 'T0tally!AV4lidPwd!!'
     }).expect(400);
@@ -170,24 +172,36 @@ describe('UsersController integration tests', () => {
   });
 
   it('should handle malformed request body correctly', async () => {
-    const noBodyResponse = await api.patch(`${base}/password`).set('Authorization', `bearer ${token}`).send({}).expect(400);
+    const noBodyResponse = await api.patch(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({}).expect(400);
     checkApiError(noBodyResponse.body, 'old password is required');
   });
 
   it('should be possible to delete account', async () => {
     // first get the UID from /me
-    const meResponse = await api.get(`${base}/me`).set('Authorization', `bearer ${token}`).expect(200);
+    const meResponse = await api.get(`${base}/${uid}`).set('Authorization', `bearer ${token}`).expect(200);
     const userData = toPublicUser(meResponse.body);
-    const uid: string = userData ? (userData.uid || 'invalid') : 'invalid';
+    const uidFromApi: string = userData ? (userData.uid || 'invalid') : 'invalid';
     // now make sure user is found from db
-    const beforeDeleteResult = await db.getUserByUid(uid);
+    const beforeDeleteResult = await db.getUserByUid(uidFromApi);
     expect(validators.isPublicUser(beforeDeleteResult)).toBe(true);
     // now delete the user
-    await api.delete(`${base}/delete`).set('Authorization', `bearer ${token}`).expect(204);
+    await api.delete(`${base}/${uidFromApi}`).set('Authorization', `bearer ${token}`).expect(204);
     // user shouldn't exist in the database
-    const afterDeleteResult = await db.getUserByUid(uid);
+    const afterDeleteResult = await db.getUserByUid(uidFromApi);
     expect(validators.isPublicUser(afterDeleteResult)).toBe(false);
     expect(afterDeleteResult).toBe(undefined);
+  });
+
+  it('should give 400 if uid in url not matches uid in token', async () => {
+    await api.get(`${base}/foobar`).set('Authorization', `bearer ${token}`).expect(400);
+    await api.put(`${base}/foobar`).set('Authorization', `bearer ${token}`).send({
+      username: 'tester2',
+      password: newUser.password,
+      name: 'New Name',
+      email: 'tester2@example.net',
+      stealth: false
+    }).expect(400);
+    await api.delete(`${base}/foobar`).set('Authorization', `bearer ${token}`).expect(400);
   });
 
 });

@@ -25,7 +25,7 @@ describe('register a new user', () => {
       name: 'Test User',
       email: 'my_testmail@example.org'
     };
-    const registerResponse = await api.post('/users/save').send(newUserBody).expect(201);
+    const registerResponse = await api.post('/users').send(newUserBody).expect(201);
     const newlyCreatedUser = toPublicUser(registerResponse.body);
     expect(newlyCreatedUser).not.toBe(undefined);
     expect(validators.isPublicUser(newlyCreatedUser)).toBe(true);
@@ -34,16 +34,18 @@ describe('register a new user', () => {
     const loginResponse = await api.post('/login').send({ username: newUserBody.username, password: newUserBody.password }).expect(200);
     expect(isLoginBody(loginResponse.body)).toBe(true);
     let token: string | undefined;
+    let uid: string | undefined;
     if (isLoginBody(loginResponse.body)) {
       token = loginResponse.body.token;
+      uid = loginResponse.body.content.uid;
       // stealth should be true by default!
-      const firstMeResponse = await api.get('/users/me').set('Authorization', `bearer ${token}`).expect(200);
+      const firstMeResponse = await api.get(`/users/${uid}`).set('Authorization', `bearer ${token}`).expect(200);
       const firstMePublicUser = toPublicUser(firstMeResponse.body);
       expect(firstMePublicUser).not.toBe(undefined);
       expect(firstMePublicUser?.stealth).toBe(true);
     }
     // we should now have a valid token, let's use it to alter user and set stealth to false
-    const updateResponse = await api.put('/users/save').set('Authorization', `bearer ${token}`).send({
+    const updateResponse = await api.put(`/users/${uid}`).set('Authorization', `bearer ${token}`).send({
       ...newUserBody,
       stealth: false
     }).expect(200);
@@ -51,7 +53,7 @@ describe('register a new user', () => {
     expect(updateResponsePublicUser).not.toBe(undefined);
     expect(validators.isPublicUser(updateResponsePublicUser)).toBe(true);
     // now let's see if a request to /me says that stealth is false (this shouldn't require a new token!)
-    const secondMeResponse = await api.get('/users/me').set('Authorization', `bearer ${token}`).expect(200);
+    const secondMeResponse = await api.get(`/users/${uid}`).set('Authorization', `bearer ${token}`).expect(200);
     const secondMePublicUser = toPublicUser(secondMeResponse.body);
     expect(secondMePublicUser).not.toBe(undefined);
     expect(secondMePublicUser?.stealth).toBe(false);

@@ -36,11 +36,11 @@ Serves static files...
 
 | endpoint | method | authorization | success | failure(s) |
 |----------|--------|---------------|---------|------------|
-| [/users/me](API/users.md#user-me)    | GET    | any           | 200     | 401        |
-| [/users/save](API/users.md#user-save) | POST | none          | 201     | 400, 409, 422 |
-| [/users/save](API/users.md#user-save) | PUT  | any           | 200     | 401, 409, 422 |
-| [/users/delete](API/users.md#user-delete) | DELETE | any | 204 | 401 |
-| [/users/password](API/users.md#user-password) | PATCH | any      | 204     | 401, 422   |
+| [/users/](API/users.md#user) | POST | none          | 201     | 400, 409, 422 |
+| [/users/:id](API/users.md#user-id)    | GET    | any           | 200     | 401        |
+| [/users/:id](API/users.md#user-id) | PUT  | any           | 200     | 401, 409, 422 |
+| [/users/:id](API/users.md#user-id) | DELETE | any | 204 | 401 |
+| [/users/:id](API/users.md#user-id) | PATCH | any      | 204     | 401, 422   |
 
 ## verify
 
