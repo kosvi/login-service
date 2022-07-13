@@ -37,10 +37,10 @@ Serves static files...
 | endpoint | method | authorization | success | failure(s) |
 |----------|--------|---------------|---------|------------|
 | [/users/](API/users.md#user) | POST | none          | 201     | 400, 409, 422 |
-| [/users/:id](API/users.md#user-id)    | GET    | any           | 200     | 401        |
-| [/users/:id](API/users.md#user-id) | PUT  | any           | 200     | 401, 409, 422 |
-| [/users/:id](API/users.md#user-id) | DELETE | any | 204 | 401 |
-| [/users/:id](API/users.md#user-id) | PATCH | any      | 204     | 401, 422   |
+| [/users/:id](API/users.md#users-id)    | GET    | any           | 200     | 401        |
+| [/users/:id](API/users.md#users-id) | PUT  | any           | 200     | 401, 409, 422 |
+| [/users/:id](API/users.md#users-id) | DELETE | any | 204 | 401 |
+| [/users/:id](API/users.md#users-id) | PATCH | any      | 204     | 401, 422   |
 
 ## verify
 
