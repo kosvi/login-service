@@ -1,0 +1,29 @@
+OAuth 2.0 code api (plan)
+
+/static/ <- send user here to for authentication
+ -> post user&password to /login -> returns code
+<- user is returned to client app
+
+/token <- request token with the code given
+ -> return: access_token, token_type, expires_in
+
+client sends token to /verify
+ -> returns the content of the token 
+
+
+New users:
+
+/users
+ -> / POST new user
+ -> / GET list users (admin token only!)
+ -> /:id PUT edit user
+ -> /:id/password PATCH update password
+ -> /:id DELETE delete user
+ -> /:id GET display single user
+
+/hosts (admin token only!)
+ -> / GET list hosts
+ -> / POST new host
+ -> /:id PUT edit host
+ -> /:id DELETE delete host
+
