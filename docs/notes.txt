@@ -1,8 +1,10 @@
 OAuth 2.0 code api (plan)
 
-/static/ <- send user here to for authentication
+/authorize <- send user here to for authentication
  -> post user&password to /login -> returns code
 <- user is returned to client app
+
+* /static will be created using React and is server as another microservice
 
 /token <- request token with the code given
  -> return: access_token, token_type, expires_in
@@ -27,3 +29,58 @@ New users:
  -> /:id PUT edit host
  -> /:id DELETE delete host
 
+
+Request when requesting code:
+
+GET /authorize?response_type=code&client_id=<client_id>&state=<state>&redirect_uri=<redirect_uri>(&resource=<resource_id>)&code_challenge=<PKCE_code_challenge>&code_challenge_method=S256
+Host: auth.5v.fi
+
+client_id = id of the client requesting code
+state = random string that is returned with code (to prevent CSRF attacks)
+redirect_uri = uri where user is returned with code (must match the uri registered with client!)
+resource_id = not required for now
+code_challenge = hashed random string, original is send with code in order to obtain token
+
+Code response:
+
+302 Found
+Location: <redirect_uri>?code=<authorization_code>&state=<state>
+
+authorization_code = code needed to obtain token
+state = same string that was send with request
+
+Requesting token:
+
+POST /token
+Host: auth.5v.fi
+Content-Type: application/x-www-form-urlencoded
+
+{
+  grant_type=authorization_code
+  code=<authorization_code>
+  client_id=<client_id>
+  code_verifier=<code_verifier>
+  redirect_uri=<redirect_uri>
+}
+
+authorization_code = code received from /authorize 
+client_id = id of the client requesting token
+code_verifier = string that was used to create code_challenge
+redirect_uri = uri that was used when the code was requested
+
+Response (with token):
+
+200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+{
+  access_token = <access_token>
+  token_type = bearer
+  expires_in = <token_expiration>
+  (refresh_token = <refresh_token>)
+}
+
+access_token = token that can be used to access protected APIs
+token_expiration = when token expires
+refresh_token = token used to request new token (not implemented for now)

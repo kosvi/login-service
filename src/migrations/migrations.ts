@@ -12,7 +12,6 @@ export const migrations: Array<Migration> = [
     email VARCHAR(100) UNIQUE NOT NULL, \
     admin BOOLEAN NOT NULL DEFAULT FALSE, \
     locked BOOLEAN NOT NULL DEFAULT FALSE, \
-    stealth BOOLEAN NOT NULL DEFAULT TRUE, \
     deleted BOOLEAN NOT NULL DEFAULT FALSE, \
     created_on TIMESTAMP NOT NULL DEFAULT current_timestamp \
     );',
@@ -26,13 +25,26 @@ export const migrations: Array<Migration> = [
     down: 'DELETE FROM account WHERE username = \'admin\';'
   },
   {
-    id: 'add_whitelist_table',
-    up: 'CREATE TABLE IF NOT EXISTS whitelist (\
+    id: 'add_clients_table',
+    up: 'CREATE TABLE IF NOT EXISTS client (\
     id SERIAL PRIMARY KEY, \
     name VARCHAR(100) UNIQUE NOT NULL, \
-    host VARCHAR(200) UNIQUE NOT NULL, \
-    trusted BOOLEAN NOT NULL DEFAULT FALSE \
+    redirect_uri VARCHAR(200) UNIQUE NOT NULL, \
+    secret VARCHAR(100) NOT NULL \
     );',
-    down: 'DROP TABLE IF EXISTS whitelist;'
+    down: 'DROP TABLE IF EXISTS client;'
+  },
+  {
+    id: 'add_codes_table',
+    up: 'CREATE TABLE IF NOT EXISTS code (\
+    id SERIAL PRIMARY KEY, \
+    user_uid VARCHAR(50) NOT NULL references account(uid), \
+    client_id INT NOT NULL references client(id), \
+    code VARCHAR(100) UNIQUE NOT NULL, \
+    code_challenge VARCHAR(100) NOT NULL, \
+    full_info BOOLEAN NOT NULL DEFAULT FALSE, \
+    created_on TIMESTAMP NOT NULL DEFAULT corrent_timestamp \
+    );',
+    down: 'DROP TABLE IF EXISTS code'
   }
 ];

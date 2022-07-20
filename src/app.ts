@@ -5,7 +5,7 @@ import { requestHandlers } from './utils/requestHandlers';
 
 // Import controllers
 import { Controller } from './types';
-import { ErrorController, HelloController, HostController, StaticController, UserController, VerifyController } from './controllers';
+import { ErrorController, HelloController, HostController, UserController, VerifyController } from './controllers';
 import { ControllerError } from './utils/customErrors';
 
 // Import createServer so we can start taking in requests
@@ -38,8 +38,6 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
     // If request wasn't an OPTIONS request -> initialize correct controller to handle request
     if (req.url?.startsWith('/hello')) {
       controller = new HelloController();
-    } else if (req.url?.startsWith('/static')) {
-      controller = new StaticController();
     } else if (req.url?.startsWith('/login')) {
       controller = new LoginController();
     } else if (req.url?.startsWith('/users')) {

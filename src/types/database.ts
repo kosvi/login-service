@@ -9,7 +9,7 @@
  */
 
 import { z } from 'zod';
-import { HOST_CONSTANTS, USER_CONSTANTS } from '../utils/config';
+import { CLIENT_CONSTANTS, USER_CONSTANTS } from '../utils/config';
 
 export interface Migration {
   id: string,
@@ -40,8 +40,6 @@ export const ZodUser = z.object({
   admin: z.boolean().default(false),
   // locked
   locked: z.boolean().default(false),
-  // stealth
-  stealth: z.boolean().default(true),
   // deleted
   deleted: z.boolean().default(false),
   // created_on
@@ -51,21 +49,21 @@ export const ZodUser = z.object({
 export type User = z.infer<typeof ZodUser>;
 export type PublicUser = Omit<User, 'password'>;
 
-export const ZodWhitehost = z.object({
+export const ZodClient = z.object({
   // id
   id: z.number(),
   // name
   name: z.string({
-    required_error: 'host needs a unique name'
-  }).min(HOST_CONSTANTS.NAME_MIN_LENGTH),
+    required_error: 'client needs a unique name'
+  }).min(CLIENT_CONSTANTS.NAME_MIN_LENGTH),
   // host
-  host: z.string({
-    required_error: 'host needs a unique domain'
+  redirect_uri: z.string({
+    required_error: 'client needs a unique redirect uri'
   }).url({
-    message: 'invalid host'
-  }).min(HOST_CONSTANTS.DOMAIN_MIN_LENGTH),
-  // trusted
-  trusted: z.boolean()
+    message: 'invalid url'
+  }).min(CLIENT_CONSTANTS.URI_MIN_LENGTH),
+  // secret
+  trusted: z.string()
 }).strict();
 
-export type Whitehost = z.infer<typeof ZodWhitehost>;
+export type Client = z.infer<typeof ZodClient>;

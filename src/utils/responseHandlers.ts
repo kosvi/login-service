@@ -43,6 +43,11 @@ const setHeaderHtml = (res: HttpResponse): HttpResponse => {
   return res;
 };
 
+const setHeaderIcon = (res: HttpResponse): HttpResponse => {
+  res.setHeader('Content-Type', 'image/x-icon');
+  return res;
+}
+
 export const responseHandlers = {
-  setStatus, setCors, setHeaderJson, setHeaderHtml
+  setStatus, setCors, setHeaderJson, setHeaderHtml, setHeaderIcon
 };

@@ -16,9 +16,9 @@
 | 3  | user  | as a user, I want to limit the information provided to services I use so that they can't send spam to my email account or publish my real name. |
 | 4  | user  | as a user, I want to be able to delete my account so that no information about me is left to the servers. |
 | 5  | client service | as a service, I dont want to maintain user database so that I won't have to worry about password security or general data protection regulations. |
-| 6  | client service | as a service, I want to easily authenticate users so that I know who is accessing my service. |
+| 6  | client service | as a service, I want to easily authenticate/authorize users so that I know who is accessing my service. |
 | 7  | admin | as an admin, I want to be able to delete/lock users if needed. |
-| 8  | admin | as an admin, I want to be able to manage sites allowed to use this login-service so that only trusted sites can authenticate our users. |
+| 8  | admin | as an admin, I want to be able to manage sites allowed to use this login-service so that only trusted sites can authenticate/authorize our users. |
 
 ## Used technologies
 
@@ -51,25 +51,34 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 |-------|------|-------------|
 |uid   | string, primary key | this is unique id given to each user |
 |username | string, unique | this is the username used for logging in, needs to be unique |
-| password| string | combine with username and use it to login |
+|password | string | combine with username and use it to login |
 |name | string | gecos (full name suggested, up to user what to input) |
 |email | string, unique | just so we can reset password or similar, mailinator etc. allowed |
 |admin| boolean | simply marks if the user is admin (can manage user database) |
 |locked | boolean | user is locked or not |
-|stealth | boolean | affects the information added to tokens |
 |deleted | boolean | if set to true, accound is deleted |
-| created_on | timestamp | current timestamp on time of creation |
+|created_on | timestamp | current timestamp on time of creation |
 
-*whitelist*
+*Clients*
 
 | field | type | description |
 |-------|------|-------------|
-| id    | serial, primary key | id of the whitelisted host |
+| id    | string, primary key | unique id of the client |
 | name  | string, unique | a name to identify the whitelisted site | 
-| host  | string, unique | a host(:port) that is whitelisted to allow requests to this login-service |
-| trusted(*) | boolean | if false, only allowed methods are: OPTIONS and POST. Else will also allow GET, PUT, PATCH and DELETE. | 
+| redirect_uri  | string, unique | location where user is returned after authorization |
+| secret | string | client secret used for Basic authentication with refresh token |
 
-(*) setting this to false does NOT provide any additional security. It simply limits the features available on whitelisted site to "register" and "login". 
+*Codes*
+
+| field | type | description |
+|-------|------|-------------|
+| id | serial, primary key | id of the code |
+| user_uid | foreign_key (Users.uid) | reference to Users table |
+| client_id | foreign_key (Clients.id) | reference to Clients table |
+| code | string, unique | code that was handed to client |
+| code_challenge | string | must match code_verifier | 
+| full_info | boolean | if true, also name & email is added to token |
+| created_on | timestamp | used to clean up expired codes | 
 
 *possibility for a settings-table is reserved for the future*
 
@@ -79,6 +88,4 @@ Basics:
 - Passwords are hashed using bcrypt.
 - All requests are logged, all database interactions are logged. 
 - Requirements for passwords can be set via settings. 
-
-**Brute force** \
-This is an issue that needs to be solved. Possible solution is adding delay when suspecting abuse and finally stop responding for a period of time. 
+- implements OAuth 2.0 / rfc 6749
