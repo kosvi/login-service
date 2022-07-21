@@ -6,10 +6,10 @@
 
 import { runMigrations, revertMigrations, runSingleQuery } from './migrations';
 import { addUser, getUserByUid, getUserByUsername, getUserByCreds, getUserByUidAndPassword, updateUser, updatePassword, deleteUser } from './users';
-import { findHost, addHost, editHost } from './whitelist';
+import { findClient, addClient, editClient } from './clients';
 
 export const db = {
   runMigrations, revertMigrations, runSingleQuery,
   addUser, getUserByUid, getUserByUsername, getUserByCreds, getUserByUidAndPassword, updateUser, updatePassword, deleteUser,
-  findHost, addHost, editHost
+  findClient, addClient, editClient
 };

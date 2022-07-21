@@ -51,7 +51,7 @@ export type PublicUser = Omit<User, 'password'>;
 
 export const ZodClient = z.object({
   // id
-  id: z.number(),
+  id: z.string().uuid(),
   // name
   name: z.string({
     required_error: 'client needs a unique name'
@@ -63,7 +63,27 @@ export const ZodClient = z.object({
     message: 'invalid url'
   }).min(CLIENT_CONSTANTS.URI_MIN_LENGTH),
   // secret
-  trusted: z.string()
+  secret: z.string()
 }).strict();
 
 export type Client = z.infer<typeof ZodClient>;
+export type PublicClient = Omit<Client, 'secret'>;
+
+export const ZodCode = z.object({
+  // id
+  id: z.number(),
+  // user_uid (foreign_key)
+  user_uid: z.string().uuid(),
+  // client_id (foreign_key)
+  client_it: z.string().uuid(),
+  // code
+  code: z.string(),
+  // code_challenge
+  code_challenge: z.string(),
+  // full_info
+  full_info: z.boolean().default(false),
+  // created_on
+  created_on: z.date().optional()
+}).strict();
+
+export type Code = z.infer<typeof ZodClient>

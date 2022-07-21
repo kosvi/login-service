@@ -3,7 +3,7 @@
  */
 
 import { ZodError } from 'zod';
-import { PublicUser, TokenContent, User, Whitehost, ZodTokenContent, ZodUser, ZodWhitehost } from '../types';
+import { PublicUser, TokenContent, User, Client, ZodTokenContent, ZodUser, ZodClient, PublicClient } from '../types';
 import { logger } from './logger';
 
 const isString = (text: unknown): text is string => {
@@ -65,17 +65,33 @@ const isPublicUser = (obj: unknown): obj is PublicUser => {
   }
 };
 
-const isWhitehost = (obj: unknown): obj is Whitehost => {
+const isClient = (obj: unknown): obj is Client => {
   try {
     if (obj && typeof obj === 'object') {
-      ZodWhitehost.parse(obj);
+      ZodClient.parse(obj);
       return true;
     }
     return false;
   } catch (error) {
-    logger.debugError('isWhitehost', error);
+    logger.debugError('isClient', error);
     return false;
   }
+};
+
+const isPublicClient = (obj: unknown): obj is PublicClient => {
+  if (obj && typeof obj === 'object' && 'secret' in obj) {
+    // we have secret -> this is not public!
+    return false;
+  }
+  try {
+    if (obj && typeof obj === 'object') {
+      ZodClient.parse({ secret: 'mocked', ...obj });
+      return true;
+    }
+  } catch (error) {
+    logger.debugError('isPublicClient()', error);
+  }
+  return false;
 };
 
 const isTokenContent = (obj: unknown): obj is TokenContent => {
@@ -97,5 +113,5 @@ const isTokenContent = (obj: unknown): obj is TokenContent => {
 };
 
 export const validators = {
-  isString, isUser, userFailure, isPublicUser, isWhitehost, isTokenContent
+  isString, isUser, userFailure, isPublicUser, isClient, isPublicClient, isTokenContent
 };

@@ -1,4 +1,4 @@
-import { User, PublicUser, Whitehost } from '../../../src/types';
+import { User, PublicUser, PublicClient } from '../../../src/types';
 
 const defaultAdmin = {
   username: 'admin',
@@ -11,20 +11,18 @@ const validPublicUser: PublicUser = {
   email: 'user@example.com',
   admin: false,
   locked: false,
-  stealth: false,
   deleted: false
 };
 const validUser: User = {
   ...validPublicUser,
   password: 'this-is-some-hashed-string'
 };
-const validWhitehost: Whitehost = {
-  id: 1,
-  name: 'foo',
-  host: 'http://foo.example.com',
-  trusted: false
+const validPublicClient: PublicClient = {
+  id: '06978f0f-58a6-481b-9033-2ced35107b52',
+  name: 'FooClient',
+  redirect_uri: 'https://foo.example.com/callback'
 };
 
 export const testData = {
-  defaultAdmin, validPublicUser, validUser, validWhitehost
+  defaultAdmin, validPublicUser, validUser, validPublicClient
 };

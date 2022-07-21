@@ -31,7 +31,7 @@ export const addUser = async (user: User): Promise<boolean> => {
 export const getUserByUid = async (uid: string): Promise<PublicUser | undefined> => {
   try {
     logger.db(`SELECT uid '${uid}'`);
-    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE uid = $1', [uid]);
+    const result = await pool.query('SELECT uid, username, name, email, admin, locked, deleted, created_on FROM account WHERE uid = $1', [uid]);
     if (result.rowCount === 1 && validators.isPublicUser(result.rows[0])) {
       return result.rows[0];
     }
@@ -46,7 +46,7 @@ export const getUserByUid = async (uid: string): Promise<PublicUser | undefined>
 export const getUserByUsername = async (username: string): Promise<PublicUser | undefined> => {
   try {
     logger.db(`SELECT user '${username}'`);
-    const result = await pool.query('SELECT uid, username, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE username = $1', [username]);
+    const result = await pool.query('SELECT uid, username, name, email, admin, locked, deleted, created_on FROM account WHERE username = $1', [username]);
     if (result.rowCount === 1 && validators.isPublicUser(result.rows[0])) {
       return result.rows[0];
     }
@@ -61,7 +61,7 @@ export const getUserByUsername = async (username: string): Promise<PublicUser | 
 export const getUserByCreds = async (username: string, password: string): Promise<PublicUser | undefined> => {
   try {
     logger.db(`SELECT user '${username}' and check password`);
-    const result = await pool.query('SELECT uid, username, password, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE username = $1',
+    const result = await pool.query('SELECT uid, username, password, name, email, admin, locked, deleted, created_on FROM account WHERE username = $1',
       [username]);
     if (result.rowCount === 1 && validators.isUser(result.rows[0])) {
       const success = await userService.compareHashes(password, result.rows[0].password);
@@ -80,7 +80,7 @@ export const getUserByCreds = async (username: string, password: string): Promis
 export const getUserByUidAndPassword = async (uid: string, password: string): Promise<PublicUser | undefined> => {
   try {
     logger.db(`SELECT user ${uid} and check password`);
-    const result = await pool.query('SELECT uid, username, password, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE uid = $1', [uid]);
+    const result = await pool.query('SELECT uid, username, password, name, email, admin, locked, deleted, created_on FROM account WHERE uid = $1', [uid]);
     if (result.rowCount === 1 && validators.isUser(result.rows[0])) {
       // if password is valid -> return found user (as public user)
       const success = await userService.compareHashes(password, result.rows[0].password);
@@ -96,7 +96,7 @@ export const getUserByUidAndPassword = async (uid: string, password: string): Pr
 };
 
 export const updateUser = async (user: PublicUser): Promise<boolean> => {
-  logger.db(`UPDATE user '${user.uid}' and SET username, name, email and stealth`);
+  logger.db(`UPDATE user '${user.uid}' and SET username, name and email`);
   // make sure user REALLY is valid and that UID is set
   if (!user.uid || !validators.isPublicUser(user)) {
     logger.log('db.updateUser() - malformed parameters given');
@@ -104,8 +104,8 @@ export const updateUser = async (user: PublicUser): Promise<boolean> => {
   }
   try {
     // We expect that the user has been verified before
-    const result = await pool.query('UPDATE account SET username = $1, name = $2, email = $3, stealth = $4 WHERE uid = $5',
-      [user.username, user.name, user.email, user.stealth, user.uid]);
+    const result = await pool.query('UPDATE account SET username = $1, name = $2, email = $3 WHERE uid = $4',
+      [user.username, user.name, user.email, user.uid]);
     if (result.rowCount === 1) {
       logger.log('db.updateUser() - update successfull');
       return true;

@@ -81,18 +81,19 @@ describe('validator tests', () => {
     expect(validators.isTokenContent(validTokenContent)).toBe(true);
   });
 
-  // These are to validate objects as whitelist-hosts
-  it('should validate valid whitehost', () => {
-    expect(validators.isWhitehost(testData.validWhitehost)).toBe(true);
+  // These are to validate objects as Clients
+  it('should validate valid client', () => {
+    expect(validators.isPublicClient(testData.validPublicClient)).toBe(true);
   });
-  it('shouldn\'t allow extra properties for a whitehost', () => {
-    expect(validators.isWhitehost({ ...testData.validWhitehost, extraProperty: 'foobar' })).toBe(false);
+  it('shouldn\'t allow extra properties for a client', () => {
+    expect(validators.isPublicClient({ ...testData.validPublicClient, extraProperty: 'foobar' })).toBe(false);
   });
-  it('shouldn\'t validate objects that miss an property', () => {
-    expect(validators.isWhitehost({ id: 1, name: 'foo', host: 'http://foo.example.com' })).toBe(false);
-    expect(validators.isWhitehost({ id: 1, name: 'foo', trusted: false })).toBe(false);
-    expect(validators.isWhitehost({ id: 1, host: 'http://foo.example.com', trusted: false })).toBe(false);
-    expect(validators.isWhitehost({ name: 'foo', host: 'http://foo.example.com', trusted: false })).toBe(false);
+  it('shouldn\'t validate objects that miss a property or includes secret', () => {
+    expect(validators.isPublicClient({ id: '06978f0f-58a6-481b-9033-2ced35107b52', name: 'foo' })).toBe(false);
+    expect(validators.isPublicClient({ id: '06978f0f-58a6-481b-9033-2ced35107b52', redirect_uri: 'https://foo.example.com/callback' })).toBe(false);
+    expect(validators.isPublicClient({ name: 'foo', host: 'http://foo.example.com' })).toBe(false);
+    // also should't validate if secret exists
+    expect(validators.isPublicClient({ id: '06978f0f-58a6-481b-9033-2ced35107b52', name: 'foo', redirect_uri: 'https://foo.example.com/callback', secret: 'mocked' })).toBe(false);
   });
 
 });

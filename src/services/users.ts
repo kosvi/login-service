@@ -34,7 +34,6 @@ const addUser = async (username: string, password: string, name: string, email: 
     email: email.toLowerCase(),
     admin: false,
     locked: false,
-    stealth: true,
     deleted: false
   };
   // check to make sure password is strong enough
@@ -89,8 +88,7 @@ const updateUser = async (uid: string, password: string, newValues: PublicUser):
       ...oldValues,
       username: newValues.username,
       name: newValues.name,
-      email: newValues.email,
-      stealth: newValues.stealth
+      email: newValues.email
     };
     // now validate input 
     if (validators.isPublicUser(newUser)) {

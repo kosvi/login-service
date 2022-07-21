@@ -27,7 +27,7 @@ export const migrations: Array<Migration> = [
   {
     id: 'add_clients_table',
     up: 'CREATE TABLE IF NOT EXISTS client (\
-    id SERIAL PRIMARY KEY, \
+    id VARCHAR(50) PRIMARY KEY, \
     name VARCHAR(100) UNIQUE NOT NULL, \
     redirect_uri VARCHAR(200) UNIQUE NOT NULL, \
     secret VARCHAR(100) NOT NULL \

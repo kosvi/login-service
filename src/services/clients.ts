@@ -1,36 +1,36 @@
-import { Whitehost } from '../types';
+import { v4 as uuidv4 } from 'uuid';
+import { PublicClient } from '../types';
 import { ControllerError } from '../utils/customErrors';
 import { validators } from '../utils/validators';
 import { db } from './database';
 
 // just gimme the request body and I'll validate it... 
-const addHost = async (data: unknown): Promise<Whitehost | undefined> => {
-  let newHost;
+const addClient = async (data: unknown): Promise<PublicClient | undefined> => {
+  let newClient;
   if (typeof data === 'object') {
-    newHost = { id: 1, ...data };
+    newClient = { id: uuidv4(), ...data };
   }
-  // we gave some default id for the host as it's a required property of whitehost, but it shouldn't cause a problem
-  if (!validators.isWhitehost(newHost)) {
+  if (!validators.isClient(newClient)) {
     return undefined;
   }
-  // ok, newHost is a valid whitehost
+  // ok, newClient is a valid Client
   // let's add it to database
-  return await db.addHost(newHost);
+  return await db.addClient(newClient);
 };
 
-// edit a host with simply passing request body & id
-const editHost = async (id: number, data: unknown): Promise<Whitehost> => {
+// edit a client with simply passing request body & id
+const editClient = async (id: number, data: unknown): Promise<PublicClient> => {
   let newData;
   if (typeof data === 'object') {
     newData = { id: id, ...data };
   }
   // validate data
-  if (!validators.isWhitehost(newData)) {
+  if (!validators.isClient(newData)) {
     // failure -> throw ControllerError
     throw new ControllerError(400, 'malformed request');
   }
-  // update host 
-  const result = await db.editHost(newData);
+  // update client 
+  const result = await db.editClient(newData);
   if (result) {
     return result;
   }
@@ -40,5 +40,5 @@ const editHost = async (id: number, data: unknown): Promise<Whitehost> => {
 };
 
 export const hostService = {
-  addHost, editHost
+  addClient, editClient
 };
