@@ -20,7 +20,8 @@ const validUser: User = {
 const validPublicClient: PublicClient = {
   id: '06978f0f-58a6-481b-9033-2ced35107b52',
   name: 'FooClient',
-  redirect_uri: 'https://foo.example.com/callback'
+  redirect_uri: 'https://foo.example.com/callback',
+  allow_write: false
 };
 
 export const testData = {

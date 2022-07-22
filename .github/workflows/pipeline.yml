@@ -30,6 +30,7 @@ jobs:
 
     env:
       DATABASE_URL: "postgres://tester:test_password@localhost:5432/test_db"
+      FRONTEND_URL: "https://login.example.com"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1

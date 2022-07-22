@@ -63,7 +63,9 @@ export const ZodClient = z.object({
     message: 'invalid url'
   }).min(CLIENT_CONSTANTS.URI_MIN_LENGTH),
   // secret
-  secret: z.string()
+  secret: z.string(),
+  // allow_write
+  allow_write: z.boolean().default(false)
 }).strict();
 
 export type Client = z.infer<typeof ZodClient>;

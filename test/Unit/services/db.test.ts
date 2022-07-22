@@ -241,7 +241,8 @@ describe('clients tests', () => {
       id: testData.validPublicClient.id,
       name: testData.validPublicClient.name,
       redirect_uri: testData.validPublicClient.redirect_uri,
-      secret: 'mocked'
+      secret: 'mocked',
+      allow_write: testData.validPublicClient.allow_write
     };
     const success = await db.addClient(newClient);
     expect(pool.query).toBeCalledTimes(1);

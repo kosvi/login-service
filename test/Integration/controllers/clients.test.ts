@@ -34,7 +34,8 @@ describe('clientController integration tests', () => {
     const newClient: Omit<Client, 'id'> = {
       name: testData.validPublicClient.name,
       redirect_uri: testData.validPublicClient.redirect_uri,
-      secret: 'mocked'
+      secret: 'mocked',
+      allow_write: testData.validPublicClient.allow_write
     };
     // let's send this as request body
     const response = await api.post(base).set('Authorization', authContent).send(newClient).expect(201);
@@ -45,7 +46,8 @@ describe('clientController integration tests', () => {
     const newClient: Omit<Client, 'id'> = {
       name: testData.validPublicClient.name,
       redirect_uri: testData.validPublicClient.redirect_uri,
-      secret: 'mocked'
+      secret: 'mocked',
+      allow_write: testData.validPublicClient.allow_write
     };
     // let's add the client
     const addResponse = await api.post(base).set('Authorization', authContent).send(newClient).expect(201);
@@ -54,7 +56,8 @@ describe('clientController integration tests', () => {
     const data: Omit<Client, 'id'> = {
       name: 'another cool service',
       redirect_uri: 'http://must-be-a-valid.host.name',
-      secret: 'mocked2'
+      secret: 'mocked2',
+      allow_write: testData.validPublicClient.allow_write
     };
     if (validators.isPublicClient(addResponse.body)) {
       id = addResponse.body.id;

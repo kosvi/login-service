@@ -67,6 +67,7 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 | name  | string, unique | a name to identify the whitelisted site | 
 | redirect_uri  | string, unique | location where user is returned after authorization |
 | secret | string | client secret used for Basic authentication with refresh token |
+| allow_write | boolean | tokens provided has read_only set false |
 
 *Codes*
 
