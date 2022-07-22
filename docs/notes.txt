@@ -4,7 +4,11 @@ OAuth 2.0 code api (plan)
  -> post user&password to /login -> returns code
 <- user is returned to client app
 
-* /static will be created using React and is server as another microservice
+login.example.com <- send user here to authenticate
+ -> post user&password to /login -> returns token
+display user information and client and verify content send to client
+ <- redirect back to client with code
+
 
 /token <- request token with the code given
  -> return: access_token, token_type, expires_in
@@ -23,11 +27,11 @@ New users:
  -> /:id DELETE delete user
  -> /:id GET display single user
 
-/hosts (admin token only!)
- -> / GET list hosts
- -> / POST new host
- -> /:id PUT edit host
- -> /:id DELETE delete host
+/clients (admin token only!)
+ -> / GET list clients
+ -> / POST new client
+ -> /:id PUT edit client
+ -> /:id DELETE delete client
 
 
 Request when requesting code:

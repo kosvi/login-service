@@ -12,19 +12,14 @@ const createResponseFromPublicUser = (user: PublicUser): { token: string, conten
     throw new Error('no UID found');
   }
 
-  let privateContent: { name?: string, email?: string } = {};
-  if (!user.stealth) {
-    privateContent = {
-      name: user.name,
-      email: user.email
-    };
-  }
   // create token content
   const content: TokenContent = {
     uid: user.uid,
     username: user.username,
+    name: user.name,
+    email: user.email,
+    read_only: true,
     expires: createExpireTime(),
-    ...privateContent
   };
   // sign token
   const token = sign(content, SECRET);

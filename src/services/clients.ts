@@ -19,7 +19,7 @@ const addClient = async (data: unknown): Promise<PublicClient | undefined> => {
 };
 
 // edit a client with simply passing request body & id
-const editClient = async (id: number, data: unknown): Promise<PublicClient> => {
+const editClient = async (id: string, data: unknown): Promise<PublicClient> => {
   let newData;
   if (typeof data === 'object') {
     newData = { id: id, ...data };
@@ -39,6 +39,6 @@ const editClient = async (id: number, data: unknown): Promise<PublicClient> => {
   throw new ControllerError(400, 'incorrect id');
 };
 
-export const hostService = {
+export const clientService = {
   addClient, editClient
 };

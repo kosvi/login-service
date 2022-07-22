@@ -42,12 +42,11 @@ describe('register a new user', () => {
       const firstMeResponse = await api.get(`/users/${uid}`).set('Authorization', `bearer ${token}`).expect(200);
       const firstMePublicUser = toPublicUser(firstMeResponse.body);
       expect(firstMePublicUser).not.toBe(undefined);
-      expect(firstMePublicUser?.stealth).toBe(true);
     }
-    // we should now have a valid token, let's use it to alter user and set stealth to false
+    // we should now have a valid token, let's use it to alter user and update name
     const updateResponse = await api.put(`/users/${uid}`).set('Authorization', `bearer ${token}`).send({
       ...newUserBody,
-      stealth: false
+      name: 'User Test'
     }).expect(200);
     const updateResponsePublicUser = toPublicUser(updateResponse.body);
     expect(updateResponsePublicUser).not.toBe(undefined);
@@ -56,7 +55,7 @@ describe('register a new user', () => {
     const secondMeResponse = await api.get(`/users/${uid}`).set('Authorization', `bearer ${token}`).expect(200);
     const secondMePublicUser = toPublicUser(secondMeResponse.body);
     expect(secondMePublicUser).not.toBe(undefined);
-    expect(secondMePublicUser?.stealth).toBe(false);
+    expect(secondMePublicUser?.name).toBe('User Test');
   });
 });
 

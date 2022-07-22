@@ -69,6 +69,7 @@ describe('validator tests', () => {
     let validTokenContent: TokenContent = {
       uid: testData.validPublicUser.uid as string,
       username: testData.validPublicUser.username,
+      read_only: true,
       expires: Math.floor(new Date().getTime() / 1000),
     };
     expect(validators.isTokenContent(validTokenContent)).toBe(true);

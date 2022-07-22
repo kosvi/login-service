@@ -36,6 +36,7 @@ App has following environmental variables and they can be set in `.env`.
 |PORT         | set the port the server listens on | no | 3000 |
 |SECRET       | secret that is used when signing JSON web tokens | **yes** | process.exit(2) |
 |TOKEN_EXPIRE_TIME | tells how long the tokens are valid (in minutes) | no | 5 |
+|FRONTEND_URL | location of frontend (for CORS) | no | |
 
 **Password settings**
 |variable name| description | value type | default value |

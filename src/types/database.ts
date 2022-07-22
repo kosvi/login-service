@@ -56,7 +56,7 @@ export const ZodClient = z.object({
   name: z.string({
     required_error: 'client needs a unique name'
   }).min(CLIENT_CONSTANTS.NAME_MIN_LENGTH),
-  // host
+  // redirect_uri
   redirect_uri: z.string({
     required_error: 'client needs a unique redirect uri'
   }).url({

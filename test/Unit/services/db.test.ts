@@ -8,7 +8,7 @@ import { db } from '../../../src/services';
 
 import { userService } from '../../../src/services';
 import { validators } from '../../../src/utils/validators';
-import { PublicUser, User, Whitehost } from '../../../src/types';
+import { PublicUser, User, Client } from '../../../src/types';
 // helper data
 import { testData } from '../utils/helperData';
 
@@ -148,7 +148,7 @@ describe('users tests', () => {
     await db.getUserByUsername('username');
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['SELECT uid, username, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE username = $1', ['username']]
+      ['SELECT uid, username, name, email, admin, locked, deleted, created_on FROM account WHERE username = $1', ['username']]
     ]);
     // and the same when selecting by UID
     jest.clearAllMocks();
@@ -156,7 +156,7 @@ describe('users tests', () => {
     await db.getUserByUid('mock-uid');
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['SELECT uid, username, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE uid = $1', ['mock-uid']]
+      ['SELECT uid, username, name, email, admin, locked, deleted, created_on FROM account WHERE uid = $1', ['mock-uid']]
     ]);
   });
 
@@ -167,7 +167,7 @@ describe('users tests', () => {
     const publicUser = await db.getUserByCreds('username', 'Password!');
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['SELECT uid, username, password, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE username = $1',
+      ['SELECT uid, username, password, name, email, admin, locked, deleted, created_on FROM account WHERE username = $1',
         ['username']]
     ]);
     const returnValue = validators.isPublicUser(publicUser);
@@ -177,7 +177,7 @@ describe('users tests', () => {
     const anotherPublicUser = await db.getUserByUidAndPassword('some-long-uid', 'Password!');
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['SELECT uid, username, password, name, email, admin, locked, stealth, deleted, created_on FROM account WHERE uid = $1', ['some-long-uid']]
+      ['SELECT uid, username, password, name, email, admin, locked, deleted, created_on FROM account WHERE uid = $1', ['some-long-uid']]
     ]);
     expect(validators.isPublicUser(anotherPublicUser)).toBe(true);
   });
@@ -191,8 +191,8 @@ describe('users tests', () => {
     // now let's make sure the query is what we expect it to be 
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['UPDATE account SET username = $1, name = $2, email = $3, stealth = $4 WHERE uid = $5',
-        [testUser.username, testUser.name, testUser.email, testUser.stealth, testUser.uid]]
+      ['UPDATE account SET username = $1, name = $2, email = $3 WHERE uid = $4',
+        [testUser.username, testUser.name, testUser.email, testUser.uid]]
     ]);
   });
 
@@ -225,7 +225,7 @@ describe('users tests', () => {
 
 });
 
-describe('whitelist tests', () => {
+describe('clients tests', () => {
   // this is our pool for the tests
   const pool: Pool = new Pool();
 
@@ -233,34 +233,35 @@ describe('whitelist tests', () => {
     jest.clearAllMocks();
   });
 
-  it('should add new host correctly', async () => {
+  it('should add new client correctly', async () => {
     // mock query result
-    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [testData.validWhitehost], rowCount: 1 });
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [testData.validPublicClient], rowCount: 1 });
     // our testdata
-    const newHost: Omit<Whitehost, 'id'> = {
-      name: testData.validWhitehost.name,
-      host: testData.validWhitehost.host,
-      trusted: testData.validWhitehost.trusted
+    const newClient: Client = {
+      id: testData.validPublicClient.id,
+      name: testData.validPublicClient.name,
+      redirect_uri: testData.validPublicClient.redirect_uri,
+      secret: 'mocked'
     };
-    const success = await db.addHost(newHost);
+    const success = await db.addClient(newClient);
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['INSERT INTO whitelist (name, host, trusted) VALUES ($1, $2, $3) RETURNING *', [newHost.name, newHost.host, newHost.trusted]]
+      ['INSERT INTO client (id, name, redirect_uri, secret) VALUES ($1, $2, $3, $4) RETURNING id, name, redirect_uri', [newClient.id, newClient.name, newClient.redirect_uri, newClient.secret]]
     ]);
-    expect(success).toEqual(testData.validWhitehost);
+    expect(success).toEqual(testData.validPublicClient);
   });
 
-  it('should edit a host correctly', async () => {
+  it('should edit a client correctly', async () => {
     // mock query result
-    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [testData.validWhitehost], rowCount: 1 });
+    (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [testData.validPublicClient], rowCount: 1 });
     // run edit
-    const result = await db.editHost(testData.validWhitehost);
+    const result = await db.editClient({ ...testData.validPublicClient, secret: 'mocked' });
     expect(pool.query).toBeCalledTimes(1);
     expect((pool.query as jest.Mock).mock.calls).toEqual([
-      ['UPDATE whitelist SET name = $1, host = $2, trusted = $3 WHERE id = $4 RETURNING *',
-        [testData.validWhitehost.name, testData.validWhitehost.host, testData.validWhitehost.trusted, testData.validWhitehost.id]]
+      ['UPDATE client SET name = $1, redirect_uri = $2, secret = $3 WHERE id = $4 RETURNING id, name, redirect_uri',
+        [testData.validPublicClient.name, testData.validPublicClient.redirect_uri, 'mocked', testData.validPublicClient.id]]
     ]);
-    expect(result).toEqual(testData.validWhitehost);
+    expect(result).toEqual(testData.validPublicClient);
   });
 
 });

@@ -18,8 +18,7 @@ describe('VerifyController tests', () => {
   beforeEach(() => {
     // create token with LoginService using a test-user (make user not in stealth mode!)
     const testUser: PublicUser = {
-      ...testData.validPublicUser,
-      stealth: false
+      ...testData.validPublicUser
     };
     const responseContent = loginService.createResponseFromPublicUser(testUser);
     token = responseContent.token;

@@ -17,6 +17,7 @@ const getContentFromToken = (token: string): TokenContent => {
   return {
     uid: tokenContent.uid,
     username: tokenContent.username,
+    read_only: tokenContent.read_only,
     expires: tokenContent.expires,
     // these are only added if they are in the actual token
     ...(tokenContent.name && { name: tokenContent.name }),

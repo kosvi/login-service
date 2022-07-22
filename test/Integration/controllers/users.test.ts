@@ -70,7 +70,6 @@ describe('UsersController integration tests', () => {
       expect(user.email).toBe(newUser.email);
       expect(user.admin).toBe(false);
       expect(user.locked).toBe(false);
-      expect(user.stealth).toBe(true);
       expect(user.deleted).toBe(false);
     }
   });
@@ -108,7 +107,6 @@ describe('UsersController integration tests', () => {
       expect(publicUser.username).toBe('tester2');
       expect(publicUser.name).toBe('New Name');
       expect(publicUser.email).toBe('tester2@example.net');
-      expect(publicUser.stealth).toBe(false);
     }
     // let's see that things look good at database also
     const queryResult = await db.getUserByUid(publicUser?.uid || '');
@@ -117,7 +115,6 @@ describe('UsersController integration tests', () => {
       expect(queryResult.username).toBe('tester2');
       expect(queryResult.name).toBe('New Name');
       expect(queryResult.email).toBe('tester2@example.net');
-      expect(queryResult.stealth).toBe(false);
     }
   });
 

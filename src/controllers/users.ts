@@ -27,7 +27,7 @@ export class UserController implements Controller {
       await this.addUser(req, res);
     } else if (req.url?.startsWith('/users/') && this.checkUid(req, res) && req.method === 'PUT') {
       await this.updateMe(req, res);
-    } else if (req.url?.startsWith('/users/') && this.checkUid(req, res) && req.method === 'PATCH') {
+    } else if (req.url?.startsWith('/users/') && req.url.endsWith('password') && this.checkUid(req, res) && req.method === 'PATCH') {
       await this.updateMyPassword(req, res);
     } else if (req.url?.startsWith('/users/') && this.checkUid(req, res) && req.method === 'DELETE') {
       await this.deleteMe(req, res);
@@ -43,7 +43,7 @@ export class UserController implements Controller {
     if (!this.tokenContent) {
       throw new ControllerError(401, 'not logged in');
     }
-    if (req.url?.substring(7) === this.tokenContent?.uid) {
+    if (req.url?.substring(43, 7) === this.tokenContent?.uid) {
       return true;
     }
     throw new ControllerError(400, 'uid mismatch');

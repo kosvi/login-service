@@ -1,25 +1,24 @@
-import { hostService, userService, VerifyService } from '../services';
+import { clientService, userService, VerifyService } from '../services';
 import { Controller, HttpRequest, HttpResponse, TokenContent } from '../types';
-import { converters } from '../utils/converters';
 import { ControllerError } from '../utils/customErrors';
 import { logger } from '../utils/logger';
 import { parsers } from '../utils/parsers';
 import { responseHandlers } from '../utils/responseHandlers';
 import { validators } from '../utils/validators';
 
-export class HostController implements Controller {
+export class ClientController implements Controller {
 
-  controllerName = 'HostController';
+  controllerName = 'ClientController';
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
     if (!(await this.checkPermission(req))) {
       throw new ControllerError(403, 'not authorized');
     }
-    if (req.url === '/hosts' && req.method === 'POST') {
-      await this.addHost(req, res);
+    if (req.url === '/clients' && req.method === 'POST') {
+      await this.addClient(req, res);
     }
-    else if (req.url?.startsWith('/hosts/') && !isNaN(converters.unknownToInteger(req.url.substring(7))) && req.method === 'PUT') {
-      await this.editHost(req, res);
+    else if (req.url?.startsWith('/clients/') && req.url.substring(9) && req.method === 'PUT') {
+      await this.editClient(req, res);
     }
   }
 
@@ -46,34 +45,34 @@ export class HostController implements Controller {
   }
 
   /*
-   * This function adds a new whitelisted host
+   * This function adds a client
    */
-  async addHost(req: HttpRequest, res: HttpResponse) {
+  async addClient(req: HttpRequest, res: HttpResponse) {
     try {
-      const newHost = await hostService.addHost(parsers.parseStringToJson(req.body ? req.body : '{}'));
-      if (validators.isWhitehost(newHost)) {
+      const newClient = await clientService.addClient(parsers.parseStringToJson(req.body ? req.body : '{}'));
+      if (validators.isClient(newClient)) {
         responseHandlers.setHeaderJson(res);
         responseHandlers.setStatus(201, res);
-        res.end(JSON.stringify(newHost));
+        res.end(JSON.stringify(newClient));
       } else {
         throw new ControllerError(400, 'malformed request');
       }
     } catch (error) {
-      logger.debugError(`${this.controllerName} - addHost()`, error);
+      logger.debugError(`${this.controllerName} - addClient()`, error);
       // this could be internal error (like db failure), but let's just assume malformed req body
       throw error;
     }
   }
 
   /*
-   * This function allows updating a host
+   * This function allows updating a client
    */
-  async editHost(req: HttpRequest, res: HttpResponse) {
-    const id = converters.unknownToInteger(req.url?.substring(7));
+  async editClient(req: HttpRequest, res: HttpResponse) {
+    const id = req.url?.substring(9) || '';
     const data = parsers.parseStringToJson(req.body ? req.body : '{}');
     try {
-      const newData = await hostService.editHost(id, data);
-      if (validators.isWhitehost(newData)) {
+      const newData = await clientService.editClient(id, data);
+      if (validators.isClient(newData)) {
         responseHandlers.setHeaderJson(res);
         responseHandlers.setStatus(200, res);
         res.end(JSON.stringify(newData));
@@ -81,7 +80,7 @@ export class HostController implements Controller {
         throw new ControllerError(500);
       }
     } catch (error) {
-      logger.debugError(`${this.controllerName} - editHost()`, error);
+      logger.debugError(`${this.controllerName} - editClient()`, error);
       if (error instanceof ControllerError) {
         throw error;
       } else {

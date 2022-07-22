@@ -5,7 +5,7 @@ import { requestHandlers } from './utils/requestHandlers';
 
 // Import controllers
 import { Controller } from './types';
-import { ErrorController, HelloController, HostController, UserController, VerifyController } from './controllers';
+import { ErrorController, HelloController, ClientController, UserController, VerifyController } from './controllers';
 import { ControllerError } from './utils/customErrors';
 
 // Import createServer so we can start taking in requests
@@ -42,8 +42,8 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
       controller = new LoginController();
     } else if (req.url?.startsWith('/users')) {
       controller = new UserController();
-    } else if (req.url?.startsWith('/hosts')) {
-      controller = new HostController();
+    } else if (req.url?.startsWith('/clients')) {
+      controller = new ClientController();
     } else if (req.url?.startsWith('/verify')) {
       controller = new VerifyController();
     } else {
