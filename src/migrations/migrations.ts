@@ -38,15 +38,13 @@ export const migrations: Array<Migration> = [
     id: 'add_codes_table',
     up: 'CREATE TABLE IF NOT EXISTS code (\
     id SERIAL PRIMARY KEY, \
-    user_uid VARCHAR(50) NOT NULL, \
-    client_id INT NOT NULL, \
+    user_uid VARCHAR(50) NOT NULL references account (uid), \
+    client_id VARCHAR(50) NOT NULL references client (id), \
     code VARCHAR(100) UNIQUE NOT NULL, \
     code_challenge VARCHAR(100) NOT NULL, \
     full_info BOOLEAN NOT NULL DEFAULT FALSE, \
-    created_on TIMESTAMP NOT NULL DEFAULT corrent_timestamp, \
-    constraint fk_code_account foreign key (user_uid) REFERENCES account (uid), \
-    constraint fk_code_client foreign key (client_id) REFERENCES client (id) \
+    created_on TIMESTAMP NOT NULL DEFAULT current_timestamp \
     );',
-    down: 'DROP TABLE IF EXISTS code'
+    down: 'DROP TABLE IF EXISTS code;'
   }
 ];

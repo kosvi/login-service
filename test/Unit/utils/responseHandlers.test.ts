@@ -18,15 +18,15 @@ jest.mock('../../../src/services', () => {
 
 describe('responseHandlers tests', () => {
 
-  it('shouldn\'t update headers for invalid origin', async () => {
+  it('shouldn\'t update headers for invalid origin', () => {
     const res = mockResponse();
-    await responseHandlers.setCors(res, 'http://invalid.example.com');
+    responseHandlers.setCors(res, 'http://invalid.example.com');
     // no calls to setHeader should happen
     expect(res.setHeader).toHaveBeenCalledTimes(0);
   });
-  it('should update headers for correct origin', async () => {
+  it('should update headers for correct origin', () => {
     const res = mockResponse();
-    await responseHandlers.setCors(res, FRONTEND_URL);
+    responseHandlers.setCors(res, FRONTEND_URL);
     // should be called 3 times: Origin, Methods, Headers
     expect(res.setHeader).toHaveBeenCalledTimes(3);
     expect((res.setHeader as jest.Mock).mock.calls).toEqual([

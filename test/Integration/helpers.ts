@@ -83,6 +83,7 @@ export const LoginBody = z.object({
     username: z.string(),
     name: z.string().optional(),
     email: z.string().email().optional(),
+    read_only: z.boolean(),
     expires: z.number()
   })
 }).strict();

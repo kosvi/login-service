@@ -50,7 +50,7 @@ export class ClientController implements Controller {
   async addClient(req: HttpRequest, res: HttpResponse) {
     try {
       const newClient = await clientService.addClient(parsers.parseStringToJson(req.body ? req.body : '{}'));
-      if (validators.isClient(newClient)) {
+      if (validators.isPublicClient(newClient)) {
         responseHandlers.setHeaderJson(res);
         responseHandlers.setStatus(201, res);
         res.end(JSON.stringify(newClient));
@@ -72,7 +72,7 @@ export class ClientController implements Controller {
     const data = parsers.parseStringToJson(req.body ? req.body : '{}');
     try {
       const newData = await clientService.editClient(id, data);
-      if (validators.isClient(newData)) {
+      if (validators.isPublicClient(newData)) {
         responseHandlers.setHeaderJson(res);
         responseHandlers.setStatus(200, res);
         res.end(JSON.stringify(newData));

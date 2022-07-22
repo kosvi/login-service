@@ -6,7 +6,7 @@ import { closeDatabase, isLoginBody, resetDatabase } from '../helpers';
 import { validators } from '../../../src/utils/validators';
 
 const api = supertest(app);
-const base = '/hosts';
+const base = '/clients';
 
 // setup database for tests
 beforeAll(async () => {
@@ -31,8 +31,9 @@ describe('clientController integration tests', () => {
    */
 
   it('should allow storing of a valid client', async () => {
-    const newClient: Client = {
-      ...testData.validPublicClient,
+    const newClient: Omit<Client, 'id'> = {
+      name: testData.validPublicClient.name,
+      redirect_uri: testData.validPublicClient.redirect_uri,
       secret: 'mocked'
     };
     // let's send this as request body
@@ -41,8 +42,9 @@ describe('clientController integration tests', () => {
   });
 
   it('should allow editing a stored client', async () => {
-    const newClient: Client = {
-      ...testData.validPublicClient,
+    const newClient: Omit<Client, 'id'> = {
+      name: testData.validPublicClient.name,
+      redirect_uri: testData.validPublicClient.redirect_uri,
       secret: 'mocked'
     };
     // let's add the client
@@ -60,7 +62,7 @@ describe('clientController integration tests', () => {
     // ok, we have the id and new data
     const editResponse = await api.put(`${base}/${id}`).set('Authorization', authContent).send(data).expect(200);
     expect(validators.isPublicClient(editResponse.body)).toBe(true);
-    expect(editResponse.body).toEqual({ id: id, ...data });
+    expect(editResponse.body).toEqual({ id: id, name: data.name, redirect_uri: data.redirect_uri });
   });
 
 });

@@ -97,8 +97,7 @@ describe('UsersController integration tests', () => {
       username: 'tester2',
       password: newUser.password,
       name: 'New Name',
-      email: 'tester2@example.net',
-      stealth: false
+      email: 'tester2@example.net'
     }).expect(200);
     expect(response.body).not.toBe(undefined);
     const publicUser = toPublicUser(response.body);
@@ -120,7 +119,7 @@ describe('UsersController integration tests', () => {
 
   it('should be able to update password', async () => {
     const newPwd = 'Th1s!sL4NuPwd#1';
-    await api.patch(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({
+    await api.patch(`${base}/${uid}/password`).set('Authorization', `bearer ${token}`).send({
       password: newUser.password,
       newPassword: newPwd
     }).expect(204);
@@ -153,7 +152,7 @@ describe('UsersController integration tests', () => {
   });
 
   it('shouldn\'t allow updating password to a weak password', async () => {
-    const newPasswordResponse = await api.patch(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({
+    const newPasswordResponse = await api.patch(`${base}/${uid}/password`).set('Authorization', `bearer ${token}`).send({
       password: newUser.password,
       newPassword: 'too_weak'
     }).expect(400);
@@ -161,15 +160,15 @@ describe('UsersController integration tests', () => {
   });
 
   it('should tell if password failed on password update', async () => {
-    const newPasswordResponse = await api.patch(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({
+    const newPasswordResponse = await api.patch(`${base}/${uid}/password`).set('Authorization', `bearer ${token}`).send({
       password: 'wrong_password',
       newPassword: 'T0tally!AV4lidPwd!!'
     }).expect(400);
     checkApiError(newPasswordResponse.body, 'old password was incorrect');
   });
 
-  it('should handle malformed request body correctly', async () => {
-    const noBodyResponse = await api.patch(`${base}/${uid}`).set('Authorization', `bearer ${token}`).send({}).expect(400);
+  it('should handle malformed password update request body correctly', async () => {
+    const noBodyResponse = await api.patch(`${base}/${uid}/password`).set('Authorization', `bearer ${token}`).send({}).expect(400);
     checkApiError(noBodyResponse.body, 'old password is required');
   });
 

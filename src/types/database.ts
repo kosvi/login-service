@@ -86,4 +86,4 @@ export const ZodCode = z.object({
   created_on: z.date().optional()
 }).strict();
 
-export type Code = z.infer<typeof ZodClient>
+export type Code = z.infer<typeof ZodClient>;

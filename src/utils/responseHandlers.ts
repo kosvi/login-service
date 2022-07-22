@@ -15,7 +15,7 @@ const setCors = (res: HttpResponse, origin: string): HttpResponse => {
   // first check if the origin is valid
   try {
     if (origin === FRONTEND_URL) {
-      let permissions = 'OPTIONS, POST';
+      const permissions = 'OPTIONS, POST';
       // permissions += ', GET, PUT, PATCH, DELETE';
       // set headers correctly
       res.setHeader('Access-Control-Allow-Origin', FRONTEND_URL);
@@ -39,11 +39,6 @@ const setHeaderHtml = (res: HttpResponse): HttpResponse => {
   return res;
 };
 
-const setHeaderIcon = (res: HttpResponse): HttpResponse => {
-  res.setHeader('Content-Type', 'image/x-icon');
-  return res;
-}
-
 export const responseHandlers = {
-  setStatus, setCors, setHeaderJson, setHeaderHtml, setHeaderIcon
+  setStatus, setCors, setHeaderJson, setHeaderHtml
 };

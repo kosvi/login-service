@@ -30,7 +30,7 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
     logger.log(`${req.method} - ${req.url}`);
     // first handle OPTIONS requests
     if (req.method === 'OPTIONS' && req.headers.origin) {
-      await responseHandlers.setCors(res, req.headers.origin);
+      responseHandlers.setCors(res, req.headers.origin);
       logger.debug('Options : headers set if origin allowed');
       res.end();
       return;
