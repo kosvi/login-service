@@ -31,7 +31,7 @@ describe('cors tests', () => {
     // Second check methods header
     expect(response.headers).toHaveProperty('access-control-allow-methods');
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    expect(response.headers['access-control-allow-methods']).toBe('OPTIONS, POST');
+    expect(response.headers['access-control-allow-methods']).toBe('OPTIONS, POST, GET');
 
     // Third check headers header
     expect(response.headers).toHaveProperty('access-control-allow-headers');

@@ -31,7 +31,7 @@ describe('responseHandlers tests', () => {
     expect(res.setHeader).toHaveBeenCalledTimes(3);
     expect((res.setHeader as jest.Mock).mock.calls).toEqual([
       ['Access-Control-Allow-Origin', FRONTEND_URL],
-      ['Access-Control-Allow-Methods', 'OPTIONS, POST'],
+      ['Access-Control-Allow-Methods', 'OPTIONS, POST, GET'],
       ['Access-Control-Allow-Headers', 'Content-Type']
     ]);
   });
