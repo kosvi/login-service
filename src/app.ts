@@ -72,6 +72,7 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
 
         // now, we should have a ControllerError and we can simply return it
         if (error instanceof ControllerError) {
+          responseHandlers.setCors(res, req.headers.origin);
           res.writeHead(error.statusCode, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: error.message }));
         } else {

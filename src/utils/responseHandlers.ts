@@ -11,7 +11,7 @@ const setStatus = (statusCode: StatusCode, res: HttpResponse): HttpResponse => {
   return res;
 };
 
-const setCors = (res: HttpResponse, origin: string): HttpResponse => {
+const setCors = (res: HttpResponse, origin: string | undefined): HttpResponse => {
   // first check if the origin is valid
   try {
     if (origin === FRONTEND_URL) {

@@ -59,7 +59,7 @@ describe('UsersController integration tests', () => {
    * HERE ARE THE ACTUAL TESTS
    */
 
-  it('should give users details on /me', async () => {
+  it('should give users details on /<uid>', async () => {
     const response = await api.get(`${base}/${uid}`).set('Authorization', `bearer ${token}`).expect(200);
     const user = toPublicUser(response.body);
     expect(validators.isPublicUser(user)).toBe(true);

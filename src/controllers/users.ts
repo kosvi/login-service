@@ -52,12 +52,13 @@ export class UserController implements Controller {
   /*
    * This function simply returns the information of the logged in user 
    */
-  async returnMe(_req: HttpRequest, res: HttpResponse) {
+  async returnMe(req: HttpRequest, res: HttpResponse) {
     if (!this.tokenContent) {
       // user not logged in -> 401
       throw new ControllerError(401, 'not logged in');
     }
     const me = await userService.findUserByUid(this.tokenContent.uid);
+    responseHandlers.setCors(res, req.headers.origin);
     responseHandlers.setHeaderJson(res);
     res.end(JSON.stringify(me));
   }
@@ -198,6 +199,7 @@ export class UserController implements Controller {
     }
     try {
       const result = await userService.addUser(user.username, user.password, user.name, user.email);
+      responseHandlers.setCors(res, req.headers.origin);
       responseHandlers.setHeaderJson(res);
       responseHandlers.setStatus(201, res);
       res.end(JSON.stringify(result));
