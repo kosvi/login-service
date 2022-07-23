@@ -15,7 +15,7 @@ const setCors = (res: HttpResponse, origin: string | undefined): HttpResponse =>
   // first check if the origin is valid
   try {
     if (origin === FRONTEND_URL) {
-      const permissions = 'OPTIONS, POST';
+      const permissions = 'OPTIONS, POST, GET';
       // permissions += ', GET, PUT, PATCH, DELETE';
       // set headers correctly
       res.setHeader('Access-Control-Allow-Origin', FRONTEND_URL);
