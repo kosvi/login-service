@@ -29,10 +29,17 @@ New users:
 
 /clients (admin token only!)
  -> / GET list clients
+ -> /:id GET display client (open to anyone!)
  -> / POST new client
  -> /:id PUT edit client
  -> /:id DELETE delete client
 
+/resources (admin token only!)
+ -> / GET list resources
+ -> /:id GET display resource (open to anyone!)
+ -> / POST new client
+ -> /:id PUT edit client
+ -> /:id DELETE delete client
 
 Request when requesting code:
 

@@ -36,6 +36,6 @@ describe('cors tests', () => {
     // Third check headers header
     expect(response.headers).toHaveProperty('access-control-allow-headers');
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    expect(response.headers['access-control-allow-headers']).toBe('Content-Type');
+    expect(response.headers['access-control-allow-headers']).toBe('Authorization, Content-Type');
   });
 });

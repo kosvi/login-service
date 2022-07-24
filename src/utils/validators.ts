@@ -3,7 +3,7 @@
  */
 
 import { ZodError } from 'zod';
-import { PublicUser, TokenContent, User, Client, ZodTokenContent, ZodUser, ZodClient, PublicClient } from '../types';
+import { PublicUser, TokenContent, User, Client, ZodTokenContent, ZodUser, ZodClient, PublicClient, Resource, ZodResource } from '../types';
 import { logger } from './logger';
 
 const isString = (text: unknown): text is string => {
@@ -94,6 +94,10 @@ const isPublicClient = (obj: unknown): obj is PublicClient => {
   return false;
 };
 
+const isResource = (obj: unknown): obj is Resource => {
+  return ZodResource.safeParse(obj).success;
+};
+
 const isTokenContent = (obj: unknown): obj is TokenContent => {
   try {
     if (obj && typeof obj === 'object') {
@@ -113,5 +117,5 @@ const isTokenContent = (obj: unknown): obj is TokenContent => {
 };
 
 export const validators = {
-  isString, isUser, userFailure, isPublicUser, isClient, isPublicClient, isTokenContent
+  isString, isUser, userFailure, isPublicUser, isClient, isPublicClient, isResource, isTokenContent
 };

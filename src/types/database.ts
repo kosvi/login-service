@@ -89,3 +89,10 @@ export const ZodCode = z.object({
 }).strict();
 
 export type Code = z.infer<typeof ZodClient>;
+
+export const ZodResource = z.object({
+  id: z.string().uuid(),
+  name: z.string()
+}).strict();
+
+export type Resource = z.infer<typeof ZodResource>;

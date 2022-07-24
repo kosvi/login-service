@@ -20,7 +20,7 @@ const setCors = (res: HttpResponse, origin: string | undefined): HttpResponse =>
       // set headers correctly
       res.setHeader('Access-Control-Allow-Origin', FRONTEND_URL);
       res.setHeader('Access-Control-Allow-Methods', permissions);
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
     }
     // if host was not found -> don't update headers
     return res;

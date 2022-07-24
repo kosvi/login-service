@@ -7,9 +7,11 @@
 import { runMigrations, revertMigrations, runSingleQuery } from './migrations';
 import { addUser, getUserByUid, getUserByUsername, getUserByCreds, getUserByUidAndPassword, updateUser, updatePassword, deleteUser } from './users';
 import { findClient, addClient, editClient } from './clients';
+import { findResource, addResource } from './resources';
 
 export const db = {
   runMigrations, revertMigrations, runSingleQuery,
   addUser, getUserByUid, getUserByUsername, getUserByCreds, getUserByUidAndPassword, updateUser, updatePassword, deleteUser,
-  findClient, addClient, editClient
+  findClient, addClient, editClient,
+  findResource, addResource
 };

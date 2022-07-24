@@ -64,10 +64,16 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 | field | type | description |
 |-------|------|-------------|
 | id    | string, primary key | unique id of the client |
-| name  | string, unique | a name to identify the whitelisted site | 
+| name  | string, unique | a name to identify the client | 
 | redirect_uri  | string, unique | location where user is returned after authorization |
 | secret | string | client secret used for Basic authentication with refresh token |
-| allow_write | boolean | tokens provided has read_only set false |
+
+*Resources*
+
+| field | type | description |
+|-------|------|-------------|
+| id    | string, primary key | unique id of the resource |
+| name  | string, unique | a name to identify the resource |
 
 *Codes*
 
@@ -76,6 +82,7 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 | id | serial, primary key | id of the code |
 | user_uid | foreign_key (Users.uid) | reference to Users table |
 | client_id | foreign_key (Clients.id) | reference to Clients table |
+| resource_id | foreign_key (Resources.id) | references to Resources table |
 | code | string, unique | code that was handed to client |
 | code_challenge | string | must match code_verifier | 
 | full_info | boolean | if true, also name & email is added to token |

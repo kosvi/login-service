@@ -32,7 +32,7 @@ describe('responseHandlers tests', () => {
     expect((res.setHeader as jest.Mock).mock.calls).toEqual([
       ['Access-Control-Allow-Origin', FRONTEND_URL],
       ['Access-Control-Allow-Methods', 'OPTIONS, POST, GET'],
-      ['Access-Control-Allow-Headers', 'Content-Type']
+      ['Access-Control-Allow-Headers', 'Authorization, Content-Type']
     ]);
   });
 });
