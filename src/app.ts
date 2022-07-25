@@ -12,6 +12,7 @@ import { ControllerError } from './utils/customErrors';
 import { IncomingMessage, ServerResponse } from 'http';
 import { LoginController } from './controllers/login';
 import { responseHandlers } from './utils/responseHandlers';
+import { ResourceController } from './controllers/resources';
 
 /*
  * Create app and direct requests to correct Controllers
@@ -44,6 +45,8 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
       controller = new UserController();
     } else if (req.url?.startsWith('/clients')) {
       controller = new ClientController();
+    } else if (req.url?.startsWith('/resources')) {
+      controller = new ResourceController();
     } else if (req.url?.startsWith('/verify')) {
       controller = new VerifyController();
     } else {

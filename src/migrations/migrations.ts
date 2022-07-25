@@ -58,6 +58,7 @@ export const migrations: Array<Migration> = [
     code VARCHAR(100) UNIQUE NOT NULL, \
     code_challenge VARCHAR(100) NOT NULL, \
     full_info BOOLEAN NOT NULL DEFAULT FALSE, \
+    read_only BOOLEAN NOT NULL DEFAULT TRUE, \
     created_on TIMESTAMP NOT NULL DEFAULT current_timestamp \
     );',
     down: 'DROP TABLE IF EXISTS code;'

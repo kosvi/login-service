@@ -11,6 +11,10 @@ export class ClientController implements Controller {
   controllerName = 'ClientController';
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
+    if (req.url?.startsWith('/clients/') && req.url.substring(9) && req.method === 'GET') {
+      await this.getClient(req, res);
+      return;
+    }
     if (!(await this.checkPermission(req))) {
       throw new ControllerError(403, 'not authorized');
     }
@@ -89,4 +93,24 @@ export class ClientController implements Controller {
     }
   }
 
+  /*
+   * This function allows getting client-data 
+   */
+  async getClient(req: HttpRequest, res: HttpResponse) {
+    const id = req.url?.substring(9) || '';
+    if (id.length > 1) {
+      const client = await clientService.getClient(id);
+      if (client && validators.isPublicClient(client)) {
+        responseHandlers.setCors(res, req.headers.origin);
+        responseHandlers.setHeaderJson(res);
+        responseHandlers.setStatus(200, res);
+        res.end(JSON.stringify(client));
+      } else {
+        throw new ControllerError(404, 'client not found');
+      }
+    } else {
+      throw new ControllerError(404, 'invalid client id');
+    }
+  }
 }
+

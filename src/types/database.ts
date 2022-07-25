@@ -73,22 +73,41 @@ export type PublicClient = Omit<Client, 'secret'>;
 
 export const ZodCode = z.object({
   // id
-  id: z.number(),
+  id: z.number().optional(),
   // user_uid (foreign_key)
   user_uid: z.string().uuid(),
   // client_id (foreign_key)
-  client_it: z.string().uuid(),
+  client_id: z.string().uuid(),
+  // resource_id (foreign_key)
+  resource_id: z.string().uuid(),
   // code
   code: z.string(),
   // code_challenge
   code_challenge: z.string(),
   // full_info
   full_info: z.boolean().default(false),
+  // read_only
+  read_only: z.boolean().default(true),
   // created_on
   created_on: z.date().optional()
 }).strict();
 
-export type Code = z.infer<typeof ZodClient>;
+export type Code = z.infer<typeof ZodCode>;
+
+export const ZodCodeFromDB = z.object({
+  id: z.number(),
+  resource_id: z.string().uuid(),
+  full_info: z.boolean(),
+  read_only: z.boolean(),
+  created_on: z.date(),
+  uid: z.string().uuid(),
+  username: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  redirect_uri: z.string().url()
+}).strict();
+
+export type CodeFromDB = z.infer<typeof ZodCodeFromDB>;
 
 export const ZodResource = z.object({
   id: z.string().uuid(),

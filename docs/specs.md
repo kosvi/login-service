@@ -86,6 +86,7 @@ As a bit of an anti-pattern, our DB migrations are built-in, but we try to live 
 | code | string, unique | code that was handed to client |
 | code_challenge | string | must match code_verifier | 
 | full_info | boolean | if true, also name & email is added to token |
+| read_only | boolean | defines the value for the read_only attribute in the token |
 | created_on | timestamp | used to clean up expired codes | 
 
 *possibility for a settings-table is reserved for the future*

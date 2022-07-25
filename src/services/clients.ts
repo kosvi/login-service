@@ -39,6 +39,11 @@ const editClient = async (id: string, data: unknown): Promise<PublicClient> => {
   throw new ControllerError(400, 'incorrect id');
 };
 
+const getClient = async (id: string): Promise<PublicClient | undefined> => {
+  const result = await db.findClient(id);
+  return result;
+};
+
 export const clientService = {
-  addClient, editClient
+  addClient, editClient, getClient
 };
