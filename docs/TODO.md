@@ -31,3 +31,9 @@ Current task:
 - ~~write tests: db.getUserByUidAndPassword(), ...~~
 - WRITE A LOT OF TESTS!!! especially tests that do something unexpecting...
 - ~~Write tests for down-migrations~~
+
+
+New list:
+- Make sure that resource_id is validated from tokens! (so no other resources/clients gain access to users)
+- a HUGE amount of tests missing!!!
+- update documentation (this is lagging badly too!)

@@ -104,7 +104,9 @@ export const ZodCodeFromDB = z.object({
   username: z.string(),
   name: z.string(),
   email: z.string().email(),
-  redirect_uri: z.string().url()
+  redirect_uri: z.string().url(),
+  code_challenge: z.string(),
+  client_id: z.string().uuid()
 }).strict();
 
 export type CodeFromDB = z.infer<typeof ZodCodeFromDB>;

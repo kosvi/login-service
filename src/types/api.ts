@@ -17,6 +17,8 @@ export const ZodTokenContent = z.object({
   name: z.string().optional(),
   // email
   email: z.string().optional(),
+  // resource (to where the token is requested!)
+  resource: z.string().uuid().optional(),
   // read_only (defines if token can be used only on GET requests)
   read_only: z.boolean().default(true),
   // expires

@@ -28,5 +28,6 @@ export const PASSWORD_REQUIREMENTS = {
   NO_EASY: process.env.PASSWORD_REQUIRE_NO_EASY || true
 };
 // token lifetime is set in minutes
-export const TOKEN_EXPIRE_TIME = process.env.TOKEN_EXPIRE_TIME || '5';
+export const TOKEN_EXPIRE_TIME = process.env.TOKEN_EXPIRE_TIME || '60';
+export const CODE_LENGTH = process.env.CODE_LENGTH || '32';
 export const FRONTEND_URL = process.env.FRONTEND_URL || '';

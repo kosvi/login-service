@@ -35,7 +35,8 @@ App has following environmental variables and they can be set in `.env`.
 |DATABASE_URL | tell where to find database | **yes** | postgres://user:password@localhost:port/db |
 |PORT         | set the port the server listens on | no | 3000 |
 |SECRET       | secret that is used when signing JSON web tokens | **yes** | process.exit(2) |
-|TOKEN_EXPIRE_TIME | tells how long the tokens are valid (in minutes) | no | 5 |
+|TOKEN_EXPIRE_TIME | tells how long the tokens are valid (in minutes) | no | 60 |
+|CODE_LENGTH | tells how long (bytes) codes to generate when handing out codes to clients | no | 32 |
 |FRONTEND_URL | location of frontend (for CORS) | no | |
 
 **Password settings**
