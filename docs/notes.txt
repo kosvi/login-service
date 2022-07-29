@@ -48,7 +48,7 @@ Host: auth.5v.fi
 
 client_id = id of the client requesting code
 state = random string that is returned with code (to prevent CSRF attacks)
-redirect_uri = uri where user is returned with code (must match the uri registered with client!)
+redirect_uri = uri where user is returned with code (must match the uri registered with client!) (example: http%3A%2F%2Flocalhost%3A5000%2Fcallback)
 resource_id = not required for now
 code_challenge = hashed random string, original is send with code in order to obtain token
 

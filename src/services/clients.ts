@@ -41,7 +41,15 @@ const editClient = async (id: string, data: unknown): Promise<PublicClient> => {
 
 const getClient = async (id: string): Promise<PublicClient | undefined> => {
   const result = await db.findClient(id);
-  return result;
+  if (validators.isClient(result)) {
+    return {
+      id: result.id,
+      name: result.name,
+      redirect_uri: result.redirect_uri,
+      allow_write: result.allow_write
+    };
+  }
+  return undefined;
 };
 
 export const clientService = {
