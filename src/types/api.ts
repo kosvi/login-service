@@ -27,6 +27,19 @@ export const ZodTokenContent = z.object({
 
 export type TokenContent = z.infer<typeof ZodTokenContent>;
 
+/* 
+ * This is the content of a token request send by client
+ */
+export const ZodTokenRequest = z.object({
+  grant_type: z.string(),
+  code: z.string(),
+  client_id: z.string().uuid(),
+  code_verifier: z.string(),
+  redirect_uri: z.string().url()
+}).strict();
+
+export type TokenRequest = z.infer<typeof ZodTokenRequest>;
+
 /*
  * This is the content send by user when logging in
  */

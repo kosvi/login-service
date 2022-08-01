@@ -31,6 +31,8 @@ const setCors = (res: HttpResponse, origin: string | undefined): HttpResponse =>
 
 const setHeaderJson = (res: HttpResponse): HttpResponse => {
   res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Pragma', 'no-cache');
   return res;
 };
 

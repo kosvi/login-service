@@ -27,7 +27,7 @@ const verifyWhatIsReturned = (res: HttpResponse, type: ContentType, status: Stat
   // and it should have been called with 200
   expect(res.writeHead).toBeCalledWith(status);
   // header is set once
-  expect(res.setHeader).toBeCalledTimes(1);
+  expect(res.setHeader).toBeCalledTimes(3);
   // and it should be of type 'type'
   expect(res.setHeader).toBeCalledWith('Content-Type', type);
   // end is called once
