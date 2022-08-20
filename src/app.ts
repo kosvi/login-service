@@ -13,6 +13,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { LoginController } from './controllers/login';
 import { responseHandlers } from './utils/responseHandlers';
 import { ResourceController } from './controllers/resources';
+import { CodeController } from './controllers/codes';
 
 /*
  * Create app and direct requests to correct Controllers
@@ -43,6 +44,8 @@ export const app = (request: IncomingMessage, res: ServerResponse) => {
       controller = new LoginController();
     } else if (req.url?.startsWith('/users')) {
       controller = new UserController();
+    } else if (req.url?.startsWith('/codes')) {
+      controller = new CodeController();
     } else if (req.url?.startsWith('/clients')) {
       controller = new ClientController();
     } else if (req.url?.startsWith('/resources')) {

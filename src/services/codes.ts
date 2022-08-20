@@ -26,22 +26,8 @@ const codeGenerator = (): string => {
   return code;
 };
 
-/*
-const generateCode = (): string => {
-  const length = parseInt(CODE_LENGTH);
-  const t = new Date().getTime();
-  const a = 'abcdefghijklmnopqrstuvwxyz';
-  const n = '0123456789';
-  const v = `${a}${a.toUpperCase()}${n}`;
-  let code = `${t.toString()}-`;
-  for (let i = 0; i < length; i++) {
-    code = `${code}${v[Math.floor(Math.random() * v.length)]}`;
-  }
-  return code;
-};
-*/
-
 const addCode = async (obj: unknown): Promise<Code | undefined> => {
+  logger.debug(`codeService.addCode() : typeof obj === 'object' => ${typeof obj === 'object'}`);
   let code;
   if (typeof obj === 'object') {
     code = {
