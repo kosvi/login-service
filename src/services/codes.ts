@@ -26,12 +26,12 @@ const codeGenerator = (): string => {
   return code;
 };
 
-const addCode = async (obj: unknown): Promise<Code | undefined> => {
-  logger.debug(`codeService.addCode() : typeof obj === 'object' => ${typeof obj === 'object'}`);
+const addCode = async (body: unknown): Promise<Code | undefined> => {
+  logger.debug(`codeService.addCode() : typeof body === 'object' => ${typeof body === 'object'}`);
   let code;
-  if (typeof obj === 'object') {
+  if (typeof body === 'object') {
     code = {
-      ...obj,
+      ...body,
       code: codeGenerator()
     };
   }

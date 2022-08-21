@@ -1,7 +1,10 @@
 import { codeService } from '../services/codes';
 import { Controller, HttpRequest, HttpResponse } from '../types';
+import { ControllerError } from '../utils/customErrors';
 import { logger } from '../utils/logger';
+import { parsers } from '../utils/parsers';
 import { responseHandlers } from '../utils/responseHandlers';
+import { validators } from '../utils/validators';
 
 export class CodeController implements Controller {
   controllerName = 'CodeController';
@@ -17,14 +20,19 @@ export class CodeController implements Controller {
    */
   async addCode(req: HttpRequest, res: HttpResponse) {
     try {
-      const newCode = await codeService.addCode(req.body || {});
-      responseHandlers.setCors(res, req.headers.origin);
-      responseHandlers.setHeaderJson(res);
-      responseHandlers.setStatus(201, res);
-      res.end(JSON.stringify(newCode));
+      const body = validators.isString(req.body) ? parsers.parseStringToJson(req.body) : {};
+      const newCode = await codeService.addCode(body);
+      if (newCode) {
+        responseHandlers.setCors(res, req.headers.origin);
+        responseHandlers.setHeaderJson(res);
+        responseHandlers.setStatus(201, res);
+        const { code } = newCode;
+        res.end(JSON.stringify({ code }));
+      }
     } catch (error) {
       logger.debugError(`${this.controllerName}.addCode()`, error);
     }
+    throw new ControllerError(500);
   }
 
 }
