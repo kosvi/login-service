@@ -28,6 +28,9 @@ export class CodeController implements Controller {
         responseHandlers.setStatus(201, res);
         const { code } = newCode;
         res.end(JSON.stringify({ code }));
+        return;
+      } else {
+        logger.debug(`${this.controllerName}.addCode() - codeService didn't return a valid new code`);
       }
     } catch (error) {
       logger.debugError(`${this.controllerName}.addCode()`, error);
