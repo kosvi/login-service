@@ -33,9 +33,9 @@ export type TokenContent = z.infer<typeof ZodTokenContent>;
 export const ZodTokenRequest = z.object({
   grant_type: z.string(),
   code: z.string(),
-  client_id: z.string().uuid(),
+  client_id: z.string(),
   code_verifier: z.string(),
-  redirect_uri: z.string().url()
+  redirect_uri: z.string()
 }).strict();
 
 export type TokenRequest = z.infer<typeof ZodTokenRequest>;

@@ -46,8 +46,9 @@ const getTokenForCode = async (code: string, client_id: string, code_verifier: s
   // first find the code from database
   try {
     const codeFromDB = await db.findCode(code);
+    logger.debug(JSON.stringify(codeFromDB));
     // make sure we got a result with the code and that client_id, redirect_uri and code_challenge match
-    if (codeFromDB && client_id === codeFromDB.client_id && codeFromDB.redirect_uri === redirect_uri && codeVerifier(code_verifier, codeFromDB.code_challenge)) {
+    if (codeFromDB && client_id === codeFromDB.client_id && codeFromDB.redirect_uri === decodeURIComponent(redirect_uri) && codeVerifier(code_verifier, codeFromDB.code_challenge)) {
       let tokenContent: Omit<TokenContent, 'expires'> = {
         uid: codeFromDB.uid,
         username: codeFromDB.username,

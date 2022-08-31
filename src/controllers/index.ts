@@ -4,3 +4,4 @@ export * from './login';
 export * from './verify';
 export * from './users';
 export * from './clients';
+export * from './token';

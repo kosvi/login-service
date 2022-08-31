@@ -4,6 +4,7 @@ import { ControllerError } from '../utils/customErrors';
 import { logger } from '../utils/logger';
 import { responseHandlers } from '../utils/responseHandlers';
 import { validators } from '../utils/validators';
+import { parsers } from '../utils/parsers';
 
 export class TokenController implements Controller {
   controllerName = 'TokenController';
@@ -18,7 +19,9 @@ export class TokenController implements Controller {
    * This function checks code and returns token if code is valid
    */
   async checkCode(req: HttpRequest, res: HttpResponse) {
-    const body = req.body;
+    const body = parsers.parseStringToJson(req.body);
+    // eslint-disable-next-line no-console
+    console.log(body);
     try {
       if (!validators.isTokenRequest(body)) {
         throw new ControllerError(400, 'malformed request');
