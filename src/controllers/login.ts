@@ -17,6 +17,7 @@ export class LoginController implements Controller {
   controllerName = 'LoginController';
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
+    responseHandlers.setCors(res, req.headers.origin);
     if (req.url === '/login' && req.method === 'POST') {
       await this.login(req, res);
     } else {
@@ -35,7 +36,6 @@ export class LoginController implements Controller {
         /*
          * If user was fetched, create token and send response
          */
-        responseHandlers.setCors(res, req.headers.origin);
         responseHandlers.setHeaderJson(res);
         responseHandlers.setStatus(200, res);
         res.end(JSON.stringify(loginService.createResponseFromPublicUser(user)));

@@ -11,6 +11,7 @@ export class ClientController implements Controller {
   controllerName = 'ClientController';
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
+    responseHandlers.setCors(res, req.headers.origin);
     if (req.url?.startsWith('/clients/') && req.url.substring(9) && req.method === 'GET') {
       await this.getClient(req, res);
       return;
@@ -101,7 +102,6 @@ export class ClientController implements Controller {
     if (id.length > 1) {
       const client = await clientService.getClient(id);
       if (client && validators.isPublicClient(client)) {
-        responseHandlers.setCors(res, req.headers.origin);
         responseHandlers.setHeaderJson(res);
         responseHandlers.setStatus(200, res);
         res.end(JSON.stringify(client));

@@ -10,6 +10,7 @@ export class CodeController implements Controller {
   controllerName = 'CodeController';
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
+    responseHandlers.setCors(res, req.headers.origin);
     if (req.url === '/codes' && req.method === 'POST') {
       await this.addCode(req, res);
     }
@@ -23,7 +24,6 @@ export class CodeController implements Controller {
       const body = validators.isString(req.body) ? parsers.parseStringToJson(req.body) : {};
       const newCode = await codeService.addCode(body);
       if (newCode) {
-        responseHandlers.setCors(res, req.headers.origin);
         responseHandlers.setHeaderJson(res);
         responseHandlers.setStatus(201, res);
         const { code } = newCode;

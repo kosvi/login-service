@@ -11,6 +11,7 @@ export class ResourceController implements Controller {
   controllerName = 'ResourceController';
 
   async handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
+    responseHandlers.setCors(res, req.headers.origin);
     if (req.url?.startsWith('/resources/') && req.url.substring(11) && req.method === 'GET') {
       await this.getResource(req, res);
       return;
@@ -44,7 +45,6 @@ export class ResourceController implements Controller {
     if (id.length > 1) {
       const resource = await resourceService.getResource(id);
       if (resource && validators.isResource(resource)) {
-        responseHandlers.setCors(res, req.headers.origin);
         responseHandlers.setHeaderJson(res);
         responseHandlers.setStatus(200, res);
         res.end(JSON.stringify(resource));

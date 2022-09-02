@@ -8,7 +8,7 @@ import { db } from '../../../src/services';
 
 import { userService } from '../../../src/services';
 import { validators } from '../../../src/utils/validators';
-import { PublicUser, User, Client } from '../../../src/types';
+import { PublicUser, User, Client, Resource } from '../../../src/types';
 // helper data
 import { testData } from '../utils/helperData';
 
@@ -263,6 +263,28 @@ describe('clients tests', () => {
         [testData.validPublicClient.name, testData.validPublicClient.redirect_uri, 'mocked', testData.validPublicClient.id]]
     ]);
     expect(result).toEqual(testData.validPublicClient);
+  });
+
+  describe('resources tests', () => {
+    // this is our pool for the tests
+    const pool: Pool = new Pool();
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should add new resource correctly', async () => {
+      (pool.query as jest.Mock).mockResolvedValueOnce({ rows: [], rowCount: 1 });
+      const result = await db.addResource(testData.validResource);
+      expect(result).toBe(true);
+    });
+
+    it('should fail silently with incorret input', async () => {
+      (pool.query as jest.Mock).mockRejectedValueOnce({});
+      const result = await db.addResource({} as Resource);
+      expect(result).toBe(false);
+    });
+
   });
 
 });

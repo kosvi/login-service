@@ -12,4 +12,17 @@ describe('converter tests', () => {
     expect({ ...newPublicUser, password: testData.validUser.password }).toEqual(testData.validUser);
   });
 
+  it('should be able to convert anything to number (or NaN)', () => {
+    const first = converters.unknownToInteger(6);
+    expect(first).toEqual(6);
+    const second = converters.unknownToInteger(new Number('30'));
+    expect(second).toEqual(30);
+    const third = converters.unknownToInteger('50');
+    expect(third).toEqual(50);
+    const fourth = converters.unknownToInteger(new String('7'));
+    expect(fourth).toEqual(7);
+    const final = converters.unknownToInteger('foobar');
+    expect(final).toEqual(NaN);
+  });
+
 });

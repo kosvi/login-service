@@ -30,6 +30,18 @@ describe('clientController integration tests', () => {
    * LET'S START THE ACTUAL TESTS
    */
 
+  it('should return 401 if no token is provided', async () => {
+    const newClient: Omit<Client, 'id'> = {
+      name: testData.validPublicClient.name,
+      redirect_uri: testData.validPublicClient.redirect_uri,
+      secret: 'mocked',
+      allow_write: testData.validPublicClient.allow_write
+    };
+    // let's send this as request body
+    const response = await api.post(base).set('Authorization', 'bearer ').send(newClient).expect(401);
+    expect(response.body).toHaveProperty('error');
+  });
+
   it('should allow storing of a valid client', async () => {
     const newClient: Omit<Client, 'id'> = {
       name: testData.validPublicClient.name,

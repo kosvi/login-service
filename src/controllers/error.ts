@@ -6,12 +6,14 @@
 import { Controller, HttpRequest, HttpResponse } from '../types';
 import { ControllerError } from '../utils/customErrors';
 import { logger } from '../utils/logger';
+import { responseHandlers } from '../utils/responseHandlers';
 
 export class ErrorController implements Controller {
 
   controllerName = 'ErrorController';
 
-  handleRequest(req: HttpRequest, _res: HttpResponse): Promise<void> {
+  handleRequest(req: HttpRequest, res: HttpResponse): Promise<void> {
+    responseHandlers.setCors(res, req.headers.origin);
     logger.error(`${req.url}: 404 - not found`);
     throw new ControllerError(404, 'not found');
   }

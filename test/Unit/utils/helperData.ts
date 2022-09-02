@@ -1,4 +1,4 @@
-import { User, PublicUser, PublicClient } from '../../../src/types';
+import { User, PublicUser, PublicClient, Resource } from '../../../src/types';
 
 const defaultAdmin = {
   username: 'admin',
@@ -24,6 +24,11 @@ const validPublicClient: PublicClient = {
   allow_write: false
 };
 
+const validResource: Resource = {
+  name: 'resource name',
+  id: 'e21318d6-a1c3-4f7a-896e-0a07089ba4b0'
+};
+
 export const testData = {
-  defaultAdmin, validPublicUser, validUser, validPublicClient
+  defaultAdmin, validPublicUser, validUser, validPublicClient, validResource
 };
