@@ -36,7 +36,7 @@ Serves static files...
 
 | endpoint | method | authorization | success | failure(s) |
 |----------|--------|---------------|---------|------------|
-| [/users/](API/users.md#user) | POST | none          | 201     | 400, 409, 422 |
+| [/users/](API/users.md#users) | POST | none          | 201     | 400, 409, 422 |
 | [/users/:id](API/users.md#users-id)    | GET    | any           | 200     | 401        |
 | [/users/:id](API/users.md#users-id) | PUT  | any           | 200     | 401, 409, 422 |
 | [/users/:id](API/users.md#users-id) | DELETE | any | 204 | 401 |
