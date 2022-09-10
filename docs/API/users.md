@@ -20,7 +20,6 @@ Status 201
   "email": "<email>",
   "admin": boolean,
   "locked": boolean,
-  "stealth": boolean,
   "deleted": boolean
 }
 ```
@@ -42,7 +41,6 @@ Status 200
   "email": "<email>",
   "admin": boolean,
   "locked": boolean,
-  "stealth": boolean,
   "deleted": boolean,
   "created_on": "<date-in-iso-format>"
 }
@@ -72,7 +70,6 @@ Status 201
   "email": "<email>",
   "admin": boolean,
   "locked": boolean,
-  "stealth": boolean,
   "deleted": boolean
 }
 ```
