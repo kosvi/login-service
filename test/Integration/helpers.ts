@@ -8,11 +8,29 @@ import { pool } from '../../src/services/database/db';
 import { validators } from '../../src/utils/validators';
 import { PublicUser } from '../../src/types';
 import { z } from 'zod';
+import { dbData } from './helperData';
+import { userService } from '../../src/services';
 
 /*
  * The functions below are used to setup database at the beginning of the test
  * and to close connection after the test (so that jest finished correctly)
  */
+
+const addClientsToDB = async () => {
+  const result = await db.addClient(dbData.dbClient);
+  expect(result).not.toBe(undefined);
+};
+
+const addResourcesToDB = async () => {
+  const result = await db.addResource(dbData.dbResource);
+  expect(result).toBe(true);
+};
+
+const addUsersToDB = async () => {
+  const password = await userService.hashPassword(dbData.dbUser.password);
+  const result = await db.addUser({ ...dbData.dbUser, password });
+  expect(result).toBe(true);
+};
 
 export const resetDatabase = async () => {
   const allMigrations: Array<string> = migrations.reduce((prev: Array<string>, curr) => {
@@ -20,6 +38,9 @@ export const resetDatabase = async () => {
   }, []);
   expect(await db.revertMigrations(migrations, allMigrations)).toBe(true);
   expect(await db.runMigrations(migrations)).toBe(true);
+  await addClientsToDB();
+  await addResourcesToDB();
+  await addUsersToDB();
 };
 
 export const closeDatabase = async () => {

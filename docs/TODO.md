@@ -39,3 +39,5 @@ New list:
 - update documentation (this is lagging badly too!)
 - ~~FINISH CODE API! (code controller)~~
 - ~~Create /token endpoint!~~
+- ~~UID for the code SHOULD NOT come from payload but from token! ~~
+  -> ~~currently anyone can craft codes without even logging in!~~

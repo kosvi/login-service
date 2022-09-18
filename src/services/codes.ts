@@ -26,13 +26,14 @@ const codeGenerator = (): string => {
   return code;
 };
 
-const addCode = async (body: unknown): Promise<Code | undefined> => {
+const addCode = async (uid: string, body: unknown): Promise<Code | undefined> => {
   logger.debug(`codeService.addCode() : typeof body === 'object' => ${typeof body === 'object'}`);
   let code;
   if (typeof body === 'object') {
     code = {
       ...body,
-      code: codeGenerator()
+      code: codeGenerator(),
+      user_uid: uid
     };
   }
   if (validators.isCode(code)) {
